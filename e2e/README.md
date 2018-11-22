@@ -1,0 +1,1 @@
+Automated tests that simulate a real user.
