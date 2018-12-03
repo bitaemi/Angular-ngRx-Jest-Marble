@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LikesComponent } from './modules/features/likes/likes.component';
 
-let likeButton = new LikesComponent(310, false);
+const likeButton = new LikesComponent(310, false);
 
 @Component({
   selector: 'app-root',
@@ -9,8 +9,11 @@ let likeButton = new LikesComponent(310, false);
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  title = 'Angular7-App';
-  
+  post = {
+    title: 'Angular7-App',
+    notFavorite: true
+  };
 }
+
 likeButton.pressLikeButton();
 console.log(`LikesCount: ${likeButton.likesCount}, LikeState: ${likeButton.likeState}`);

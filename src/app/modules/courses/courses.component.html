@@ -1,2 +1,6 @@
-<h2>Courses Component</h2>
-<courses></courses>
+<h2>{{ "List of " + title + getWebsite()}}</h2>
+<ul>
+    <li *ngFor="let course of courses">
+    {{ course }}
+    </li>
+</ul>

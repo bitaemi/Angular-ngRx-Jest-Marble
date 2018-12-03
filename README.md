@@ -34,8 +34,20 @@
   - [3.3. Templates](#33-templates)
   - [3.4. Directives](#34-directives)
   - [3.5. Services](#35-services)
-  - [3.6. Dependency Injection](#36-dependency-injection)
-  - [3.7. Generating Services Using Angular CLI](#37-generating-services-using-angular-cli)
+    - [3.5.1. Services and Dependency Injection](#351-services-and-dependency-injection)
+    - [3.5.2. Generating Services Using Angular CLI](#352-generating-services-using-angular-cli)
+  - [4. Displaying Data and Handling Events](#4-displaying-data-and-handling-events)
+    - [4.1. Property Binding](#41-property-binding)
+    - [4.2. Attribute Binding](#42-attribute-binding)
+    - [4.3. Adding Bootstrap](#43-adding-bootstrap)
+    - [4.4. Class binding and Style Binding](#44-class-binding-and-style-binding)
+    - [4.5. Event Binding](#45-event-binding)
+    - [4.6. Event Filtering](#46-event-filtering)
+    - [4.7. Template variables](#47-template-variables)
+    - [4.8. Two way data-binding](#48-two-way-data-binding)
+    - [4.9. Pipes](#49-pipes)
+  - [5. Building Reusable Components](#5-building-reusable-components)
+    - [5.1. Component API, Input and Output Properties](#51-component-api-input-and-output-properties)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -51,6 +63,9 @@ Installed extensions:
     - Debugger For Chrome
     - TS Lint
     - Auto Import
+    - Sass
+    - Npm
+    - TSLint
 
 MUST USE Shortcuts with VS Code:
 
@@ -62,7 +77,9 @@ MUST USE Shortcuts with VS Code:
     Ctrl + ` - open console / terminal
     Ctrl + Shift + V - preview current file
     Ctrl + K Ctrl + O - open Directory
-    q - quit/exit log screen from terminal 
+    q - quit/exit log screen from terminal
+    Ctrl + P and type a distinctive file name fragment e.g. authors.html
+    Ctrl + K + W - close all tabs
     
 #### 1.2. Using Angular CLI for development
 
@@ -140,7 +157,7 @@ Run ```npm i``` and this will install all the missing dependencies
     - karma.config.js is a test runner for JavaScript code
     - package.json - e standard file that every node project has: 
         - some basic settings 
-        - dependencies wich determine the libraries your app is dependent on
+        - dependencies which determine the libraries your app is dependent on
         - devDependencies - required for app development, not on production (includes karma dependencies for testing)
     - protractor,conf.js - a tool for running end-to-end tests for Angular
     - tsconfig.json - has a bunch of settings for TypeScript Compiler to compile .ts into .js code
@@ -233,7 +250,7 @@ Interfaces are purely for declarations.
 
 ##### 2.3.6. Classes, Objects, Constructors
 
-Cohesion = things related should go together => Introduse classes. A class groups fproperties and functions that are highly related.
+Cohesion = things related should go together => Introduce classes. A class groups properties and functions that are highly related.
 
 ```TypeScript
 class Point {
@@ -322,7 +339,7 @@ In each file, we export one or more types, these types can be classes, functions
 
 #### 3.1. Building Blocks of Angular App
 
-A COMPONENT = encapsulates : the DATA, HTML template and the LOGIC
+A COMPONENT = encapsulates : the DATA, HTML template and the PRESENTATION LOGIC
 
 Example of componets tree: 
     -App
@@ -339,7 +356,7 @@ Example of modules:
 
 - Courses MODULE
 - Messaging MODULE
-- Instructor MODULE (includes all the components for the instructor dashboard wich you don't see)
+- Instructor MODULE (includes all the components for the instructor dashboard which you don't see)
 - Admin MODULE (The area of the side managed by site admins)
 
 #### 3.2. Component
@@ -355,7 +372,7 @@ import { Component } from '@angular/core';
 })
 
 export class CoursesComponent {
-
+courses; //add required fields of the component
 }
 ```
    ##### 3.2.2. Register it in a module:
@@ -390,8 +407,8 @@ Bind the view to fields from the component using ```{{}}``` syntax - add inside 
 })
 
 export class CoursesComponent {
-    title = " courses ";
-    website = " udemy ";
+    title = ' courses ';
+    website = ' udemy ';
 
     getWebsite() {
         return this.website;
@@ -401,7 +418,7 @@ export class CoursesComponent {
 ```
  #### 3.4. Directives
 
-```ngFor```
+```*ngFor```
 To manipulate the DOM, we use special blocks called directives inside the HTML templates. Use directives to:
  - add/remove DOM elements - change the structure of the DOM - in this case you have to prefix the directive with ```*``` (```*ngFor```)
  - change the class of a DOM element
@@ -422,13 +439,17 @@ To manipulate the DOM, we use special blocks called directives inside the HTML t
 })
 
 export class CoursesComponent {
-   title = "List of courses ";
-   courses = ["course1", "course2"] ;
+   title = 'List of courses ';
+   courses = ['course1', 'course2'] ;
 }
 ```
 #### 3.5. Services
 
-Details and Logic should be in services, not in components:
+##### 3.5.1. Services and Dependency Injection
+
+Details and Logic required in multiple places should be in services, not in components:
+
+Naming convention: courses.service.ts:
 
 ```TypeScript
 export class CourseService {
@@ -437,8 +458,256 @@ export class CourseService {
     }
 }
 ```
-#### 3.6. Dependency Injection
-#### 3.7. Generating Services Using Angular CLI
+Our service should be injectable to decouple the component from the service logic. Inject the service into the component's constructor:
+
+```TypeScript
+courses; //add required fields for the component
+constructor(service: CoursesComponent) {
+    this.courses = service.getCousses();
+}
+```
+Angular will automatically instantiate component's dependencies and inject those dependencies into the constructor when a new instance of the component is created because Angular has a dependencies injection framework built into it.
+
+In order for that to work, we need to register dependencies in the module's **providers**.
+
+app.module.ts:
+
+```TypeScript
+//...
+@NgModule({
+    //...
+    providers: [
+        //..
+        CoursesService //Enter and autocomplete will include the service file on top of module's file
+    ]
+})
+```
+When you register a dependency as a provider in a module, Angular will create **a single instance** of that service class for that entire module.
+
+So imagine in this module we have 100 components and 50 of these components need the courses's service.
+
+**In the memory we're going to have only a single instance of courses service** and Angular will pass the same instance to all its components =>
+
+Service is a Singleton.
+
+SINGLETON PATTERN (use it for caching and optimization resons).
+
+Also, when unit testing we can create fake instances of the service, and not use the HTTP service on the back-end.
+
+##### 3.5.2. Generating Services Using Angular CLI
+
+```ng g s email``` -  generate the email service
+
+This willl generate an injectable service. We need the ```@Injectable()``` decorator function to be applied if this service has dependencies in its constructor.
+
+```TypeScript
+//...
+    @Injectable()
+    export class EmailService {
+        constructor(logService: LogService) {
+        }
+        //..
+    }
+```
+#### 4. Displaying Data and Handling Events
+
+ ##### 4.1. Property Binding
+
+ INTERPOLATION =  ```{{}}``` syntax for binding data inside the HTML component - when Angular compiles the templates translates these interpretations into **property binding**.
+
+ ```HTML
+    <img src="{{imageUrl}}" />
+    ```
+ PROPERTY BINDING - bind a property of DOM element to a field or a property in the component.
+
+```HTML
+    <img [src] = "imageUrl" />
+```
+where src is a DOM property and the imageUrl is a field in the component:
+
+```TypeScript
+export class CoursesComponent {
+    imageUrl = "http://lorepixel.com/400/200";
+}
+```
+So the result of interpolation is the same with the one of property binding.
+
+Property binding works only one way: from component to the DOM. Any update from component will update the DOM, but any changes in the DOM are not reflected back into the component.
+
+ ##### 4.2. Attribute Binding
+
+DOM =  a tree model of objects in memory. HTML is a markup language that we use to represent DOM in text. 
+
+Most of the HTML attributes have a one to one mapping to propperties of DOM objects, but we have a few exceptions, e.g. colspan attr:
+
+```HTML
+<!-- target the colspan attribute of the HTML element because we don't have a colspan property in DOM -->
+<td [attr.colspan] = "colSpan"></td>
+```
+##### 4.3. Adding Bootstrap
+
+Get more info about this great CSS library from [getbootstrap.com](http://getbootstrap.com)
+
+Add bootstrap and store it in the node_modules folder, running:
+
+```npm i bootstrap --save```
+
+The save flag adds bootstrap as a dependency in package.json
+
+In the main style.sass file add the import of the minified css framework located in node_modules:
+
+```scss
+@import "~bootstrap/dist/css/bootstrap.min.css"
+```
+
+##### 4.4. Class binding and Style Binding
+
+Add the .active class to the HTML element, dinamically, based on the  isActive condition (isActive is a boolean field in the component):
+```HTML
+<button class="btn btn-primary" [class.active]="isActive"></button>
+```
+
+- Apply inline style based on a condition 
+- Use [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) to find and see the properties of the 'Style' Object
+
+
+```HTML 
+<button [style.backgroundColor]="isActive ? 'blue' : 'white'"></button>
+```
+##### 4.5. Event Binding
+
+We bind the click event to a method in our component. 
+Sometimes we need to get access to the event object that was raised in the event handler, for example with mouse movements the event object
+
+will tell us that x and y position. To get access to that event object we need to pass the ```$event``` as a parameter here to the method.
+
+```$event``` is the standard DOM event object seen in vanila JavaScript. 
+
+```HTML
+<div (click)="onDivClicked()">
+    <button (click)="onSave($event)">Save</button>
+</div>
+```
+All the DOM events bubble up the DOM tree (from the inner element to the outer element), unless a handler along the way prevents further bubbling.
+
+```TypeScript
+
+onDivClicked() {
+    console.log('Div was clicked');
+}
+
+onSave($event) {
+    $event.stopPropagation(); //this will prevent the parser engine to go up in the DOM tree to handle the next click event
+    console.log('Button was clicked: ', $event);
+}
+
+```
+Console log: I: Button was clicked: Mouse Event {...}
+
+The EVENT QUEUE: button click, div click
+
+##### 4.6. Event Filtering
+
+In Angular, when handleing an event we can apply a filter. 
+```HTML
+<input (keyup.enter)="onKeyUp($event)" />
+```
+
+##### 4.7. Template variables
+
+To get the value typed into the input field:
+I) pass the ```$event``` object to the method and read the value using ```$event.target.value``` or faster:
+
+II) in Angular we can **declare variables in the template**: ```#variableName```, that reference the input field, and read the value of the variable with: 
+```variableName.value```
+
+```HTML
+<input #email (keyup.enter)="onKeyUp(email.value)" />
+```
+##### 4.8. Two way data-binding
+
+In OOP we do not pass unnecessary parameters to methods, so in components we use fields. 
+
+For two-way binding from the component to DOM and from DOM to component, we use the ```ngModel ``` directive.
+
+```HTML
+<input [(ngModel)]="email" (keyup.enter)="onKeyUp()" />
+```
+in the module file:
+```import { FormsModule } from '@angular/forms';```
+and add the FormsModule to @ngModule's imports array.
+##### 4.9. Pipes 
+
+Another Building block in Angular is PIPES - used to format data.
+
+Buit-in PIPES: - uppercase
+               - lowercase
+               - decimal
+               - currency
+               - percent
+
+PIPES are chainable.
+ Supply arguments to some pipes using `:`
+
+```HTML
+<div>{{ course.title | uppercase}}
+{{ course.title | number: '1.2-2' }} <!-- supply: (number of integer digits - adds 0 in front if we specify more).(min-max digits number after the decimal point)  -->
+{{ course.price: currency:'AUD':true:'3.2-2' }} <!-- displays the currency sighn and formats the value -->
+{{ course.releaseDate | date: 'shortDate }}
+```
+ - no need to import CommonModule in your module's imports the BrowserModule import brings the CommonModule
+
+    **Custom Pipes**
+
+```html
+{{ text | summary : 10 }}
+```    
+Nameing convention: summary.pipe.ts holds pipe's implementation
+```TypeScript
+    import { Pipe, PipeTransform } from '@angular/core';
+    //apply a pipe decorator:
+    
+    @Pipe({
+        name: 'summary'
+    })
+    //the pipe class should have the exact form as PipeTransform interface
+    export SummaryPipe implements PipeTransform {
+        transform(value: string, limit: number) {
+            if (!value) {
+                return null;
+            }
+            let actualLimit = (limit)? limit : 50;
+            return value.substring(0, limit ) + '...';
+        }
+    }
+```
+Also add the SummaryPipe in the module's @ngModule declarations array.
+
+or simply generate your pipe files: ```ng g p title-casing```
+#### 5. Building Reusable Components
+
+   ##### 5.1. Component API, Input and Output Properties
+
+   To make a component more reusable we add input and output properties.
+
+   We use input properties ```[notFavorite]``` to pass input or STATE to a component and we use OUTPUT properties ```(change)``` to RAISE EVENTS from these custom components.
+
+   Inside outer's component template we include inner components like:
+   
+```HTML 
+   <app-favorite [notFavorite]="post.notFavorite" (change)="onFavoriteChange()"></app-favorite>
+```
+      - where:
+            - post is a field with notFavorite property, inside the outer component.
+            - [notFavorite] is the input field in the inner component:
+```TypeScript
+    export class FavoriteComponent implements OnInit {
+
+    @Input() notFavorite: boolean;
+    //...
+```
+
+   Input Propertie is another decorator in Angular for marking fields and properties as input properties.
 
 ### Libs and Bundles
 
