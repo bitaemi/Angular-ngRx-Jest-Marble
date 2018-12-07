@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'likes',
+    selector: 'app-likes',
     templateUrl: './likes.component.html',
   })
 
-  
 export class LikesComponent {
     constructor(private _likesCount?: number, private _likeState?: boolean) {
     }

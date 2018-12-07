@@ -11,6 +11,8 @@ import { AuthorsComponent } from './modules/authors/authors.component';
 import { AuthorsService } from './services/authors.service';
 import { FavoriteComponent } from './modules/favorite/favorite.component';
 import { TitleCasingPipe } from './modules/pipes/title-casing.pipe';
+import { PanelComponent } from './modules/panel/panel.component';
+import { LikeReusableComponent } from './modules/like-reusable/like-reusable.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { TitleCasingPipe } from './modules/pipes/title-casing.pipe';
     AuthorsComponent,
     FavoriteComponent,
     TitleCasingPipe,
+    PanelComponent,
+    LikeReusableComponent,
   ],
   imports: [
     BrowserModule,

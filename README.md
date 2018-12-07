@@ -48,6 +48,12 @@
     - [4.9. Pipes](#49-pipes)
   - [5. Building Reusable Components](#5-building-reusable-components)
     - [5.1. Component API, Input and Output Properties](#51-component-api-input-and-output-properties)
+    - [5.2. Templates and Styles](#52-templates-and-styles)
+    - [5.3. View Encapsulation](#53-view-encapsulation)
+  - [5.4. ngContent and ngContainer](#54-ngcontent-and-ngcontainer)
+  - [6. Directives](#6-directives)
+    - [6.1. Built-In Directives](#61-built-in-directives)
+      - [ngIf](#ngif)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -79,6 +85,7 @@ MUST USE Shortcuts with VS Code:
     Ctrl + K Ctrl + O - open Directory
     q - quit/exit log screen from terminal
     Ctrl + P and type a distinctive file name fragment e.g. authors.html
+    Ctrl + . when cursor is over the name of the class/interface you want to import
     Ctrl + K + W - close all tabs
     
 #### 1.2. Using Angular CLI for development
@@ -159,7 +166,7 @@ Run ```npm i``` and this will install all the missing dependencies
         - some basic settings 
         - dependencies which determine the libraries your app is dependent on
         - devDependencies - required for app development, not on production (includes karma dependencies for testing)
-    - protractor,conf.js - a tool for running end-to-end tests for Angular
+    - protractor.conf.js - a tool for running end-to-end tests for Angular
     - tsconfig.json - has a bunch of settings for TypeScript Compiler to compile .ts into .js code
     - tslint.json -  a static analize tool for .ts code (it checks for readability, maintainability, and functionality errors)
 
@@ -640,22 +647,30 @@ and add the FormsModule to @ngModule's imports array.
 
 Another Building block in Angular is PIPES - used to format data.
 
-Buit-in PIPES: - uppercase
-               - lowercase
-               - decimal
-               - currency
-               - percent
+Buit-in PIPES: 
+
+        - uppercase
+
+        - lowercase
+
+        - decimal
+
+        - currency
+
+        - percent
 
 PIPES are chainable.
  Supply arguments to some pipes using `:`
 
 ```HTML
 <div>{{ course.title | uppercase}}
-{{ course.title | number: '1.2-2' }} <!-- supply: (number of integer digits - adds 0 in front if we specify more).(min-max digits number after the decimal point)  -->
-{{ course.price: currency:'AUD':true:'3.2-2' }} <!-- displays the currency sighn and formats the value -->
+<!-- supply: (number of integer digits - adds 0 in front if we specify more).(min-max digits number after the decimal point):  -->
+{{ course.title | number: '1.2-2' }} 
+ <!-- displays the currency sign and formats the value: -->
+{{ course.price: currency:'AUD':true:'3.2-2' }}
 {{ course.releaseDate | date: 'shortDate }}
 ```
- - no need to import CommonModule in your module's imports the BrowserModule import brings the CommonModule
+ - no need to import ```CommonModule``` in your module's imports because the ``BrowserModule`` import brings the CommonModule
 
     **Custom Pipes**
 
@@ -688,9 +703,9 @@ or simply generate your pipe files: ```ng g p title-casing```
 
    ##### 5.1. Component API, Input and Output Properties
 
-   To make a component more reusable we add input and output properties.
 
-   We use input properties ```[notFavorite]``` to pass input or STATE to a component and we use OUTPUT properties ```(change)``` to RAISE EVENTS from these custom components.
+   To make a component more reusable we add input and output properties.
+   We use input properties e.g. ```[notFavorite]``` to pass input or STATE to a component and we use OUTPUT properties e.g. ```(change)``` to RAISE/PRODUCE/YEILD EVENTS from these custom components.
 
    Inside outer's component template we include inner components like:
    
@@ -706,8 +721,220 @@ or simply generate your pipe files: ```ng g p title-casing```
     @Input() notFavorite: boolean;
     //...
 ```
-
    Input Propertie is another decorator in Angular for marking fields and properties as input properties.
+
+   Aliasing input properties: 
+
+```TypeScript
+    //..
+        @Input('not-favorite') notFavorite: boolean;
+    //...
+``` 
+   We keep the contract of the component stable using the aliass 'not-favorite'. In the HTML template we give the input field like ```['not-favorite']``` and if notFavorite is
+   
+   changed to another name in the component, the template won't brake if you use the allias input field, but you still have to manually refactor the templates.
+
+   We use the OUTPUT propertie ```(change)``` to RAISE a change EVENT from the favorite component and capture the output in the outer component (app.component.ts):
+
+```HTML
+    <app-favorite [notFavorite]="post.notFavorite"  (change)="OnFavoriteChange($event)"></app-favorite>
+```
+   The ```$event``` is a JS object that has the property called: ```newObjProperty```because the ``(change)`` output 
+```TypeScript
+//import the output decourator function
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+export class FavoriteComponent implements OnInit {
+
+ //..
+  @Output() change = new EventEmitter();
+  //..
+  clickFavor() {
+    
+    this.change.emit({newObjProp: this.notFavorite});
+    //..
+  }
+```
+In the outer component we have:   
+
+```TypeScript
+
+onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
+    console.log('Favorite changed:', eventArgs );
+  }
+```
+
+ Aliasing Output properties :
+
+ ```TypeScript
+     //..
+  @Output(changeAliass) newChangeEvent = new EventEmitter();
+  //..
+  ```
+  ``change`` is the allias wich will work if is used when calling the inner component in the template of the outer component:
+
+  ```HTML
+  <app-favorite [notFavorite]="post.notFavorite"  (changeAliass)="OnFavoriteChange($event)"></app-favorite>
+  ```
+  ##### 5.2. Templates and Styles
+
+    Each component has a template (HTML file) to render component's view. But all our external templates are actually bundled along with our Javascript code (all show under one 
+    
+    request: main.bundle.js)
+
+    So there are no separate requests to the server to download these templates.
+
+    STYLES
+
+    There are two ways of declaring styles your component. The style declaration that comes the last is the one that takes effect.
+    
+```TypeScript
+    @Component({
+    selector: 'app-favorite',
+    templateUrl: './favorite.component.html',
+    styleUrls: ['./favorite.component.sass'],
+    styles: [
+        ` .fa-star {color: blue;}`
+    ]
+    })
+```
+   ##### 5.3. View Encapsulation
+
+    Styles applied to a component, are scoped to that component and will not leak outside the template for that component.
+
+    SHADOW DOM = A specification that enables DOM tree and styles encapsulation. Allows to apply scoped styles to elements without bleeding out to the outer world.
+
+```JavaScript
+    var el = document.querySelector('favorite');
+    var root = el.createShadowRoot(); 
+    //the style will be scoped only to the 'el' element
+    root.innerHTML = `
+    <style>h1 { color: red}</style>
+    <h1>Hello</h1>
+    `;
+```
+
+VIEW ENCAPSULATION - is an enum defined in the ```@angular/core``` and we have to include it in the ```@Component```'s definition if we do not want the default value, ``Emulated``
+
+```TypeScript
+@Component({
+  selector: 'app-favorite',
+  templateUrl: './favorite.component.html',
+  styleUrls: ['./favorite.component.sass'],
+  styles: [
+    ` .fa-star {color: blue !important;}`
+    ],
+  encapsulation: ViewEncapsulation.Emulated 
+  //this is the default setting in Angular wich enables style encapsulation for all browser, even thouse old browsers, where ShadowDom is not available, Angular will emulate the concept
+})
+```
+```TypeScript
+ //...
+  encapsulation: ViewEncapsulation.Native
+  //instead of generating the attributes dinamically, Angular uses the native ShadowDom of the browser, and this is not going to work in most browsers out there
+  //also the common styles @imported in /src/styles.sass file won't be applied to this component, you have to @import those manually  inside the .sass file of the component - NOT a good practice - DON'T DO THIS!
+```
+In your browser's developer settings activate 'Show User Agent Shadow DOM' and you'll be able to inspect the favorite component element and see that all styles from the favorite component are not available outside the component and are under the ```#shadow-root``` element of the component.
+
+```TypeScript
+@Component({
+  selector: 'app-favorite',
+  templateUrl: './favorite.component.html',
+  styles: [
+    ` .fa-star {color: blue}
+    * {color: green}
+    `
+],
+encapsulation: ViewEncapsulation.None
+})
+  //  Styles defined here will leak outside component's template so all  text in the Angular app will be green
+```
+#### 5.4. ngContent and ngContainer
+ Write css syntax to automatically generate html contentent:
+
+```SCSS
+ div.panel.panel-default>div.panel-heading+div.panel-body
+ ```
+   If you're building reusable components and you want the consumer of this components to be able to provide custom content, use the ```<ng-content></ng-content>``` element:
+
+```HTML
+    <div class="panel-heading">
+        <!-- at runtime the ng-content element will be replace entirely with: 
+        <div class="heading">Heading</div> -->
+        <ng-content select=".heading"></ng-content>
+    </div>
+    <div class="panel-body">
+        <!-- no need for: <ng-content select=".body"></ng-content> when we use ng-container in consumer's component-->
+        Body
+    </div>
+```
+   The consumer is able to inject text or markup into this component:
+
+```HTML
+    <app-bootstrap-panel>
+      <div class="heading">Heading</div>
+      <!-- better, less noise: at runtime ng-container will just display the ng-content element-->
+      <ng-container class="body">Body</ng-container>
+    </app-bootstrap-panel>
+```
+#### 6. Directives
+
+   ##### 6.1. Built-In Directives
+
+   ######  ngIf
+
+```HTML
+<div *ngIf="courses.length > 0; then coursesList else noCourses">
+</div>
+<ng-template #noCourses>
+    List of Courses
+</ng-template>
+<ng-template #noCourses>
+    No couses yet!
+</ng-template>
+```
+    This will add to DOM only ONE div, depending on the result of if condition
+
+   ###### Hidden Property
+
+   This will add all divs with ``hidden`` attribute to the DOM, but hide the ones with true expression assignment:
+
+```HTML
+    <div [hidden]="courses.length == 0">List of courses</div>
+    <div [hidden]="courses.length > 0">No courses yet</div>
+```
+    If you're dealing with a small tree of objects it doesn't matter which approach you choose, it's purely a personal preference.
+
+    If you're working with a large tree, first check to see if building that tree is going to be costly or not.
+    
+    If it's costly ( if the user is going to click a button to toggle something to show or hide that part of the page), use the hidden property to keep it in the dark but hide it.
+
+   Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the resources.
+
+   ###### ngSwitch Case
+
+```HTML
+    <ul class="nav nav-pills">
+        <li [class.active]="viewMode == 'map'"><a (click)="viewMode == 'map'" href="">Map View</a></li>
+        <li [class.active]="viewMode == 'list'"><a  (click)="viewMode == 'list'" href="">like Component</a></li>
+    </ul>
+    <div [ngSwitch]="viewMode">
+        <div *ngSwitchCase="'map'">Map View Content</div>
+        <div *ngSwitchCase="'list'">List View Content</div>
+        <div *ngSwitchDefault>Otherwise</div>
+    </div>
+```
+
+   ###### ngFor
+   ###### ngFor and Change Detection
+   ###### ngFor and trackBy
+   ###### The Leading Asterisk
+   ###### ngClass
+   ###### ngStyle
+   ###### Safe Traversal Operator
+   ###### Creating Custom Directives
+
+
 
 ### Libs and Bundles
 

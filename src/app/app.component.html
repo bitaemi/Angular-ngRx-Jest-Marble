@@ -1,10 +1,19 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     Welcome to {{ post.title }}!
-    <app-authors></app-authors>
-    <app-favorite [notFavorite]="post.notFavorite"></app-favorite>
   </h1>
+    <app-authors></app-authors>
+    <app-favorite [notFavorite]="post.notFavorite"  (change)="OnFavoriteChange($event)"></app-favorite>
+
+    <app-bootstrap-panel>
+      <div class="heading">Heading</div>
+      <ng-container class="body">Body</ng-container>
+    </app-bootstrap-panel>
+
+    <app-like-reusable 
+    [likesCount]="tweet.likesCount"
+    [isLiked]="tweet.isLiked">
+  </app-like-reusable>
 </div>
 <h2>Here are some links to help you start: </h2>
 <ul>
