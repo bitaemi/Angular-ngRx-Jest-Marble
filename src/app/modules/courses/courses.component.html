@@ -1,6 +1,32 @@
-<h2>{{ "List of " + title + getWebsite()}}</h2>
+<h2>{{ "Testing template variables, ngForOf " + title + getWebsite()}}</h2>
+<h6>In this comonent we test differect Angular features</h6>
 <ul>
-    <li *ngFor="let course of courses">
-    {{ course }}
+    <li *ngFor="let course of courses; index as i">
+    {{ i }} - {{ course.name }}
     </li>
 </ul>
+<span (click)="onAdd()">Add anew course</span>
+<ul>
+  <li *ngFor="let course of courses; even as isEven">
+  {{ course.name }} - <span *ngIf="!isEven">EVEN</span>
+  <button (click)="onRemove(course)">Remove </button>
+  <button (click)="onChange(course)">Change</button>
+  </li>
+</ul>
+<button (click)="loadCourses()">Testing TrackBy - Load Courses Button</button>
+<ul>
+    <li *ngFor="let courses of course; trackBy: trackCourse">
+        {{ course.name }}
+    </li>
+</ul>
+<div class="mb-2">
+    <span class="p-2">Test custom directive implementation:</span>
+    <input type="text" [appInputFormat]="'uppercase'"/>
+</div>
+
+<app-zippy title="Shipping Details">
+    Shipping Details Content
+</app-zippy>
+<app-zippy title="Billing Details">
+    Billing Details Content
+</app-zippy>

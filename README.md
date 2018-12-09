@@ -54,6 +54,15 @@
   - [6. Directives](#6-directives)
     - [6.1. Built-In Directives](#61-built-in-directives)
       - [ngIf](#ngif)
+      - [Hidden Property](#hidden-property)
+      - [ngSwitch Case](#ngswitch-case)
+      - [ngFor](#ngfor)
+      - [ngFor and Change Detection](#ngfor-and-change-detection)
+      - [ngFor and trackBy](#ngfor-and-trackby)
+      - [The Leading Asterisk](#the-leading-asterisk)
+      - [ngClass](#ngclass)
+      - [ngStyle](#ngstyle)
+      - [Safe Traversal Operator](#safe-traversal-operator)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -75,7 +84,7 @@ Installed extensions:
 
 MUST USE Shortcuts with VS Code:
 
-    Shift + Ctrl + P - open comans pallet
+    Shift + Ctrl + P - open commands pallet
     Ctrl + X - cut line
     Ctrl + Shift + K - delete line
     Ctrl + W - close current tab
@@ -87,11 +96,12 @@ MUST USE Shortcuts with VS Code:
     Ctrl + P and type a distinctive file name fragment e.g. authors.html
     Ctrl + . when cursor is over the name of the class/interface you want to import
     Ctrl + K + W - close all tabs
+    Ctrl + Tab keep Ctrl pressed and use Tab or up/down arrows to navigate between opened files
     
 #### 1.2. Using Angular CLI for development
 
-```npm i -g @angular/cli``` - instal Angular Command Line Interface
-```npm i -g typescript``` - install typescript (tsserver and tsc compiler)
+```npm i -g @angular/cli``` - install Angular Command Line Interface
+```npm i -g typescript``` - install typescript (ts server and tsc compiler)
 
 ##### 1.2.1.Start a new project
 
@@ -438,8 +448,8 @@ To manipulate the DOM, we use special blocks called directives inside the HTML t
     template: `
     <h2> {{ title }}</h2>
     <ul>
-        <li *ngFor="let course of courses">
-        {{ course }}
+        <li *ngFor="let course of courses; index as i">
+        {{ i }} - {{ course.name }}
         </li>
     </ul>
     `
@@ -447,8 +457,10 @@ To manipulate the DOM, we use special blocks called directives inside the HTML t
 
 export class CoursesComponent {
    title = 'List of courses ';
-   courses = ['course1', 'course2'] ;
-}
+   courses = [
+        { id: 1, name: 'course1'},
+        { id: 2, name: 'course2'}
+   ]
 ```
 #### 3.5. Services
 
@@ -886,7 +898,7 @@ encapsulation: ViewEncapsulation.None
 ```HTML
 <div *ngIf="courses.length > 0; then coursesList else noCourses">
 </div>
-<ng-template #noCourses>
+<ng-template #coursesList>
     List of Courses
 </ng-template>
 <ng-template #noCourses>
@@ -915,8 +927,12 @@ encapsulation: ViewEncapsulation.None
 
 ```HTML
     <ul class="nav nav-pills">
-        <li [class.active]="viewMode == 'map'"><a (click)="viewMode == 'map'" href="">Map View</a></li>
-        <li [class.active]="viewMode == 'list'"><a  (click)="viewMode == 'list'" href="">like Component</a></li>
+        <li [class.active]="viewMode == 'map'">
+            <a (click)="viewMode == 'map'" href="">Map View</a>
+        </li>
+        <li [class.active]="viewMode == 'list'">
+            <a  (click)="viewMode == 'list'" href="">like Component</a>
+        </li>
     </ul>
     <div [ngSwitch]="viewMode">
         <div *ngSwitchCase="'map'">Map View Content</div>
@@ -924,18 +940,196 @@ encapsulation: ViewEncapsulation.None
         <div *ngSwitchDefault>Otherwise</div>
     </div>
 ```
-
    ###### ngFor
+
+   Search in angular.io for ``ngForOf`` to see local variables/values  of this directive (index, even, odd ...).
+
+```HTML
+    <ul>
+        <li *ngFor="let course of courses; index as i">
+        {{ i }} - {{ course.name }}
+        </li>
+    </ul>
+
+    <ul>
+    <li *ngFor="let course of courses; even as isEven">
+    {{ course.name }} - <span *ngIf="!isEven">EVEN</span>
+    </li>
+    </ul>
+```
    ###### ngFor and Change Detection
+
+    Wenever you click a button or, when around Ajax requests, or a timer function completes, angular performs a CHANGE DETECTION mechanism. 
+    
+    Angular will refresh the DOM automatically.
+
+```HTML
+<span (click)="onAdd()">Add anew course</span>
+
+<ul>
+  <li *ngFor="let course of courses">
+  {{ course.name }}   <button (click)="onRemove(course)">Remove</button>
+  </li>
+</ul>
+```
+```TypeScript
+    onRemove(course) {
+        const index = this.courses.indexOf(course);
+        this.courses.splice(index, 1);
+    }
+```
+
+
    ###### ngFor and trackBy
+
+   Angular by default tracks objects by their identity (the reference into the memory).
+
+   Each time the loadCourses() is called will create new objects in memory, though the content of the newly created objects is the same with previous ones.
+
+   To prevent this default behaviour and if we want to track objects by their ids, we add ``trackBy`` and the name of the method as a reference in the *ngFor directive. 
+
+```TypeScript
+    loadCourses() {
+        this.courses = [
+            { id: 1, name: 'course1 loaded'},
+            { id: 2, name: 'course2 loaded'},
+            { id: 3, name: 'course2 loaded'},
+            { id: 4, name: 'course2 loaded'},
+            { id: 5, name: 'course2 loaded'}
+        ];
+    }
+    trackCourse(index, course) {
+        return course ? course.id : undefined;
+    }
+```
+```HTML
+    <button (click)="loadCourses()">Testing TrackBy - Load Courses Button</button>
+    <span></span>
+    <ul>
+        <li *ngFor="let courses of course; trackBy: trackCourse">
+            {{ course.name }}
+        </li>
+    </ul>
+```
+   So Angular is not re-rendering the list items, because each time we call loadCourses we are using the same course objects.
+
+   If you're dealing with a large list with complex markup and you do observe performance problems, on a given page, you can try using ``trackBy`` to improve the performance of that page.
+   
+   Don't use it by default in every page because you have to write more code and you won't gain any performance benefits.
+
    ###### The Leading Asterisk
+
+   When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``, Angular is going to rewrite that block using an ``<ng-template>``, so you donn't have to write that by yourself.
+
+```HTML
+    <div *ngIf="courses.length > 0; else noCourses">
+    </div>
+        <ng-template   #noCourses>
+        No couses yet!
+    </ng-template>
+```
+gets gets parsed into:
+
+```HTML
+    <ng-template [ngIf]="courses.length > 0">
+        <div>
+            List of Courses
+        </div>
+    </ng-template>
+    <ng-template   [ngIf]="!(courses.length > 0)">
+        No couses yet!
+    </ng-template>
+```
    ###### ngClass
+
+  **ngClass** is an attribute directive used to modify attributes on existing DOM elements.
+
+  ```TypeScript
+  <span [class.is-liked-class]="isLiked" [class.not-liked-class]="!isLiked">
+```
+    ... a cleaner way to deal with class binding is to use ```[ngClass]``` directive, where we do not have to repeat class binding:
+
+  ```HTML
+    <span [ngClass]="{ 
+      'is-liked-class': isLiked,
+      'not-liked-class': !isLiked
+      }"
+      >The button 
+      </span>
+  ```
+
    ###### ngStyle
+
+```HTML
+    <button [style.backgroundColor]="isActive ? 'blue' : 'white'"
+            [style.color]="isActive ? 'red' : 'green'"
+            [style.fontWeight]="isActive ? '900' : 100'">
+            Save
+    </button>
+```
+    Clean up multiple style bindings using the ``ngStyle`` directive:
+
+```HTML
+<button [ngSyle]="{
+        'backgroundColor': isActive ? 'blue' : 'white',
+        'color': isActive ? 'red' : 'green'
+        'fontWeight': isActive ? '900' : 100'
+        }">
+        Save
+    </button>
+```
+
    ###### Safe Traversal Operator
+
+   Sometimes, when you're dealing with complex objects, it is possible that the value of a property may be unknown or undefined for a certain period of time(maybe for a fraction of a second).
+
+   For example, you might want to call different endpoints to get these objects from the server. There are two solutions to solve this problem:
+
+   - use ```*ngIf``` or:
+
+   - when dealing with complex objects, use safeTraversal operator (the **'?'**) to keep the element in the DOM:
+
+   ```HTML
+    <span>{{ task.assignee?.name }}</span>
+   ```
    ###### Creating Custom Directives
 
+   Implement simple directives to use, for example for formating fields.
 
+   ``ng g d input-format``
 
+    Use the ``@HostListener`` DECORATOR, to subscribe to the events raised from the host:
+
+```TypeScript
+    @Directive({
+    selector: '[appInputFormat]'
+    })
+    export class InputFormatDirective {
+
+        @Input('appInputFormat') format;
+        constructor(private el: ElementRef) { }
+
+        @HostListener('blur') onBlur() {
+            const value: string = this.el.nativeElement.value;
+
+            if (this.format === 'lowercase') {
+            this.el.nativeElement.value = value.toLowerCase;
+            } else {
+            this.el.nativeElement.value = value.toUpperCase;
+            }
+        }
+    }
+```
+    If is required only one parameter for that directive, we can use the name of the directive as input aliass and use it like this:
+
+```HTML
+ <input type="text" [appInputFormat]="'uppercase'"/>
+ ```
+ instead of:
+
+ ```HTML
+ <input type="text" appInputFormat [format]="'uppercase'"/>
+ ```
 ### Libs and Bundles
 
 Common libraries to include at need:

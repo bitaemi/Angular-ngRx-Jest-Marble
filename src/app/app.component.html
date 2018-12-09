@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div class="text-center">
   <h1>
     Welcome to {{ post.title }}!
   </h1>
@@ -10,6 +10,7 @@
       <ng-container class="body">Body</ng-container>
     </app-bootstrap-panel>
 
+    <app-courses></app-courses>
     <app-like-reusable 
     [likesCount]="tweet.likesCount"
     [isLiked]="tweet.isLiked">

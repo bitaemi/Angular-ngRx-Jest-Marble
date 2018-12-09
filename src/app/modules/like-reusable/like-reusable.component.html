@@ -1,7 +1,7 @@
 <span class="fas fa-heart" [class.isActive]="isLiked" (click)="clickLoveButton()"> {{ likesCount }}</span>
 
 <div *ngIf="courses.length > 0; else noCourses">
-    List of courses
+    Testing if..else statement: List of courses
 </div>
 <ng-template #noCourses>
     No couses yet!
