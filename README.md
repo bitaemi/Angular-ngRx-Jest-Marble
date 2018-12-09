@@ -54,6 +54,16 @@
   - [6. Directives](#6-directives)
     - [6.1. Built-In Directives](#61-built-in-directives)
       - [ngIf](#ngif)
+      - [Hidden Property](#hidden-property)
+      - [ngSwitch Case](#ngswitch-case)
+      - [ngFor](#ngfor)
+      - [ngFor and Change Detection](#ngfor-and-change-detection)
+      - [ngFor and trackBy](#ngfor-and-trackby)
+      - [The Leading Asterisk](#the-leading-asterisk)
+      - [ngClass](#ngclass)
+      - [ngStyle](#ngstyle)
+      - [Safe Traversal Operator](#safe-traversal-operator)
+      - [Creating Custom Directives](#creating-custom-directives)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -75,7 +85,7 @@ Installed extensions:
 
 MUST USE Shortcuts with VS Code:
 
-    Shift + Ctrl + P - open comans pallet
+    Shift + Ctrl + P - open commands pallet
     Ctrl + X - cut line
     Ctrl + Shift + K - delete line
     Ctrl + W - close current tab
@@ -90,8 +100,8 @@ MUST USE Shortcuts with VS Code:
     
 #### 1.2. Using Angular CLI for development
 
-```npm i -g @angular/cli``` - instal Angular Command Line Interface
-```npm i -g typescript``` - install typescript (tsserver and tsc compiler)
+```npm i -g @angular/cli``` - install Angular Command Line Interface
+```npm i -g typescript``` - install typescript (ts server and tsc compiler)
 
 ##### 1.2.1.Start a new project
 
@@ -886,7 +896,7 @@ encapsulation: ViewEncapsulation.None
 ```HTML
 <div *ngIf="courses.length > 0; then coursesList else noCourses">
 </div>
-<ng-template #noCourses>
+<ng-template #coursesList>
     List of Courses
 </ng-template>
 <ng-template #noCourses>
@@ -915,8 +925,12 @@ encapsulation: ViewEncapsulation.None
 
 ```HTML
     <ul class="nav nav-pills">
-        <li [class.active]="viewMode == 'map'"><a (click)="viewMode == 'map'" href="">Map View</a></li>
-        <li [class.active]="viewMode == 'list'"><a  (click)="viewMode == 'list'" href="">like Component</a></li>
+        <li [class.active]="viewMode == 'map'">
+            <a (click)="viewMode == 'map'" href="">Map View</a>
+        </li>
+        <li [class.active]="viewMode == 'list'">
+            <a  (click)="viewMode == 'list'" href="">like Component</a>
+        </li>
     </ul>
     <div [ngSwitch]="viewMode">
         <div *ngSwitchCase="'map'">Map View Content</div>
@@ -924,7 +938,6 @@ encapsulation: ViewEncapsulation.None
         <div *ngSwitchDefault>Otherwise</div>
     </div>
 ```
-
    ###### ngFor
    ###### ngFor and Change Detection
    ###### ngFor and trackBy
