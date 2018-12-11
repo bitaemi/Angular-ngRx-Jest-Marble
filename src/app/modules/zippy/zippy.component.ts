@@ -9,6 +9,7 @@ export class ZippyComponent implements OnInit {
 
   isSelected: boolean;
   @Input() title: string;
+  @Input() innerComponent: string;
   constructor() { }
 
   ngOnInit() {

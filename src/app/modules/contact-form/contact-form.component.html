@@ -1,0 +1,85 @@
+<h3>Template driven forms</h3>
+<!-- set the 'f' template variable referencing the ngForm,  just to inspect the ngForm instance-->
+<form #f="ngForm" (ngSubmit)="devSubmitToInspectBehavior(f)" class="text-left ml-3">
+  <!-- f is a reference to ngForm object-->
+  <div ngModelGroup="contact" #contact="ngModelGroup">
+    <div *ngIf="!contact.valid">...</div>
+      <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input 
+            required 
+            minlength="4" 
+            maxlength="50" 
+            pattern="[a-zA-Z0]+" 
+            ngModel 
+            name="firstName" 
+            #firstName="ngModel"  
+            (change)="log(firstName)"
+            id="firstName"  
+            type="text" 
+            class="form-control" 
+            placeholder="Fill in the name" />
+          <div 
+            class="alert alert-danger" 
+            *ngIf="firstName.touched && !firstName.valid">
+            <div *ngIf="firstName.errors.required">
+              First name is required.
+            </div>
+            <div *ngIf="firstName.errors.minlength">
+              First name has to contain at least {{ firstName.errors.minlength.requiredLength }} characters.
+            </div>
+            <div *ngIf="firstName.errors.pattern">
+              First name has to contain non-numeric characters.
+            </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="form-group">
+    <label for="comment">Comment</label>
+    <textarea 
+      ngModel 
+      name="comment" 
+      id="comment" 
+      cols="30" 
+      rows="10" 
+      class="form-control" 
+      placeholder="Fill in the comment">
+    </textarea>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ngModel name="isSubscribed" />
+    </label>
+    </div>
+    <div class="form-group">
+        <label for="contactMethod">
+          Contact Method
+        </label>
+        <select multiple ngModel name="contactMethod" id="contactMethod" class="form-control">
+          <option value=""></option>
+          <option *ngFor="let method of contactMethods" [value]="method.id">{{ method.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+          <div *ngFor="let method of contactMethods" class="radio">
+              <label>
+              <input 
+                  ngModel 
+                  name="contactMethod" 
+                  [value]="method.id" 
+                  type="radio"> 
+                  {{ method.name }}
+              </label>
+          </div>
+      </div>
+    <button class="btn btn-primary" [disabled]="!f.valid">
+      Submit
+    </button>
+  </div>
+</form>
+
+
+<p>
+  {{ f.value | json }}
+</p>

@@ -63,6 +63,14 @@
       - [ngClass](#ngclass)
       - [ngStyle](#ngstyle)
       - [Safe Traversal Operator](#safe-traversal-operator)
+  - [7. Template driven forms](#7-template-driven-forms)
+    - [7.1. Building a Bootstrap Form](#71-building-a-bootstrap-form)
+    - [7.2. Types of forms](#72-types-of-forms)
+    - [7.3. Adding Validation](#73-adding-validation)
+    - [7.4. Specific validation errors](#74-specific-validation-errors)
+    - [7.8. Styling Invalid Input Fields](#78-styling-invalid-input-fields)
+    - [7.9. ngForm](#79-ngform)
+    - [8.0. NgModelGroup](#80-ngmodelgroup)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -790,15 +798,15 @@ onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
   ```
   ##### 5.2. Templates and Styles
 
-    Each component has a template (HTML file) to render component's view. But all our external templates are actually bundled along with our Javascript code (all show under one 
-    
-    request: main.bundle.js)
+Each component has a template (HTML file) to render component's view. But all our external templates are actually
 
-    So there are no separate requests to the server to download these templates.
+bundled along with our Javascript code (all show under one  request: main.bundle.js)
 
-    STYLES
+So there are no separate requests to the server to download these templates.
 
-    There are two ways of declaring styles your component. The style declaration that comes the last is the one that takes effect.
+STYLES:
+
+There are two ways of declaring styles your component. The style declaration that comes the last is the one that takes effect.
     
 ```TypeScript
     @Component({
@@ -812,9 +820,9 @@ onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
 ```
    ##### 5.3. View Encapsulation
 
-    Styles applied to a component, are scoped to that component and will not leak outside the template for that component.
+Styles applied to a component, are scoped to that component and will not leak outside the template for that component.
 
-    SHADOW DOM = A specification that enables DOM tree and styles encapsulation. Allows to apply scoped styles to elements without bleeding out to the outer world.
+SHADOW DOM = A specification that enables DOM tree and styles encapsulation. Allows to apply scoped styles to elements without bleeding out to the outer world.
 
 ```JavaScript
     var el = document.querySelector('favorite');
@@ -826,7 +834,9 @@ onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
     `;
 ```
 
-VIEW ENCAPSULATION - is an enum defined in the ```@angular/core``` and we have to include it in the ```@Component```'s definition if we do not want the default value, ``Emulated``
+VIEW ENCAPSULATION - is an enum defined in the ```@angular/core``` and we have to include it in the ```@Component```'s definition if we do not want the default value,
+
+ ``Emulated``
 
 ```TypeScript
 @Component({
@@ -837,16 +847,23 @@ VIEW ENCAPSULATION - is an enum defined in the ```@angular/core``` and we have t
     ` .fa-star {color: blue !important;}`
     ],
   encapsulation: ViewEncapsulation.Emulated 
-  //this is the default setting in Angular wich enables style encapsulation for all browser, even thouse old browsers, where ShadowDom is not available, Angular will emulate the concept
+  //this is the default setting in Angular wich enables style encapsulation for all browser, even thouse old browsers,
+  // where ShadowDom is not available, Angular will emulate the concept
 })
 ```
 ```TypeScript
  //...
   encapsulation: ViewEncapsulation.Native
-  //instead of generating the attributes dinamically, Angular uses the native ShadowDom of the browser, and this is not going to work in most browsers out there
-  //also the common styles @imported in /src/styles.sass file won't be applied to this component, you have to @import those manually  inside the .sass file of the component - NOT a good practice - DON'T DO THIS!
+  //instead of generating the attributes dinamically, Angular uses the native ShadowDom of the browser, and this
+  //is not going to work in most browsers out there
+  //also the common styles @imported in /src/styles.sass file won't be applied to this component,
+  // you have to @import those manually  inside the .sass file of the component - NOT a good practice - DON'T DO THIS!
 ```
-In your browser's developer settings activate 'Show User Agent Shadow DOM' and you'll be able to inspect the favorite component element and see that all styles from the favorite component are not available outside the component and are under the ```#shadow-root``` element of the component.
+In your browser's developer settings activate 'Show User Agent Shadow DOM' and you'll be able to inspect
+
+the favorite component element and see that all styles from the favorite component are not available outside
+
+the component and are under the ```#shadow-root``` element of the component.
 
 ```TypeScript
 @Component({
@@ -915,13 +932,13 @@ encapsulation: ViewEncapsulation.None
     <div [hidden]="courses.length == 0">List of courses</div>
     <div [hidden]="courses.length > 0">No courses yet</div>
 ```
-    If you're dealing with a small tree of objects it doesn't matter which approach you choose, it's purely a personal preference.
+If you're dealing with a small tree of objects it doesn't matter which approach you choose, it's purely a personal preference.
 
-    If you're working with a large tree, first check to see if building that tree is going to be costly or not.
-    
-    If it's costly ( if the user is going to click a button to toggle something to show or hide that part of the page), use the hidden property to keep it in the dark but hide it.
+If you're working with a large tree, first check to see if building that tree is going to be costly or not.
 
-   Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the resources.
+If it's costly ( if the user is going to click a button to toggle something to show or hide that part of the page), use the hidden property to keep it in the dark but hide it.
+
+Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the resources.
 
    ###### ngSwitch Case
 
@@ -1013,13 +1030,16 @@ encapsulation: ViewEncapsulation.None
 ```
    So Angular is not re-rendering the list items, because each time we call loadCourses we are using the same course objects.
 
-   If you're dealing with a large list with complex markup and you do observe performance problems, on a given page, you can try using ``trackBy`` to improve the performance of that page.
+   If you're dealing with a large list with complex markup and you do observe performance problems, on a given page,
+   
+   you can try using ``trackBy`` to improve the performance of that page.
    
    Don't use it by default in every page because you have to write more code and you won't gain any performance benefits.
 
    ###### The Leading Asterisk
 
-   When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``, Angular is going to rewrite that block using an ``<ng-template>``, so you donn't have to write that by yourself.
+   When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``, 
+   Angular is going to rewrite that block using an ``<ng-template>``, so you don't have to write that by yourself.
 
 ```HTML
     <div *ngIf="courses.length > 0; else noCourses">
@@ -1130,6 +1150,265 @@ gets gets parsed into:
  ```HTML
  <input type="text" appInputFormat [format]="'uppercase'"/>
  ```
+ #### 7. Template driven forms
+
+   ##### 7.1. Building a Bootstrap Form
+
+``ng g c contact-form``
+ Use bootstrap classes(.from-group, .form-control):
+```CSS
+  div.form-group
+
+  label+input[type='text'].form-control
+
+  div.form-group>label[for='comment']=textarea[id='comment'].form-control
+```
+##### 7.2. Types of forms
+
+    For our forms we create required form controls (for validation) in two ways:
+
+- Using Directives: **Template driven forms**
+- Writing more code for more control over the validation logic of complex forms: **REACTIVE FORMS**
+
+When you apply ``ngModel`` directive, along with the name attribute, on an input field in its simplest form, without any binding, Angular will create a CONTROL OBJECT and associate it with the input field,
+
+under the hood:
+
+```HTML
+      <input ngModel name="firstName" id="firstName" type="text" class="form-control">
+```
+   ``NgModel`` is an object with properties like: ``{_parent: NgForm, name: "firstName", valueAccessor: DefaultValueAccessor, _rawValidators: Array(0), _rawAsyncValidators: Array(0), control: FormContol …}``
+   ``control`` is an instance of the ``FormControl`` class, with properties like: ``dirty`` (field touched - boolean) and ``prestine``(field untouched), ``invalid``, ``valid``, ``errors``(object of validation errors with properties like required, minlenght, name ...).
+
+   We use this form control class to track state changes and the validity of input fields.
+
+##### 7.3. Adding Validation
+
+   The attribute ``required`` is a available to use on form fields.
+   ``valid`` property of ``ngModel`` is a computed property, wich internally delegates to the underlaying FormContol object.
+
+```HTML
+    <input ngModel name="firstName" required id="firstName" type="text" class="form-control" placeholder="Fill in the name">
+    <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">First name is required.</div>
+```   
+##### 7.4. Specific validation errors
+
+```HTML
+      <input 
+        required 
+        minlength="4" 
+        maxlength="50" 
+        pattern="[a-zA-Z0]+" 
+        ngModel 
+        name="firstName" 
+        id="firstName"  
+        #firstName="ngModel" 
+        type="text" 
+        class="form-control" 
+        placeholder="Fill in the name" />
+      <div 
+        class="alert alert-danger" 
+        *ngIf="firstName.touched && !firstName.valid">
+        <div *ngIf="firstName.errors.required">
+          First name is required.
+        </div>
+        <div *ngIf="firstName.errors.minlength">
+          First name has to contain at least {{ firstName.errors.minlength.requiredLength }} characters.
+        </div>
+        <div *ngIf="firstName.errors.pattern">
+          First name has to contain non-numeric characters.
+        </div>
+      </div>
+```
+   Use the ``#firstName`` template variable to referece the FormControl instance created with the ngModel directive and to read properties of the  that input object.
+   
+##### 7.8. Styling Invalid Input Fields
+
+```CSS
+.form-control.ng-touched.ng-invalid {border: 2px red solid};
+```
+##### 7.9. ngForm
+
+```HTML
+<!-- set the 'f' template variable referencing the ngForm,  just to inspect the ngForm instance, for learning purposes-->
+<form #f="ngForm" (ngSubmit)="devSubmitToInspectBehavior(f)">
+  <!-- f parameter passed to devSubmitToInspectBehavior is a reference to ngForm object-->
+```
+Angular, by default, applies to the ``<form>`` element the ``ngForm`` directive. This directive has an ``ngSubmit`` OUTPUT property( used to REISE custom events).
+As seen, in Angular we have FormControl class (an instance of this class -``control`` represents one input field), FormGroup class (an instance of this class - ``form`` represents a group of input fiels =  form control objects). 
+
+When the ``ngForm`` directive is applied to a ``<form>`` element, it basically creates the ``form`` object and it exposes its properties:
+    form: FormGroup {
+        controls: {firstName: FormControl, comment: FormControl}
+
+        dirty: (...)
+
+        disabled: (...)
+
+        enabled: (...)
+
+        errors: null
+
+        invalid: (...)
+
+        parent: (...)
+
+        pending: (...)
+
+        pristine: true
+
+        root: (...)
+
+        status: "INVALID"
+
+        statusChanges: EventEmitter {_isScalar: false, observers: Array(0), closed: false, isStopped: false, hasError: false, …}
+
+        touched: false
+
+        untouched: (...)
+
+        updateOn: (...)
+
+        valid: (...)
+
+        validator: null
+
+        value: {firstName: "", comment: ""}
+
+        valueChanges: EventEmitter {_isScalar: false, observers: Array(0), closed: false, isStopped: false, hasError: false, …}
+
+        _onCollectionChange: ƒ ()
+
+        _onDisabledChange: []
+
+        __proto__: AbstractControl }
+        
+        These are computed properties, which basically delegate to the underlying FormGroup object.
+
+So we can access all this properties (f.invalid, f.errors ...).
+
+The ``value`` property is an object: f.value = {firstName: "The submitted first name", comment: "the submitted comment"}, wich can be easily used as a JSON representation of our form,  that we can send to an API, on the server, for persistence.
+
+##### 8.0. NgModelGroup
+
+When you're working with complex forms you want to have multiple groups in your form. 
+```HTML
+<div ngModelGroup="contact" #contact="ngModelGroup">
+    <div *ngIf="!contact.valid">...</div>
+      <div class="form-group">
+          ...
+      </div>
+    </div>
+</div>
+
+ Inspecting the DOM we observe form's object properties available for use:     
+
+```JavaScript
+
+    {
+        form: FormGroup 
+            {
+                controls: 
+                    { 
+                    contact: FormGroup,
+                    comment: FormControl
+                    },
+                value: 
+                    { 
+                        comment: "",
+                        contact: 
+                            { 
+                                firstName: ""
+                            }
+                    }
+            }
+    }
+```    
+            
+##### 8.1. Control Classes and Directives
+
+As seen above, in Angular we have two CLASSES to keep track of the state of the input fields and their validity:
+
+  CLASSES             <--------     DIRECTIVES
+  
+
+- FormControl        <--------     ngModel
+
+- FormGroup          <--------     ngForm
+
+                     <--------     ngModelGroup
+
+When we apply the ``NgModel`` DIRECTIVE to an input field, Angular automatically creates a FormControl object and associates that with an input field.
+
+A FormGroup class is used to represent an entire form and optionally groups within a form.
+
+We have a directive called ``ngForm`` that is automatically applied to all `<form>` elements.
+
+And this will internally create a FormGroup object and associate it with your form and 
+
+with this FormGroup object we can track the state changes of the form and its validity.
+
+If you have a complex form, with multiple subgroups, we can optionally apply the ngMdel directive
+
+on a subgroup and this directive, similar to the ngForm directive, will also create a FormGroup
+
+object, for that group.
+
+The difference  between ``ngForm`` and ``ngModelGroup`` is that ``ngForm`` has the OUTPUT property: ``ngSubmit``. 
+
+##### 8.2. Disabling the Submit Button
+
+Add the ``[disable]`` attribute to the element to disabable:
+
+```HTML
+<button class="btn btn-primary" [disabled]="!f.valid">
+```
+##### 8.3. Working with Check Boxes
+
+div.checkbox>label[type='checkbox']
+```HTML
+<div class="checkbox">
+    <label>
+        <input type="checkbox" ngModel name="isSubscribed" />
+    </label>
+</div>
+```
+Apply the `ngModel` directive, along with the `name` attribute.
+
+##### 8.4. Working with Drop-Down Forms
+
+```HTML
+    <div class="form-group">
+        <label for="contactMethod">
+          Contact Method
+        </label>
+        <select multiple ngModel name="contactMethod" id="contactMethod" class="form-control">
+          <option value=""></option>
+          <option *ngFor="let method of contactMethods" [value]="method.id">{{ method.name }}</option>
+        </select>
+      </div>
+```
+Adding the ``multiple`` attribute to the ``<select>`` element, allows user to select multiple options, holding the Shift key.
+
+##### 8.5. Working with Radio Buttons
+
+``div.radio>label>input[type='radio'][name='contactMethod']``
+
+    Similarly, we apply ngModel and we use property binding for the value attribute:
+
+```HTML
+    <div *ngFor="let method of contactMethods" class="radio">
+        <label>
+        <input 
+            ngModel 
+            name="contactMethod" 
+            [value]="method.id" 
+            type="radio"> 
+            {{ method.name }}
+        </label>
+    </div>
+```    
+
 ### Libs and Bundles
 
 Common libraries to include at need:

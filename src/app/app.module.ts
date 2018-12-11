@@ -14,6 +14,8 @@ import { PanelComponent } from './modules/panel/panel.component';
 import { LikeReusableComponent } from './modules/like-reusable/like-reusable.component';
 import { InputFormatDirective } from './directives/input-format.directive';
 import { ZippyComponent } from './modules/zippy/zippy.component';
+import { ContactFormComponent } from './modules/contact-form/contact-form.component';
+import { CreateCourseFormComponent } from './modules/create-course-form/create-course-form.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { ZippyComponent } from './modules/zippy/zippy.component';
     LikeReusableComponent,
     InputFormatDirective,
     ZippyComponent,
+    ContactFormComponent,
+    CreateCourseFormComponent,
   ],
   imports: [
     BrowserModule,
