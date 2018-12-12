@@ -24,8 +24,6 @@ export class CreateCourseFormComponent implements OnInit {
     this.courses.push({courseName: course, courseCategory: cc});
     console.log(f);
     console.log(this.courses);
-
-
   }
 
 }
