@@ -36,41 +36,49 @@
   - [3.5. Services](#35-services)
     - [3.5.1. Services and Dependency Injection](#351-services-and-dependency-injection)
     - [3.5.2. Generating Services Using Angular CLI](#352-generating-services-using-angular-cli)
-  - [4. Displaying Data and Handling Events](#4-displaying-data-and-handling-events)
-    - [4.1. Property Binding](#41-property-binding)
-    - [4.2. Attribute Binding](#42-attribute-binding)
-    - [4.3. Adding Bootstrap](#43-adding-bootstrap)
-    - [4.4. Class binding and Style Binding](#44-class-binding-and-style-binding)
-    - [4.5. Event Binding](#45-event-binding)
-    - [4.6. Event Filtering](#46-event-filtering)
-    - [4.7. Template variables](#47-template-variables)
-    - [4.8. Two way data-binding](#48-two-way-data-binding)
-    - [4.9. Pipes](#49-pipes)
-  - [5. Building Reusable Components](#5-building-reusable-components)
+- [4. Displaying Data and Handling Events](#4-displaying-data-and-handling-events)
+  - [4.1. Property Binding](#41-property-binding)
+  - [4.2. Attribute Binding](#42-attribute-binding)
+  - [4.3. Adding Bootstrap](#43-adding-bootstrap)
+  - [4.4. Class binding and Style Binding](#44-class-binding-and-style-binding)
+  - [4.5. Event Binding](#45-event-binding)
+  - [4.6. Event Filtering](#46-event-filtering)
+  - [4.7. Template variables](#47-template-variables)
+  - [4.8. Two way data-binding](#48-two-way-data-binding)
+  - [4.9. Pipes](#49-pipes)
+- [5. Building Reusable Components](#5-building-reusable-components)
     - [5.1. Component API, Input and Output Properties](#51-component-api-input-and-output-properties)
     - [5.2. Templates and Styles](#52-templates-and-styles)
-    - [5.3. View Encapsulation](#53-view-encapsulation)
+  - [5.3. View Encapsulation](#53-view-encapsulation)
   - [5.4. ngContent and ngContainer](#54-ngcontent-and-ngcontainer)
-  - [6. Directives](#6-directives)
-    - [6.1. Built-In Directives](#61-built-in-directives)
-      - [ngIf](#ngif)
-      - [Hidden Property](#hidden-property)
-      - [ngSwitch Case](#ngswitch-case)
-      - [ngFor](#ngfor)
-      - [ngFor and Change Detection](#ngfor-and-change-detection)
-      - [ngFor and trackBy](#ngfor-and-trackby)
-      - [The Leading Asterisk](#the-leading-asterisk)
-      - [ngClass](#ngclass)
-      - [ngStyle](#ngstyle)
-      - [Safe Traversal Operator](#safe-traversal-operator)
-  - [7. Template driven forms](#7-template-driven-forms)
-    - [7.1. Building a Bootstrap Form](#71-building-a-bootstrap-form)
-    - [7.2. Types of forms](#72-types-of-forms)
-    - [7.3. Adding Validation](#73-adding-validation)
-    - [7.4. Specific validation errors](#74-specific-validation-errors)
-    - [7.8. Styling Invalid Input Fields](#78-styling-invalid-input-fields)
-    - [7.9. ngForm](#79-ngform)
-    - [8.0. NgModelGroup](#80-ngmodelgroup)
+- [6. Directives](#6-directives)
+  - [6.1. Built-In Directives](#61-built-in-directives)
+    - [ngIf](#ngif)
+    - [Hidden Property](#hidden-property)
+    - [ngSwitch Case](#ngswitch-case)
+    - [ngFor](#ngfor)
+    - [ngFor and Change Detection](#ngfor-and-change-detection)
+    - [ngFor and trackBy](#ngfor-and-trackby)
+    - [The Leading Asterisk](#the-leading-asterisk)
+    - [ngClass](#ngclass)
+    - [ngStyle](#ngstyle)
+    - [Safe Traversal Operator](#safe-traversal-operator)
+- [7. Template driven forms](#7-template-driven-forms)
+  - [7.1. Building a Bootstrap Form](#71-building-a-bootstrap-form)
+  - [7.2. Types of forms](#72-types-of-forms)
+  - [7.3. Adding Validation](#73-adding-validation)
+  - [7.4. Specific validation errors](#74-specific-validation-errors)
+  - [7.8. Styling Invalid Input Fields](#78-styling-invalid-input-fields)
+  - [7.9. ngForm](#79-ngform)
+  - [7.10. NgModelGroup](#710-ngmodelgroup)
+  - [7.11. Control Classes and Directives](#711-control-classes-and-directives)
+  - [7.12. Disabling the Submit Button](#712-disabling-the-submit-button)
+  - [7.13. Working with Check Boxes](#713-working-with-check-boxes)
+  - [7.14. Working with Drop-Down Forms](#714-working-with-drop-down-forms)
+  - [7.15. Working with Radio Buttons](#715-working-with-radio-buttons)
+- [8. Reactive forms](#8-reactive-forms)
+  - [8.1. Implementing Custom Validation](#81-implementing-custom-validation)
+  - [8.2. Asynchronous Operations and Validation](#82-asynchronous-operations-and-validation)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -88,7 +96,6 @@ Installed extensions:
     - Auto Import
     - Sass
     - Npm
-    - TSLint
 
 MUST USE Shortcuts with VS Code:
 
@@ -96,7 +103,7 @@ MUST USE Shortcuts with VS Code:
     Ctrl + X - cut line
     Ctrl + Shift + K - delete line
     Ctrl + W - close current tab
-    Alt + arrow left/right - swith to the next door tab
+    Alt + arrow left/right - switch to the next door tab
     Ctrl + ` - open console / terminal
     Ctrl + Shift + V - preview current file
     Ctrl + K Ctrl + O - open Directory
@@ -536,9 +543,9 @@ This willl generate an injectable service. We need the ```@Injectable()``` decor
         //..
     }
 ```
-#### 4. Displaying Data and Handling Events
+### 4. Displaying Data and Handling Events
 
- ##### 4.1. Property Binding
+ #### 4.1. Property Binding
 
  INTERPOLATION =  ```{{}}``` syntax for binding data inside the HTML component - when Angular compiles the templates translates these interpretations into **property binding**.
 
@@ -561,7 +568,7 @@ So the result of interpolation is the same with the one of property binding.
 
 Property binding works only one way: from component to the DOM. Any update from component will update the DOM, but any changes in the DOM are not reflected back into the component.
 
- ##### 4.2. Attribute Binding
+ #### 4.2. Attribute Binding
 
 DOM =  a tree model of objects in memory. HTML is a markup language that we use to represent DOM in text. 
 
@@ -571,7 +578,7 @@ Most of the HTML attributes have a one to one mapping to propperties of DOM obje
 <!-- target the colspan attribute of the HTML element because we don't have a colspan property in DOM -->
 <td [attr.colspan] = "colSpan"></td>
 ```
-##### 4.3. Adding Bootstrap
+#### 4.3. Adding Bootstrap
 
 Get more info about this great CSS library from [getbootstrap.com](http://getbootstrap.com)
 
@@ -587,7 +594,7 @@ In the main style.sass file add the import of the minified css framework located
 @import "~bootstrap/dist/css/bootstrap.min.css"
 ```
 
-##### 4.4. Class binding and Style Binding
+#### 4.4. Class binding and Style Binding
 
 Add the .active class to the HTML element, dinamically, based on the  isActive condition (isActive is a boolean field in the component):
 ```HTML
@@ -601,7 +608,7 @@ Add the .active class to the HTML element, dinamically, based on the  isActive c
 ```HTML 
 <button [style.backgroundColor]="isActive ? 'blue' : 'white'"></button>
 ```
-##### 4.5. Event Binding
+#### 4.5. Event Binding
 
 We bind the click event to a method in our component. 
 Sometimes we need to get access to the event object that was raised in the event handler, for example with mouse movements the event object
@@ -633,14 +640,14 @@ Console log: I: Button was clicked: Mouse Event {...}
 
 The EVENT QUEUE: button click, div click
 
-##### 4.6. Event Filtering
+#### 4.6. Event Filtering
 
 In Angular, when handleing an event we can apply a filter. 
 ```HTML
 <input (keyup.enter)="onKeyUp($event)" />
 ```
 
-##### 4.7. Template variables
+#### 4.7. Template variables
 
 To get the value typed into the input field:
 I) pass the ```$event``` object to the method and read the value using ```$event.target.value``` or faster:
@@ -651,7 +658,7 @@ II) in Angular we can **declare variables in the template**: ```#variableName```
 ```HTML
 <input #email (keyup.enter)="onKeyUp(email.value)" />
 ```
-##### 4.8. Two way data-binding
+#### 4.8. Two way data-binding
 
 In OOP we do not pass unnecessary parameters to methods, so in components we use fields. 
 
@@ -663,7 +670,7 @@ For two-way binding from the component to DOM and from DOM to component, we use 
 in the module file:
 ```import { FormsModule } from '@angular/forms';```
 and add the FormsModule to @ngModule's imports array.
-##### 4.9. Pipes 
+#### 4.9. Pipes 
 
 Another Building block in Angular is PIPES - used to format data.
 
@@ -719,7 +726,7 @@ Nameing convention: summary.pipe.ts holds pipe's implementation
 Also add the SummaryPipe in the module's @ngModule declarations array.
 
 or simply generate your pipe files: ```ng g p title-casing```
-#### 5. Building Reusable Components
+### 5. Building Reusable Components
 
    ##### 5.1. Component API, Input and Output Properties
 
@@ -818,7 +825,7 @@ There are two ways of declaring styles your component. The style declaration tha
     ]
     })
 ```
-   ##### 5.3. View Encapsulation
+   #### 5.3. View Encapsulation
 
 Styles applied to a component, are scoped to that component and will not leak outside the template for that component.
 
@@ -906,11 +913,11 @@ encapsulation: ViewEncapsulation.None
       <ng-container class="body">Body</ng-container>
     </app-bootstrap-panel>
 ```
-#### 6. Directives
+### 6. Directives
 
-   ##### 6.1. Built-In Directives
+   #### 6.1. Built-In Directives
 
-   ######  ngIf
+   #####  ngIf
 
 ```HTML
 <div *ngIf="courses.length > 0; then coursesList else noCourses">
@@ -924,7 +931,7 @@ encapsulation: ViewEncapsulation.None
 ```
     This will add to DOM only ONE div, depending on the result of if condition
 
-   ###### Hidden Property
+   ##### Hidden Property
 
    This will add all divs with ``hidden`` attribute to the DOM, but hide the ones with true expression assignment:
 
@@ -940,7 +947,7 @@ If it's costly ( if the user is going to click a button to toggle something to s
 
 Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the resources.
 
-   ###### ngSwitch Case
+   ##### ngSwitch Case
 
 ```HTML
     <ul class="nav nav-pills">
@@ -957,7 +964,7 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
         <div *ngSwitchDefault>Otherwise</div>
     </div>
 ```
-   ###### ngFor
+   ##### ngFor
 
    Search in angular.io for ``ngForOf`` to see local variables/values  of this directive (index, even, odd ...).
 
@@ -974,7 +981,7 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
     </li>
     </ul>
 ```
-   ###### ngFor and Change Detection
+   ##### ngFor and Change Detection
 
     Wenever you click a button or, when around Ajax requests, or a timer function completes, angular performs a CHANGE DETECTION mechanism. 
     
@@ -997,7 +1004,7 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
 ```
 
 
-   ###### ngFor and trackBy
+   ##### ngFor and trackBy
 
    Angular by default tracks objects by their identity (the reference into the memory).
 
@@ -1036,7 +1043,7 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
    
    Don't use it by default in every page because you have to write more code and you won't gain any performance benefits.
 
-   ###### The Leading Asterisk
+   ##### The Leading Asterisk
 
    When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``, 
    Angular is going to rewrite that block using an ``<ng-template>``, so you don't have to write that by yourself.
@@ -1060,7 +1067,7 @@ gets gets parsed into:
         No couses yet!
     </ng-template>
 ```
-   ###### ngClass
+   ##### ngClass
 
   **ngClass** is an attribute directive used to modify attributes on existing DOM elements.
 
@@ -1078,7 +1085,7 @@ gets gets parsed into:
       </span>
   ```
 
-   ###### ngStyle
+   ##### ngStyle
 
 ```HTML
     <button [style.backgroundColor]="isActive ? 'blue' : 'white'"
@@ -1099,7 +1106,7 @@ gets gets parsed into:
     </button>
 ```
 
-   ###### Safe Traversal Operator
+   ##### Safe Traversal Operator
 
    Sometimes, when you're dealing with complex objects, it is possible that the value of a property may be unknown or undefined for a certain period of time(maybe for a fraction of a second).
 
@@ -1150,9 +1157,9 @@ gets gets parsed into:
  ```HTML
  <input type="text" appInputFormat [format]="'uppercase'"/>
  ```
- #### 7. Template driven forms
+ ### 7. Template driven forms
 
-   ##### 7.1. Building a Bootstrap Form
+   #### 7.1. Building a Bootstrap Form
 
 ``ng g c contact-form``
  Use bootstrap classes(.from-group, .form-control):
@@ -1163,7 +1170,7 @@ gets gets parsed into:
 
   div.form-group>label[for='comment']=textarea[id='comment'].form-control
 ```
-##### 7.2. Types of forms
+#### 7.2. Types of forms
 
     For our forms we create required form controls (for validation) in two ways:
 
@@ -1182,7 +1189,7 @@ under the hood:
 
    We use this form control class to track state changes and the validity of input fields.
 
-##### 7.3. Adding Validation
+#### 7.3. Adding Validation
 
    The attribute ``required`` is a available to use on form fields.
    ``valid`` property of ``ngModel`` is a computed property, wich internally delegates to the underlaying FormContol object.
@@ -1191,7 +1198,7 @@ under the hood:
     <input ngModel name="firstName" required id="firstName" type="text" class="form-control" placeholder="Fill in the name">
     <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">First name is required.</div>
 ```   
-##### 7.4. Specific validation errors
+#### 7.4. Specific validation errors
 
 ```HTML
       <input 
@@ -1222,19 +1229,19 @@ under the hood:
 ```
    Use the ``#firstName`` template variable to referece the FormControl instance created with the ngModel directive and to read properties of the  that input object.
    
-##### 7.8. Styling Invalid Input Fields
+#### 7.8. Styling Invalid Input Fields
 
 ```CSS
 .form-control.ng-touched.ng-invalid {border: 2px red solid};
 ```
-##### 7.9. ngForm
+#### 7.9. ngForm
 
 ```HTML
 <!-- set the 'f' template variable referencing the ngForm,  just to inspect the ngForm instance, for learning purposes-->
 <form #f="ngForm" (ngSubmit)="devSubmitToInspectBehavior(f)">
   <!-- f parameter passed to devSubmitToInspectBehavior is a reference to ngForm object-->
 ```
-Angular, by default, applies to the ``<form>`` element the ``ngForm`` directive. This directive has an ``ngSubmit`` OUTPUT property( used to REISE custom events).
+Angular, by default, applies the ``ngForm`` directive to the ``<form>`` element. This directive has (exposes) a ``ngSubmit`` OUTPUT property( used to REISE custom events).
 As seen, in Angular we have FormControl class (an instance of this class -``control`` represents one input field), FormGroup class (an instance of this class - ``form`` represents a group of input fiels =  form control objects). 
 
 When the ``ngForm`` directive is applied to a ``<form>`` element, it basically creates the ``form`` object and it exposes its properties:
@@ -1289,7 +1296,7 @@ So we can access all this properties (f.invalid, f.errors ...).
 
 The ``value`` property is an object: f.value = {firstName: "The submitted first name", comment: "the submitted comment"}, wich can be easily used as a JSON representation of our form,  that we can send to an API, on the server, for persistence.
 
-##### 8.0. NgModelGroup
+#### 7.10. NgModelGroup
 
 When you're working with complex forms you want to have multiple groups in your form. 
 ```HTML
@@ -1325,18 +1332,18 @@ When you're working with complex forms you want to have multiple groups in your 
     }
 ```    
             
-##### 8.1. Control Classes and Directives
+#### 7.11. Control Classes and Directives
 
 As seen above, in Angular we have two CLASSES to keep track of the state of the input fields and their validity:
 
-  CLASSES             <--------     DIRECTIVES
-  
+    CLASSES              <--------     DIRECTIVES
 
-- FormControl        <--------     ngModel
 
-- FormGroup          <--------     ngForm
+    - FormControl        <--------     ngModel
 
-                     <--------     ngModelGroup
+    - FormGroup          <--------     ngForm
+
+                         <--------     ngModelGroup
 
 When we apply the ``NgModel`` DIRECTIVE to an input field, Angular automatically creates a FormControl object and associates that with an input field.
 
@@ -1356,14 +1363,14 @@ object, for that group.
 
 The difference  between ``ngForm`` and ``ngModelGroup`` is that ``ngForm`` has the OUTPUT property: ``ngSubmit``. 
 
-##### 8.2. Disabling the Submit Button
+#### 7.12. Disabling the Submit Button
 
 Add the ``[disable]`` attribute to the element to disabable:
 
 ```HTML
 <button class="btn btn-primary" [disabled]="!f.valid">
 ```
-##### 8.3. Working with Check Boxes
+#### 7.13. Working with Check Boxes
 
 div.checkbox>label[type='checkbox']
 ```HTML
@@ -1375,7 +1382,7 @@ div.checkbox>label[type='checkbox']
 ```
 Apply the `ngModel` directive, along with the `name` attribute.
 
-##### 8.4. Working with Drop-Down Forms
+#### 7.14. Working with Drop-Down Forms
 
 ```HTML
     <div class="form-group">
@@ -1390,7 +1397,7 @@ Apply the `ngModel` directive, along with the `name` attribute.
 ```
 Adding the ``multiple`` attribute to the ``<select>`` element, allows user to select multiple options, holding the Shift key.
 
-##### 8.5. Working with Radio Buttons
+#### 7.15. Working with Radio Buttons
 
 ``div.radio>label>input[type='radio'][name='contactMethod']``
 
@@ -1408,6 +1415,247 @@ Adding the ``multiple`` attribute to the ``<select>`` element, allows user to se
         </label>
     </div>
 ```    
+### 8. Reactive forms
+
+In the last section you saw that with template driven forms we apply the ngModel directive to our input fields and 
+
+this directive will internally create an instance of the FormControl class and associate it with the input field.
+
+When building REACTIVE FORMS we should create these FormControl objects explicitly in the code:
+
+```TypeScript
+  myReactiveForm = new FormGroup({
+    username: new FormControl(),
+    password: new FormControl()
+  });
+```
+FormControl and FormGroup inherit from the AbstractControl base(parent) class.
+
+Add ``formControlName`` property and set it to your input name (instance name).
+
+```HTML
+<input 
+    formControl="username"
+    id="username" 
+    type="text" 
+    class="form-control">
+```
+...
+For reactive forms validation we do not use the HTML5 attributes (required, minlenght, maxlength ...) because  we have a ``Validators`` class available to work with.
+
+All the validators we have in template driven forms, exist here as well and are static methods in the ``Validators`` class.
+
+So, there is no need to create a new instance of ``Validators`` class, to access these methods (static members belong to the class itself and are not bound to class instances).
+
+```username: new FormControl('', [Validators.required, Validators.minLenght(4)]) ```
+
+Simply passing a reference to this function because the second argument for the constructor of FormControl
+
+requires a validator function which is basically a function reference (we do not call the required or minLenght methods - just pass references to them).
+
+#### 8.1. Implementing Custom Validation
+
+Our custom validationfunctions should implement the interface:
+
+```TypeScript
+
+interface ValidatorFn {
+    (c: AbstractControl): ValidatorsErrors|null
+}
+```
+All the validation methods should go into one class. 
+
+We decorate these methods with static and then from the outside we can simply  call ``UsernameValidators.cannotContainSpace``
+
+```TypeScript
+export class UsenameValidators {
+    static cannotContainSpace(control: AbstractControl): ValidationErrors {
+        if ((control.value as string).indexOf(' ') >= 0) {
+            return { cannotContainSpace: true};
+        }
+        return null;
+    }
+}
+```
+#### 8.2. Asynchronous Operations and Validation
+
+Async validators are usefull for validating input fields in place.
+
+Asynchronous Operations = NON BLOCKING = the process that executes the code doesn't block while waiting the operation to be completed:
+
+    - calling the server (AJAX)
+
+    - timer functions
+
+The ``validator`` function has to return a promise of ``validation errors | null``. 
+
+When the call to the server completes or the timer function completes the result that we are going to get is either a validation error or null:
+
+```TypeScript
+  static shouldBeUnique(control: AbstractControl): Promise<ValidationErrors | null> {
+
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (control.value === 'bitaemi') {
+                    resolve({ shouldBeUnique: true });
+                } else {
+                resolve(null);
+                }
+            }, 2000);
+        });
+    }
+```
+Also, in the constructor of your input field you have to supply as argument the AsyncronousValidationErrors parameter:
+
+```TypeScript
+username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(4),
+        UsernameValidators.cannotContainSpace
+        ],
+      UsernameValidators.shouldBeUnique),
+      //..
+```
+in the template the ``username`` is a property that reference the FormControl object wich has available for use different properties (pending, errors, touched, invalid ...):
+
+```HTML
+<input 
+    formControlName="username"
+    id="username"
+    type="text" 
+    class="form-control">
+    <div *ngIf="username.pending">Checking for uniqueness ...</div>
+    <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+        <div *ngIf="username.errors.required">Username is required</div>
+        <div *ngIf="username.errors.cannotContainSpace">Username cannot contain space</div>
+        <div *ngIf="username.errors.minLength">Username should be minimum {{ username.errors.minLength.requiredLength }}</div>
+        <div *ngIf="username.errors.shouldBeUnique">Username should be unique ( already registered)</div>
+    </div>
+```
+``.pending`` returns true if, at least one async validator is in progress - display a loading icon while an async validator is in progress:
+
+```HTML
+<div *ngIf="username.pending">Checking for uniqueness ...</div>
+```
+#### 8.3. Validating the form upon submit
+
+Sometimes we need to do validation upon submitting the form to the server, so we cannot validate input fields in isolation.
+
+```HTML
+<form [formGroup]="myReactiveForm" (ngSubmit)="login()">
+    <div *ngIf="myReactiveForm.errors" class="alert alert-danger">Form has errors on submit</div>
+```
+
+```TypeScript
+ login() {
+    let isValid = AuthorsService.login(this.myReactiveForm.value);
+    if (!isValid) {
+      this.myReactiveForm.setErrors({
+        invalidLogin: true
+      });
+
+    }
+  }
+  ```
+  #### 8.4. Nested FormGroups
+
+  In complex forms we group form controls into form groups:
+
+```HTML
+<div formGroupName="account">
+        <div class="form-group">
+            <input 
+                formControlName="username"
+                ...
+            >
+        </div>
+        <div class="form-group">
+            <input 
+                formControlName="password"
+                ...
+```
+
+```TypeScript
+ myReactiveForm = new FormGroup({
+    account: new FormGroup({
+        username: new FormControl(''),
+        password: new FormControl('')
+    })
+  });
+
+  get username() {
+    return this.myReactiveForm.get('account.username');
+  }
+
+  get password() {
+    return this.myReactiveForm.get('account.password');
+  }
+```
+  #### 8.5. FormArray
+
+   When we are dealing with an array of objects in a form, instead of ``FormControl`` we use the ``FormArray`` class. 
+
+```TypeScript
+  myFormArray = new FormGroup({
+    topics: new FormArray([])
+  });
+  //..
+  get topics() {
+      //we need to explicity cast the return value because the get method returns a FormControl obj  wich doesn't have the .push method:
+    return this.myFormArray.get('topics') as FormArray;
+  }
+    //topic is not an json object, is a HTMLInputElement:
+  addTopic(topic: HTMLInputElement) {
+    this.topics.push(new FormControl(topic.value));
+    topic.value = '';
+  }
+  ```
+```ul.list-group>li.list-group-item```:
+
+```HTML
+ <input type="text" class="form-control" (keyup.enter)="addTopic(topic)" #topic>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let topic of topics.controls">
+      {{ topic.value }}
+    </li>
+  </ul>
+```
+  Iterate over the FormControl objects using the ``controls`` property.
+  Remove an element from ``FormArray`` using the ``removeAt`` property.
+
+  ```TypeScript
+   removeTopic(topic: FormControl) {
+    this.topics.removeAt(this.topics.controls.indexOf(topic));
+ ```
+
+  #### 8.6. FormBuilder
+
+We can declare the form field like this:
+
+```TypeScript
+  myFormArray = new FormGroup({
+    name: new FormControl('', Validators.required),
+    contact: new FormGroup({
+      email: new FormControl(),
+      phone: new FormControl()
+    }),
+    topics: new FormArray([])
+  });
+```
+or we can use the constructor method (equivalent way):
+
+```TypeScript
+  this.myFormArray = constructor(fb: FormBuilder) {
+    fb.group({
+      name: ['', Validators.required],
+      contact: fb.group({
+        email: [],
+        phone: []
+      }),
+      topics: fb.array([])
+    });
+  }
+```
 
 ### Libs and Bundles
 
