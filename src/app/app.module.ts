@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +20,11 @@ import { CreateCourseFormComponent } from './modules/create-course-form/create-c
 import { SignupFormComponent } from './modules/signup-form/signup-form.component';
 import { NewCourseFormComponent } from './modules/new-course-form/new-course-form.component';
 import { ChangePasswordFormComponent } from './modules/change-password-form/change-password-form.component';
+import { ConsumingHttpServicesComponent } from './modules/consuming-http-services/consuming-http-services.component';
+import { PostService } from './services/post.service';
+import { AppErrorHandler } from './common/app-error-handler';
+import { DisplayFollowersComponent } from './modules/display-followers/display-followers.component';
+import { FollowersService } from './services/followers.service';
 
 @NgModule({
   declarations: [
@@ -36,15 +42,23 @@ import { ChangePasswordFormComponent } from './modules/change-password-form/chan
     CreateCourseFormComponent,
     SignupFormComponent,
     NewCourseFormComponent,
-    ChangePasswordFormComponent
+    ChangePasswordFormComponent,
+    ConsumingHttpServicesComponent,
+    DisplayFollowersComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
   ],
-  providers: [AuthorsService],
+  providers: [
+    AuthorsService,
+    PostService,
+    { provide: ErrorHandler, useClass: AppErrorHandler },
+    FollowersService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

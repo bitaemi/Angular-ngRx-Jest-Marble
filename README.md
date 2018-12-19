@@ -63,6 +63,7 @@
     - [ngClass](#ngclass)
     - [ngStyle](#ngstyle)
     - [Safe Traversal Operator](#safe-traversal-operator)
+      - [Creating Custom Directives](#creating-custom-directives)
 - [7. Template driven forms](#7-template-driven-forms)
   - [7.1. Building a Bootstrap Form](#71-building-a-bootstrap-form)
   - [7.2. Types of forms](#72-types-of-forms)
@@ -79,6 +80,11 @@
 - [8. Reactive forms](#8-reactive-forms)
   - [8.1. Implementing Custom Validation](#81-implementing-custom-validation)
   - [8.2. Asynchronous Operations and Validation](#82-asynchronous-operations-and-validation)
+  - [8.3. Validating the form upon submit](#83-validating-the-form-upon-submit)
+  - [8.4. Nested FormGroups](#84-nested-formgroups)
+  - [8.5. FormArray](#85-formarray)
+  - [8.6. FormBuilder](#86-formbuilder)
+- [9. Consuming HTTP Services](#9-consuming-http-services)
 - [Libs and Bundles](#libs-and-bundles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -89,13 +95,13 @@
 
 Installed extensions:
 
-    - VS Live Share
-    - npm Intellisense
-    - Debugger For Chrome
-    - TS Lint
-    - Auto Import
-    - Sass
-    - Npm
+  VS Live Share
+  npm Intellisense
+  Debugger For Chrome
+  TS Lint
+  Auto Import
+  Sass
+  Npm
 
 MUST USE Shortcuts with VS Code:
 
@@ -112,7 +118,8 @@ MUST USE Shortcuts with VS Code:
     Ctrl + . when cursor is over the name of the class/interface you want to import
     Ctrl + K + W - close all tabs
     Ctrl + Tab keep Ctrl pressed and use Tab or up/down arrows to navigate between opened files
-    
+    Shift + Ctrl + O - go to method
+
 #### 1.2. Using Angular CLI for development
 
 ```npm i -g @angular/cli``` - install Angular Command Line Interface
@@ -173,45 +180,60 @@ so when we compile our application, parts of this third party libraries are put 
 
 Run ```npm i``` and this will install all the missing dependencies
 
-- src folder - the actual source code of the app 
-    - app - at least one module and one component inside : AppModule, AppComponent
-    - assets - images, style files
-    - environment -  store configurations settings for different environments
-    - main.ts - the starting point of the application -this is bootstraping the main module of the app: AppModule
-    - polyfills.ts, which basically imports some scripts that are required for running Angular. Because the Angular framework uses features
-    
-    of JavaScript that are not available in the current version of JavaScript supported by most browsers out there. So these polyfills 
-    
-    fill the gap between the features of JavaScript that Angular needs and the features supported by the current browsers.
-    - styles.css - the global styles of the app
-    - test.ts - used for setting the test env
-    - edit.config - make sure that all devs in the team use the same settings in their editors
-    - karma.config.js is a test runner for JavaScript code
-    - package.json - e standard file that every node project has: 
-        - some basic settings 
-        - dependencies which determine the libraries your app is dependent on
-        - devDependencies - required for app development, not on production (includes karma dependencies for testing)
-    - protractor.conf.js - a tool for running end-to-end tests for Angular
-    - tsconfig.json - has a bunch of settings for TypeScript Compiler to compile .ts into .js code
-    - tslint.json -  a static analize tool for .ts code (it checks for readability, maintainability, and functionality errors)
+- src folder - the actual source code of the app
+  - app - at least one module and one component inside : AppModule, AppComponent
 
-#### 2.2. Webpack 
+  - assets - images, style files
+
+  - environment -  store configurations settings for different environments
+
+  - main.ts - the starting point of the application -this is bootstraping the main module of the app: AppModule
+  polyfills.ts, which basically imports some scripts that are required for running Angular. Because the Angular framework uses features
+
+    of JavaScript that are not available in the current version of JavaScript supported by most browsers out there. So these polyfills
+
+    fill the gap between the features of JavaScript that Angular needs and the features supported by the current browsers.
+
+  - styles.css - the global styles of the app
+
+  - test.ts - used for setting the test env
+
+  - edit.config - make sure that all devs in the team use the same settings in their editors
+
+  - karma.config.js is a test runner for JavaScript code
+
+  - package.json - e standard file that every node project has:
+
+    - some basic settings
+
+    -  dependencies which determine the libraries your app is dependent on
+
+    -  devDependencies - required for app development, not on production (includes karma dependencies for testing)
+
+  - protractor.conf.js - a tool for running end-to-end tests for Angular
+
+  - tsconfig.json - has a bunch of settings for TypeScript Compiler to compile .ts into .js code
+
+  - tslint.json -  a static analize tool for .ts code (it checks for readability, maintainability, and functionality errors)
+
+
+#### 2.2. Webpack
 
 Angular's CLI uses a tool called Webpack, which is a build automation tool. It gets all of our scripts and style sheets,combines them, puts them in a bundle, and then minifies that bundle, and this is for optimization.
 
-Each time you change your code Webpack automatically recompiles your application and refreshes your bundles(Hot Module Replacement). 
+Each time you change your code Webpack automatically recompiles your application and refreshes your bundles(Hot Module Replacement).
 
 Webpack automatically injects all the scripts into our index.html, at runtime:
-    -styles.bundle.js is a container for all the styles of the app compiled into one bundle
+  tyles.bundle.js is a container for all the styles of the app compiled into one bundle
 
 No need to do it with Angular CLI, but just to mention it: [Set-up Webpack and Babel for your web-server](https://gist.github.com/bitaemi/d429293325696eb11aaba058fd094f67)
 
 #### 2.3. Typescript Fundamentals
 
-- super set of JavaScript 
-    - strong typing for safe and easy debug
-    - OO features
-    - compile time errors (intellicense)
+- super set of JavaScript
+  strong typing for safe and easy debug
+  OO features
+  compile time errors (intellicense)
 
     ```npm install -g typescript```
 
@@ -219,7 +241,7 @@ No need to do it with Angular CLI, but just to mention it: [Set-up Webpack and B
     ```tsc main.ts``` - transpile main.ts into .js
     ```node main.js``` - execute the file
     ```tsc main.ts && node main.js``` - combine multiple commands with &&
-    ```tsc *.ts --target ES5 && node main.js``` 
+    ```tsc *.ts --target ES5 && node main.js```
  ##### 2.3.1. Declare variables:
    ``` var varAvailableOutsideDeclaringBlock; //scoped to the nearest function ``` or use:
    ```let varAvailableOnlyInsideDeclaringBlock; //scoped to the nearest block```
@@ -262,7 +284,7 @@ Use interface to define properties of objects:
 ```TypeScript
 //Whith this interface I'm defining the shape of an object
 interface Point {
-    x: number, 
+    x: number,
     y: number,
     draw: () => void
 };
@@ -288,7 +310,7 @@ Cohesion = things related should go together => Introduce classes. A class group
 class Point {
     x: number;
     y: number;
-    
+
     //an unique constructor - add optional params using '?'
     //the method called each time we create an instance of this class:
     constructor(x?: number, y?: number) {
@@ -322,7 +344,7 @@ Access modifiers: private, public and protected - apply them on fields(_x, _y), 
     public draw() {
         //...
     };
-    let point = new Point(); 
+    let point = new Point();
     point.x = 3; //trows an error
 ```
 The clean approach for the Point class declaration is to prefix the parameters of the constructor with the access modifier:
@@ -345,10 +367,10 @@ The clean approach for the Point class declaration is to prefix the parameters o
         }
     }
 
-     let point = new Point(); 
+     let point = new Point();
      let x = point.x; //access x property of the class
      point.x = 10; //apply the setter method
-``` 
+```
 ##### 2.3.8. Modules
 
 Module = container of related components. A module is a file with an export class declaration:
@@ -373,13 +395,13 @@ In each file, we export one or more types, these types can be classes, functions
 
 A COMPONENT = encapsulates : the DATA, HTML template and the PRESENTATION LOGIC
 
-Example of componets tree: 
-    -App
-        - Navbar
-        - Sidebar
-        - Courses
-            - Course
-            - Course
+Example of componets tree:
+  pp
+      Navbar
+      Sidebar
+      Courses
+          Course
+          Course
             ...
 
 A MODULE = A CONTAINER, A GROUP OF RELATED COMPONENTS
@@ -427,10 +449,10 @@ courses; //add required fields of the component
 
    Avoid Writing Boiler-Plate Code using the reliable way to create a new component:
 
-   ```ng g c course``` - generate a component named courses 
-  
+   ```ng g c course``` - generate a component named courses
+
   #### 3.3. Templates
-Bind the view to fields from the component using ```{{}}``` syntax - add inside any valid Javascript, using string interpolation: ```{{ "List of " + title + getWebsite()}}```. When the values of fields change the view is automatically notified and updated. 
+Bind the view to fields from the component using ```{{}}``` syntax - add inside any valid Javascript, using string interpolation: ```{{ "List of " + title + getWebsite()}}```. When the values of fields change the view is automatically notified and updated.
 
 ```TypeScript
   @Component({
@@ -459,7 +481,7 @@ To manipulate the DOM, we use special blocks called directives inside the HTML t
 
 ```TypeScript
   @Component({
-    selector: 'courses', 
+    selector: 'courses',
     template: `
     <h2> {{ title }}</h2>
     <ul>
@@ -570,7 +592,7 @@ Property binding works only one way: from component to the DOM. Any update from 
 
  #### 4.2. Attribute Binding
 
-DOM =  a tree model of objects in memory. HTML is a markup language that we use to represent DOM in text. 
+DOM =  a tree model of objects in memory. HTML is a markup language that we use to represent DOM in text.
 
 Most of the HTML attributes have a one to one mapping to propperties of DOM objects, but we have a few exceptions, e.g. colspan attr:
 
@@ -601,21 +623,21 @@ Add the .active class to the HTML element, dinamically, based on the  isActive c
 <button class="btn btn-primary" [class.active]="isActive"></button>
 ```
 
-- Apply inline style based on a condition 
+- Apply inline style based on a condition
 - Use [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) to find and see the properties of the 'Style' Object
 
 
-```HTML 
+```HTML
 <button [style.backgroundColor]="isActive ? 'blue' : 'white'"></button>
 ```
 #### 4.5. Event Binding
 
-We bind the click event to a method in our component. 
+We bind the click event to a method in our component.
 Sometimes we need to get access to the event object that was raised in the event handler, for example with mouse movements the event object
 
 will tell us that x and y position. To get access to that event object we need to pass the ```$event``` as a parameter here to the method.
 
-```$event``` is the standard DOM event object seen in vanila JavaScript. 
+```$event``` is the standard DOM event object seen in vanila JavaScript.
 
 ```HTML
 <div (click)="onDivClicked()">
@@ -642,7 +664,7 @@ The EVENT QUEUE: button click, div click
 
 #### 4.6. Event Filtering
 
-In Angular, when handleing an event we can apply a filter. 
+In Angular, when handleing an event we can apply a filter.
 ```HTML
 <input (keyup.enter)="onKeyUp($event)" />
 ```
@@ -652,7 +674,7 @@ In Angular, when handleing an event we can apply a filter.
 To get the value typed into the input field:
 I) pass the ```$event``` object to the method and read the value using ```$event.target.value``` or faster:
 
-II) in Angular we can **declare variables in the template**: ```#variableName```, that reference the input field, and read the value of the variable with: 
+II) in Angular we can **declare variables in the template**: ```#variableName```, that reference the input field, and read the value of the variable with:
 ```variableName.value```
 
 ```HTML
@@ -660,7 +682,7 @@ II) in Angular we can **declare variables in the template**: ```#variableName```
 ```
 #### 4.8. Two way data-binding
 
-In OOP we do not pass unnecessary parameters to methods, so in components we use fields. 
+In OOP we do not pass unnecessary parameters to methods, so in components we use fields.
 
 For two-way binding from the component to DOM and from DOM to component, we use the ```ngModel ``` directive.
 
@@ -670,30 +692,31 @@ For two-way binding from the component to DOM and from DOM to component, we use 
 in the module file:
 ```import { FormsModule } from '@angular/forms';```
 and add the FormsModule to @ngModule's imports array.
-#### 4.9. Pipes 
+#### 4.9. Pipes
 
 Another Building block in Angular is PIPES - used to format data.
 
-Buit-in PIPES: 
+Buit-in PIPES:
 
-        - uppercase
+      uppercase
 
-        - lowercase
+      lowercase
 
-        - decimal
+      decimal
 
-        - currency
+      currency
 
-        - percent
+      percent
 
 PIPES are chainable.
  Supply arguments to some pipes using `:`
 
 ```HTML
 <div>{{ course.title | uppercase}}
-<!-- supply: (number of integer digits - adds 0 in front if we specify more).(min-max digits number after the decimal point):  -->
-{{ course.title | number: '1.2-2' }} 
- <!-- displays the currency sign and formats the value: -->
+<!-- supply: (number of integer digits - adds 0 in front if we specify more)
+.(min-max digits number after the decimal point): -->
+{{ course.title | number: '1.2-2' }}
+<!-- displays the currency sign and formats the value: -->
 {{ course.price: currency:'AUD':true:'3.2-2' }}
 {{ course.releaseDate | date: 'shortDate }}
 ```
@@ -703,12 +726,12 @@ PIPES are chainable.
 
 ```html
 {{ text | summary : 10 }}
-```    
+```
 Nameing convention: summary.pipe.ts holds pipe's implementation
 ```TypeScript
     import { Pipe, PipeTransform } from '@angular/core';
     //apply a pipe decorator:
-    
+
     @Pipe({
         name: 'summary'
     })
@@ -731,17 +754,17 @@ or simply generate your pipe files: ```ng g p title-casing```
    ##### 5.1. Component API, Input and Output Properties
 
 
-   To make a component more reusable we add input and output properties.
-   We use input properties e.g. ```[notFavorite]``` to pass input or STATE to a component and we use OUTPUT properties e.g. ```(change)``` to RAISE/PRODUCE/YEILD EVENTS from these custom components.
+To make a component more reusable we add input and output properties.
+We use input properties e.g. ```[notFavorite]``` to pass input or STATE to a component and we use OUTPUT properties e.g. ```(change)``` to RAISE/PRODUCE/YEILD EVENTS from these custom components.
 
    Inside outer's component template we include inner components like:
-   
-```HTML 
+
+```HTML
    <app-favorite [notFavorite]="post.notFavorite" (change)="onFavoriteChange()"></app-favorite>
 ```
-      - where:
-            - post is a field with notFavorite property, inside the outer component.
-            - [notFavorite] is the input field in the inner component:
+    where:
+          post is a field with notFavorite property, inside the outer component.
+          [notFavorite] is the input field in the inner component:
 ```TypeScript
     export class FavoriteComponent implements OnInit {
 
@@ -750,23 +773,23 @@ or simply generate your pipe files: ```ng g p title-casing```
 ```
    Input Propertie is another decorator in Angular for marking fields and properties as input properties.
 
-   Aliasing input properties: 
+   Aliasing input properties:
 
 ```TypeScript
     //..
         @Input('not-favorite') notFavorite: boolean;
     //...
-``` 
-   We keep the contract of the component stable using the aliass 'not-favorite'. In the HTML template we give the input field like ```['not-favorite']``` and if notFavorite is
-   
-   changed to another name in the component, the template won't brake if you use the allias input field, but you still have to manually refactor the templates.
+```
+We keep the contract of the component stable using the aliass 'not-favorite'. In the HTML template we give the input field like ```['not-favorite']``` and if notFavorite is
 
-   We use the OUTPUT propertie ```(change)``` to RAISE a change EVENT from the favorite component and capture the output in the outer component (app.component.ts):
+changed to another name in the component, the template won't brake if you use the allias input field, but you still have to manually refactor the templates.
+
+We use the OUTPUT propertie ```(change)``` to RAISE a change EVENT from the favorite component and capture the output in the outer component (app.component.ts):
 
 ```HTML
     <app-favorite [notFavorite]="post.notFavorite"  (change)="OnFavoriteChange($event)"></app-favorite>
 ```
-   The ```$event``` is a JS object that has the property called: ```newObjProperty```because the ``(change)`` output 
+   The ```$event``` is a JS object that has the property called: ```newObjProperty```because the ``(change)`` output
 ```TypeScript
 //import the output decourator function
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -777,12 +800,12 @@ export class FavoriteComponent implements OnInit {
   @Output() change = new EventEmitter();
   //..
   clickFavor() {
-    
+
     this.change.emit({newObjProp: this.notFavorite});
     //..
   }
 ```
-In the outer component we have:   
+In the outer component we have:
 
 ```TypeScript
 
@@ -814,7 +837,7 @@ So there are no separate requests to the server to download these templates.
 STYLES:
 
 There are two ways of declaring styles your component. The style declaration that comes the last is the one that takes effect.
-    
+
 ```TypeScript
     @Component({
     selector: 'app-favorite',
@@ -833,7 +856,7 @@ SHADOW DOM = A specification that enables DOM tree and styles encapsulation. All
 
 ```JavaScript
     var el = document.querySelector('favorite');
-    var root = el.createShadowRoot(); 
+    var root = el.createShadowRoot();
     //the style will be scoped only to the 'el' element
     root.innerHTML = `
     <style>h1 { color: red}</style>
@@ -853,7 +876,7 @@ VIEW ENCAPSULATION - is an enum defined in the ```@angular/core``` and we have t
   styles: [
     ` .fa-star {color: blue !important;}`
     ],
-  encapsulation: ViewEncapsulation.Emulated 
+  encapsulation: ViewEncapsulation.Emulated
   //this is the default setting in Angular wich enables style encapsulation for all browser, even thouse old browsers,
   // where ShadowDom is not available, Angular will emulate the concept
 })
@@ -895,7 +918,7 @@ encapsulation: ViewEncapsulation.None
 
 ```HTML
     <div class="panel-heading">
-        <!-- at runtime the ng-content element will be replace entirely with: 
+        <!-- at runtime the ng-content element will be replace entirely with:
         <div class="heading">Heading</div> -->
         <ng-content select=".heading"></ng-content>
     </div>
@@ -983,8 +1006,8 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
 ```
    ##### ngFor and Change Detection
 
-    Wenever you click a button or, when around Ajax requests, or a timer function completes, angular performs a CHANGE DETECTION mechanism. 
-    
+    Wenever you click a button or, when around Ajax requests, or a timer function completes, angular performs a CHANGE DETECTION mechanism.
+
     Angular will refresh the DOM automatically.
 
 ```HTML
@@ -1010,7 +1033,7 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
 
    Each time the loadCourses() is called will create new objects in memory, though the content of the newly created objects is the same with previous ones.
 
-   To prevent this default behaviour and if we want to track objects by their ids, we add ``trackBy`` and the name of the method as a reference in the *ngFor directive. 
+   To prevent this default behaviour and if we want to track objects by their ids, we add ``trackBy`` and the name of the method as a reference in the *ngFor directive.
 
 ```TypeScript
     loadCourses() {
@@ -1038,14 +1061,14 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
    So Angular is not re-rendering the list items, because each time we call loadCourses we are using the same course objects.
 
    If you're dealing with a large list with complex markup and you do observe performance problems, on a given page,
-   
+
    you can try using ``trackBy`` to improve the performance of that page.
-   
+
    Don't use it by default in every page because you have to write more code and you won't gain any performance benefits.
 
    ##### The Leading Asterisk
 
-   When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``, 
+   When we use the **leading asterisk** with our structural directives like ``*ngIf, *ngFor, *ngSwhich``,
    Angular is going to rewrite that block using an ``<ng-template>``, so you don't have to write that by yourself.
 
 ```HTML
@@ -1077,11 +1100,11 @@ gets gets parsed into:
     ... a cleaner way to deal with class binding is to use ```[ngClass]``` directive, where we do not have to repeat class binding:
 
   ```HTML
-    <span [ngClass]="{ 
+    <span [ngClass]="{
       'is-liked-class': isLiked,
       'not-liked-class': !isLiked
       }"
-      >The button 
+      >The button
       </span>
   ```
 
@@ -1112,9 +1135,9 @@ gets gets parsed into:
 
    For example, you might want to call different endpoints to get these objects from the server. There are two solutions to solve this problem:
 
-   - use ```*ngIf``` or:
+ use ```*ngIf``` or:
 
-   - when dealing with complex objects, use safeTraversal operator (the **'?'**) to keep the element in the DOM:
+ when dealing with complex objects, use safeTraversal operator (the **'?'**) to keep the element in the DOM:
 
    ```HTML
     <span>{{ task.assignee?.name }}</span>
@@ -1197,24 +1220,24 @@ under the hood:
 ```HTML
     <input ngModel name="firstName" required id="firstName" type="text" class="form-control" placeholder="Fill in the name">
     <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">First name is required.</div>
-```   
+```
 #### 7.4. Specific validation errors
 
 ```HTML
-      <input 
-        required 
-        minlength="4" 
-        maxlength="50" 
-        pattern="[a-zA-Z0]+" 
-        ngModel 
-        name="firstName" 
-        id="firstName"  
-        #firstName="ngModel" 
-        type="text" 
-        class="form-control" 
+      <input
+        required
+        minlength="4"
+        maxlength="50"
+        pattern="[a-zA-Z0]+"
+        ngModel
+        name="firstName"
+        id="firstName"
+        #firstName="ngModel"
+        type="text"
+        class="form-control"
         placeholder="Fill in the name" />
-      <div 
-        class="alert alert-danger" 
+      <div
+        class="alert alert-danger"
         *ngIf="firstName.touched && !firstName.valid">
         <div *ngIf="firstName.errors.required">
           First name is required.
@@ -1228,7 +1251,6 @@ under the hood:
       </div>
 ```
    Use the ``#firstName`` template variable to referece the FormControl instance created with the ngModel directive and to read properties of the  that input object.
-   
 #### 7.8. Styling Invalid Input Fields
 
 ```CSS
@@ -1242,7 +1264,7 @@ under the hood:
   <!-- f parameter passed to devSubmitToInspectBehavior is a reference to ngForm object-->
 ```
 Angular, by default, applies the ``ngForm`` directive to the ``<form>`` element. This directive has (exposes) a ``ngSubmit`` OUTPUT property( used to REISE custom events).
-As seen, in Angular we have FormControl class (an instance of this class -``control`` represents one input field), FormGroup class (an instance of this class - ``form`` represents a group of input fiels =  form control objects). 
+As seen, in Angular we have FormControl class (an instance of this class -``control`` represents one input field), FormGroup class (an instance of this class - ``form`` represents a group of input fiels =  form control objects).
 
 When the ``ngForm`` directive is applied to a ``<form>`` element, it basically creates the ``form`` object and it exposes its properties:
     form: FormGroup {
@@ -1289,7 +1311,7 @@ When the ``ngForm`` directive is applied to a ``<form>`` element, it basically c
         _onDisabledChange: []
 
         __proto__: AbstractControl }
-        
+
         These are computed properties, which basically delegate to the underlying FormGroup object.
 
 So we can access all this properties (f.invalid, f.errors ...).
@@ -1298,7 +1320,7 @@ The ``value`` property is an object: f.value = {firstName: "The submitted first 
 
 #### 7.10. NgModelGroup
 
-When you're working with complex forms you want to have multiple groups in your form. 
+When you're working with complex forms you want to have multiple groups in your form.
 ```HTML
 <div ngModelGroup="contact" #contact="ngModelGroup">
     <div *ngIf="!contact.valid">...</div>
@@ -1308,30 +1330,30 @@ When you're working with complex forms you want to have multiple groups in your 
     </div>
 </div>
 
- Inspecting the DOM we observe form's object properties available for use:     
+ Inspecting the DOM we observe form's object properties available for use:
 
 ```JavaScript
 
     {
-        form: FormGroup 
+        form: FormGroup
             {
-                controls: 
-                    { 
+                controls:
+                    {
                     contact: FormGroup,
                     comment: FormControl
                     },
-                value: 
-                    { 
+                value:
+                    {
                         comment: "",
-                        contact: 
-                            { 
+                        contact:
+                            {
                                 firstName: ""
                             }
                     }
             }
     }
-```    
-            
+```
+
 #### 7.11. Control Classes and Directives
 
 As seen above, in Angular we have two CLASSES to keep track of the state of the input fields and their validity:
@@ -1339,9 +1361,9 @@ As seen above, in Angular we have two CLASSES to keep track of the state of the 
     CLASSES              <--------     DIRECTIVES
 
 
-    - FormControl        <--------     ngModel
+  FormControl        <--------     ngModel
 
-    - FormGroup          <--------     ngForm
+  FormGroup          <--------     ngForm
 
                          <--------     ngModelGroup
 
@@ -1351,7 +1373,7 @@ A FormGroup class is used to represent an entire form and optionally groups with
 
 We have a directive called ``ngForm`` that is automatically applied to all `<form>` elements.
 
-And this will internally create a FormGroup object and associate it with your form and 
+And this will internally create a FormGroup object and associate it with your form and
 
 with this FormGroup object we can track the state changes of the form and its validity.
 
@@ -1361,7 +1383,7 @@ on a subgroup and this directive, similar to the ngForm directive, will also cre
 
 object, for that group.
 
-The difference  between ``ngForm`` and ``ngModelGroup`` is that ``ngForm`` has the OUTPUT property: ``ngSubmit``. 
+The difference  between ``ngForm`` and ``ngModelGroup`` is that ``ngForm`` has the OUTPUT property: ``ngSubmit``.
 
 #### 7.12. Disabling the Submit Button
 
@@ -1406,18 +1428,18 @@ Adding the ``multiple`` attribute to the ``<select>`` element, allows user to se
 ```HTML
     <div *ngFor="let method of contactMethods" class="radio">
         <label>
-        <input 
-            ngModel 
-            name="contactMethod" 
-            [value]="method.id" 
-            type="radio"> 
+        <input
+            ngModel
+            name="contactMethod"
+            [value]="method.id"
+            type="radio">
             {{ method.name }}
         </label>
     </div>
-```    
+```
 ### 8. Reactive forms
 
-In the last section you saw that with template driven forms we apply the ngModel directive to our input fields and 
+In the last section you saw that with template driven forms we apply the ngModel directive to our input fields and
 
 this directive will internally create an instance of the FormControl class and associate it with the input field.
 
@@ -1434,10 +1456,10 @@ FormControl and FormGroup inherit from the AbstractControl base(parent) class.
 Add ``formControlName`` property and set it to your input name (instance name).
 
 ```HTML
-<input 
+<input
     formControl="username"
-    id="username" 
-    type="text" 
+    id="username"
+    type="text"
     class="form-control">
 ```
 ...
@@ -1463,7 +1485,7 @@ interface ValidatorFn {
     (c: AbstractControl): ValidatorsErrors|null
 }
 ```
-All the validation methods should go into one class. 
+All the validation methods should go into one class.
 
 We decorate these methods with static and then from the outside we can simply  call ``UsernameValidators.cannotContainSpace``
 
@@ -1483,11 +1505,11 @@ Async validators are usefull for validating input fields in place.
 
 Asynchronous Operations = NON BLOCKING = the process that executes the code doesn't block while waiting the operation to be completed:
 
-    - calling the server (AJAX)
+  calling the server (AJAX)
 
-    - timer functions
+  timer functions
 
-The ``validator`` function has to return a promise of ``validation errors | null``. 
+The ``validator`` function has to return a promise of ``validation errors | null``.
 
 When the call to the server completes or the timer function completes the result that we are going to get is either a validation error or null:
 
@@ -1519,10 +1541,10 @@ username: new FormControl('', [
 in the template the ``username`` is a property that reference the FormControl object wich has available for use different properties (pending, errors, touched, invalid ...):
 
 ```HTML
-<input 
+<input
     formControlName="username"
     id="username"
-    type="text" 
+    type="text"
     class="form-control">
     <div *ngIf="username.pending">Checking for uniqueness ...</div>
     <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
@@ -1564,13 +1586,13 @@ Sometimes we need to do validation upon submitting the form to the server, so we
 ```HTML
 <div formGroupName="account">
         <div class="form-group">
-            <input 
+            <input
                 formControlName="username"
                 ...
             >
         </div>
         <div class="form-group">
-            <input 
+            <input
                 formControlName="password"
                 ...
 ```
@@ -1593,7 +1615,7 @@ Sometimes we need to do validation upon submitting the form to the server, so we
 ```
   #### 8.5. FormArray
 
-   When we are dealing with an array of objects in a form, instead of ``FormControl`` we use the ``FormArray`` class. 
+   When we are dealing with an array of objects in a form, instead of ``FormControl`` we use the ``FormArray`` class.
 
 ```TypeScript
   myFormArray = new FormGroup({
@@ -1656,6 +1678,37 @@ or we can use the constructor method (equivalent way):
     });
   }
 ```
+### 9. Consuming HTTP Services
+
+
+        POST - CREATE
+
+        PATCH - UPDATE
+
+        PUT - UPDATE
+
+        DELETE - DELETE
+
+        GET - READ
+
+  - [9.1. Getting Data](./src/app/modules/consuming-http-services/README.md#91-getting-data)
+  - [9.2. Creating Data](./src/app/modules/consuming-http-services/README.md#92-creating-data)
+  - [9.3. Updating Data](./src/app/modules/consuming-http-services/README.md#93-updating-data)
+  - [9.4. Deleting Data](./src/app/modules/consuming-http-services/README.md#94-deleting-data)
+  - [9.5. OnInit Interface](./src/app/modules/consuming-http-services/README.md#95-oninit-interface)
+  - [9.6. Separation of Concerns](./src/app/modules/consuming-http-services/README.md#96-separation-of-concerns)
+  - [9.7. Extracting a Service](./src/app/modules/consuming-http-services/README.md#97-extracting-a-service)
+  - [9.8. Handling Errors](./src/app/modules/consuming-http-services/README.md#98-handling-errors)
+  - [9.9. Handling Unexpected Errors](./src/app/modules/consuming-http-services/README.md#99-handling-unexpected-errors)
+  - [9.10. Throwing Application Specific Errors](./src/app/modules/consuming-http-services/README.md#910-throwing-application-specific-errors)
+  - [9.11. Handling Bad Requests Errors](./src/app/modules/consuming-http-services/README.md#911-handling-bad-requests-errors)
+  - [9.12. Importing Observable Operators and Factory Methods](./src/app/modules/consuming-http-services/README.md#912-importing-observable-operators-and-factory-methods)
+  - [9.13. Global Error Handling](./src/app/modules/consuming-http-services/README.md#913-global-error-handling)
+  - [9.14. Extracting a reusable Error Handling Method](./src/app/modules/consuming-http-services/README.md#914-extracting-a-reusable-error-handling-method)
+  - [9.15. Extracting a reusable Data Service](./src/app/modules/consuming-http-services/README.md#915-extracting-a-reusable-data-service)
+  - [9.16. The Map Operator](./src/app/modules/consuming-http-services/README.md#916-the-map-operator)
+  - [9.17. Optimistic vs. Pesimistic Updates](./src/app/modules/consuming-http-services/README.md#917-optimistic-vs-pesimistic-updates)
+  - [9.18. Observables vs. Promises](./src/app/modules/consuming-http-services/README.md#918-observables-vs-promises)
 
 ### Libs and Bundles
 
