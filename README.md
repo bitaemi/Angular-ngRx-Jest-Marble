@@ -85,7 +85,14 @@
   - [8.5. FormArray](#85-formarray)
   - [8.6. FormBuilder](#86-formbuilder)
 - [9. Consuming HTTP Services](#9-consuming-http-services)
-- [Libs and Bundles](#libs-and-bundles)
+- [10. Routing and Navigation](#10-routing-and-navigation)
+  - [10.1. Configure Routes](#101-configure-routes)
+  - [10.2. RouterOutlet](#102-routeroutlet)
+  - [10.3. RouterLink](#103-routerlink)
+  - [10.3. RouterLinkActive](#103-routerlinkactive)
+  - [10.4. Getting the Route Parameters](#104-getting-the-route-parameters)
+  - [10.5. Routes with multiple parameters](#105-routes-with-multiple-parameters)
+  - [10.6. Query Parameters](#106-query-parameters)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1358,14 +1365,14 @@ When you're working with complex forms you want to have multiple groups in your 
 
 As seen above, in Angular we have two CLASSES to keep track of the state of the input fields and their validity:
 
-    CLASSES              <--------     DIRECTIVES
+    CLASSES         <--------     DIRECTIVES
 
 
-  FormControl        <--------     ngModel
+    FormControl     <--------     ngModel
 
-  FormGroup          <--------     ngForm
+    FormGroup       <--------     ngForm
 
-                         <--------     ngModelGroup
+                    <--------     ngModelGroup
 
 When we apply the ``NgModel`` DIRECTIVE to an input field, Angular automatically creates a FormControl object and associates that with an input field.
 
@@ -1710,7 +1717,148 @@ or we can use the constructor method (equivalent way):
   - [9.17. Optimistic vs. Pesimistic Updates](./src/app/modules/consuming-http-services/README.md#917-optimistic-vs-pesimistic-updates)
   - [9.18. Observables vs. Promises](./src/app/modules/consuming-http-services/README.md#918-observables-vs-promises)
 
-### Libs and Bundles
+### 10. Routing and Navigation
+
+Modules in Angular:
+
+- Forms
+
+- ReactiveForms
+
+- Http
+
+- Router
+
+Steps:
+
+- Configure routes
+
+- Add a router outlet
+
+- add links
+
+#### 10.1. Configure Routes
+
+```TypeScript
+    RouterModule.forRoot([
+      {
+        path: 'followers/:username',
+        component: ConsumingHttpServicesComponent
+      },
+      {
+        path: 'followers',
+        component: DisplayFollowersComponent
+      },
+      {
+        path: '**',
+        component: DisplayFollowersComponent
+      }
+    ])
+```
+
+RouterModule``.forRoot`` is a static method defining the root route for the application.
+
+#### 10.2. RouterOutlet
+
+``<router-outlet></router-outlet>`` has to be present in the mai app template.
+
+#### 10.3. RouterLink
+
+We **DO NOT** use `href` attribute on a link, instead we use ``routerLink`` directive!!!
+
+This makes the App a Single Page App (SPA) - resources are downloaded from the server one time
+
+and as the user navigates from  one page to another, only the content of the current page is downloaded.
+
+Use routerLink as attribute:
+
+```HTML
+<a routerLink="/followers">Display Followers Component</a>
+```
+
+and, when dealing with route parameters, use property binding to an expression:
+
+```HTML
+<a [routerLink]="['/followers', follower.id]">Follower name</a>
+```
+In  this expr. we have an array containing the path and the subsequent elements are the route parameters.
+
+#### 10.3. RouterLinkActive
+
+We use the ``routerLinkActive`` to set the CSS class for the selected links in the navigation bar.
+
+#### 10.4. Getting the Route Parameters
+
+```TypeScript
+// in app.module's imports array:
+RouterModule.forRoot([
+      {
+        path: 'followers/:id',
+        component: GithubProfileComponent
+      },
+      // ..
+
+// In GithubProfileComponent:
+import { ActivatedRoute } from '@angular/router';
+
+//..
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.paramMap
+      .subscribe(params => {
+        const id = +params.get('id'); //transform the returned string into integer
+        // service.getProfile(id);
+      });
+  }
+```
+As seen above Route Parameters are Observables. That's because, when navigating within the same route path, but with different parameters,
+
+it doesn't make sense for Angular to destroy the component from the DOM, only to recreate it straight away.
+
+Anger is not going to destroy this component and it's going to keep it in the DOM.
+
+An Observable is technically a collection of asynchronous data that arrives over time (a streaming of data wich we can filter using a
+
+ `.pipe` or `.subscribe` to get notified )
+
+So, clicking on the `Next follower` button, inside the same component, Angular won't recreate the Component
+
+(as seen, won't start a new Life Cycle for the component - The OnInit method doesn't execute once again)
+
+We have only one instance of the component and so, in order to find the new parameters we need to subscribe the route parameters.
+
+```HTML
+<button [routerLink]="['/followers', 44355]" class="btn btn-active">
+Next follower
+</button>
+```
+
+If you don't have this kind of scenario if you don't allow the user to stay on the same page and navigate
+
+back and forth there is a simpler way to get access to route parameters, without using an Observable:
+
+```TypeScript
+this.route.snapshot.paramMap
+```
+
+#### 10.5. Routes with multiple parameters
+
+```TypeScript
+      {
+        path: 'followers/:id/:username',
+        component: GithubProfileComponent
+      },
+```
+and:
+
+```HTML
+<a [routerLink]="['/followers', follower.id, follower.login]">{{ follower.login }}</a>
+```
+#### 10.6. Query Parameters
+
+
+
 
 Common libraries to include at need:
 

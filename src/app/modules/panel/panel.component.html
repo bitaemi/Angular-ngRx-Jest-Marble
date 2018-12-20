@@ -1,8 +1,28 @@
+<h3>This is the pannel component that comunicates with other components: </h3>
+<div class="row">
+  <div class="col-6">
+    <app-favorite
+      [notFavorite]="post.notFavorite"
+      (change)="OnFavoriteChange($event)">
+    </app-favorite>
+  </div>
+  <div class="col-6">
+      <app-like-reusable
+        [likesCount]="tweet.likesCount"
+        [isLiked]="tweet.isLiked">
+      </app-like-reusable>
+  </div>
+</div>
+
 <div class="panel panel-default">
   <div class="panel-heading">
     <ng-content select=".heading"></ng-content>
   </div>
   <div class="panel-body">
-   Body
+      <h6>Zippy Component</h6>
+      <app-zippy title="Angular Course Material" innerComponent="app-contact-form">
+          </app-zippy>
+          <app-zippy title="RxJs Course Material">
+          </app-zippy>
   </div>
 </div>

@@ -1,18 +1,11 @@
-<div>
-  <ul class="list-unstyled" *ngFor="let follower of followers">
-    <li class="list-group-item">
-      <div class="media">
-        <div class="col-xl-4">
+<div *ngFor="let follower of followers" class="media">
+      <div class="media-left">
       <img [src]="follower.avatar_url" [alt]="follower.login"  class="mr-3 avatar">
-        </div>
+      </div>
         <div class="media-body">
-            <div class="mb-0 mt-1">
-            {{ follower.login }}
+            <div class="media-heading">
+            <a [routerLink]="['/followers', follower.id, follower.login]">{{ follower.login }}</a>
             </div>
             <a href="{{ follower.html_url }}">{{ follower.html_url }}</a>
         </div>
-      </div>
-
-    </li>
-  </ul>
 </div>

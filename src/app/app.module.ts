@@ -25,6 +25,9 @@ import { PostService } from './services/post.service';
 import { AppErrorHandler } from './common/app-error-handler';
 import { DisplayFollowersComponent } from './modules/display-followers/display-followers.component';
 import { FollowersService } from './services/followers.service';
+import { NavbarComponent } from './modules/navbar/navbar.component';
+import { RouterModule } from '@angular/router';
+import { GithubProfileComponent } from './modules/github-profile/github-profile.component';
 
 @NgModule({
   declarations: [
@@ -45,13 +48,77 @@ import { FollowersService } from './services/followers.service';
     ChangePasswordFormComponent,
     ConsumingHttpServicesComponent,
     DisplayFollowersComponent,
+    NavbarComponent,
+    GithubProfileComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    RouterModule.forRoot([
+      {
+        path: 'favorite',
+        component: FavoriteComponent
+      },
+      {
+        path: 'courses',
+        component: CoursesComponent
+      },
+      {
+        path: 'likes',
+        component: LikesComponent
+      },
+      {
+        path: 'authors',
+        component: AuthorsComponent
+      },
+      {
+        path: 'create-course',
+        component: CreateCourseFormComponent
+      },
+      {
+        path: 'contact',
+        component: ContactFormComponent
+      },
+      {
+        path: 'like-reusable',
+        component: LikeReusableComponent
+      },
+      {
+        path: 'zippy',
+        component: ZippyComponent
+      },
+      {
+        path: 'signup',
+        component: SignupFormComponent
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordFormComponent
+      },
+      {
+        path: 'posts',
+        component: ConsumingHttpServicesComponent
+      },
+      {
+        path: 'followers/:id/:username',
+        component: GithubProfileComponent
+      },
+      {
+        path: 'followers',
+        component: DisplayFollowersComponent
+      },
+      {
+        path: 'panel',
+        component: PanelComponent
+      },
+      {
+        path: '**',
+        component: DisplayFollowersComponent
+      }
+    ])
   ],
   providers: [
     AuthorsService,

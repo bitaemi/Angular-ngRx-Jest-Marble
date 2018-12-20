@@ -1,4 +1,4 @@
-<input type="text" class="form-control" (keyup.enter)="createPost(title)" #title>
+<input type="text" class="form-control" (keyup.enter)="createPost(title)" #title placeholder="Add a new post here...">
 <ul class="list-group" *ngFor="let post of posts">
     <li class="list-group-item">
 
@@ -16,5 +16,4 @@
     </li>
   </ul>
   <h3>Display follower assignment</h3>
-  <app-display-followers></app-display-followers>
 

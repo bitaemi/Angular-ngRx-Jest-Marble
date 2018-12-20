@@ -1,13 +1,13 @@
 <h2>{{ "Testing template variables, ngForOf " + title + getWebsite()}}</h2>
-<h6>In this comonent we test differect Angular features</h6>
-<ul>
-    <li *ngFor="let course of courses; index as i">
+<h6>In this component we test differect Angular features</h6>
+<ul class="list-group-item">
+    <li *ngFor="let course of courses; index as i" class="list-item">
     {{ i }} - {{ course.name }}
     </li>
 </ul>
 <span (click)="onAdd()">Add anew course</span>
-<ul>
-  <li *ngFor="let course of courses; even as isEven">
+<ul class="list-group-item">
+  <li *ngFor="let course of courses; even as isEven" class="list-item">
   {{ course.name }} - <span *ngIf="!isEven">EVEN</span>
   <button (click)="onRemove(course)">Remove </button>
   <button (click)="onChange(course)">Change</button>
@@ -24,13 +24,12 @@
     <input type="text" [appInputFormat]="'uppercase'"/>
 </div>
 
-<app-zippy title="Template Driven Forms" innerComponent="app-contact-form">
-</app-zippy>
-<app-zippy title="Billing Details">
-    Billing Details Content
-</app-zippy>
-
-<app-contact-form></app-contact-form>
+<div *ngIf="courses.length > 0; else noCourses">
+    Testing if..else statement: List of courses
+</div>
+<ng-template #noCourses>
+    No couses yet!
+</ng-template>
 <app-create-course-form></app-create-course-form>
 
 <app-new-course-form></app-new-course-form>
