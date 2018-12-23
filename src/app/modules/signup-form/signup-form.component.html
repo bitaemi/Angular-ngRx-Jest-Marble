@@ -1,0 +1,32 @@
+<form [formGroup]="myReactiveForm" (ngSubmit)="login()">
+    <div *ngIf="myReactiveForm.errors" class="alert alert-danger">Form has errors on submit</div>
+    <div formGroupName="account">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+                formControlName="username"
+                id="username"
+                type="text" 
+                class="form-control">
+                <div *ngIf="username.pending">Checking for uniqueness ...</div>
+                <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+                    <div *ngIf="username.errors.required">Username is required</div>
+                    <div *ngIf="username.errors.cannotContainSpace">Username cannot contain space</div>
+                    <div *ngIf="username.errors.minLength">Username should be minimum {{ username.errors.minLength.requiredLength }}</div>
+                    <div *ngIf="username.errors.shouldBeUnique">Username should be unique ( already registered)</div>
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                formControlName="password"
+                id="password" 
+                type="text" 
+                class="form-control">
+            <div *ngIf="password.touched && password.invalid" class="alert alert-danger">
+                <div *ngIf="password.errors.required">Password is required</div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Sign Up</button>
+</form>

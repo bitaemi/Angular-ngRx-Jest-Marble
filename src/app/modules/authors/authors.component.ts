@@ -3,8 +3,7 @@ import { AuthorsService } from 'src/app/services/authors.service';
 
 @Component({
   selector: 'app-authors',
-  templateUrl: './authors.component.html',
-  styleUrls: ['./authors.component.sass']
+  templateUrl: './authors.component.html'
 })
 export class AuthorsComponent implements OnInit {
 authors;

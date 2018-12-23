@@ -1,0 +1,15 @@
+.zippy { 
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer; 
+};
+.zippy-heading {
+    font-weight: bold;
+    padding: 20px;
+    cursor: pointer;
+};
+.zippy-body { padding: 20px; display: none }
+.expanded {
+    background-color: #f0f0f0;
+     display: block;
+};

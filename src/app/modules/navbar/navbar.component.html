@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark my-3">
+  <a class="navbar-brand" routerLink="/">Navigate mini app</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link"  routerLinkActive="current" routerLink="/">Home </a>
+      </li>
+      <li class="nav-item dropdown dropdon-dark active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Example Components
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/courses">Courses Component</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/authors">Authors Component</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/contact">Contact Form</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/create-course">Create Course Form Component</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/signup-form">Signup Form Component</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/change-password">Change Password Form Component</a>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/posts">Consuming Http Services Component</a>
+          <a class="dropdown-item" 
+            routerLinkActive="active current" 
+            routerLink="/followers"
+            [queryParams]="{ page: 1, order: 'newest'}">
+            Display Followers Component
+          </a>
+          <a class="dropdown-item" 
+            routerLinkActive="active current" 
+            routerLink="/archives"
+          >
+            Routing and navigation Component - Display Archives
+        </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLinkActive="active current" routerLink="/panel">Panel Component communicating with Zippy, Like and Favorite Components</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" routerLink="#">Disabled</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>

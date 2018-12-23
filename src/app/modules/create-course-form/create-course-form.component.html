@@ -1,0 +1,55 @@
+<form ngForm class="m-2 p-1" #f="ngForm"  (ngSubmit)="createCourse(courseName, courseCategory, f)">
+  <div class="form-group">
+      <label for="courseName">
+        Course Name
+      </label>
+      <input 
+        ngModel 
+        required
+        minlength="4" 
+        maxlength="40" 
+        name="courseName" 
+        id="courseName" 
+        #courseName='ngModel'
+        type="text" 
+        class="form-control"
+        >
+        <div 
+          class="alert alert-danger" 
+          *ngIf="courseName?.touched && !courseName?.valid">
+          <div *ngIf="courseName.errors.required">
+              Please provide Course Name
+            </div>
+          <div *ngIf="courseName.errors.minlength">
+            Course Name has to have at least {{ courseName.errors.minlength.requiredLength }}
+          </div>
+          <div *ngIf="courseName.errors.maxlength">
+              Course Name has to have less than {{ courseName.errors.maxlength.requiredLength }}
+            </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="courseCategory"> Category</label>
+        <select 
+          ngModel 
+          required 
+          name="courseCategory" 
+          id="courseCategory" 
+          #courseCategory="ngModel" 
+          class="form-control">
+          <option value=""></option>
+          <option *ngFor="let c of categories" [value]="c.id"> {{ c.name }}</option>
+        </select>
+        <div class="alert alert-danger"  *ngIf="courseCategory.touched && courseCategory.invalid"></div>
+      </div>
+      <div class="checkbox">
+        <label for="moneyBack">
+            <input type="checkbox" name="moneyBack">  {{ moneyBack }}
+        </label>
+      </div>
+  <button class="btn btn-primary" [disabled]="f.invalid">Create</button>
+</form>
+<p>
+  {{ f.value | json }}
+</p>

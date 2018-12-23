@@ -1,0 +1,19 @@
+<input type="text" class="form-control" (keyup.enter)="createPost(title)" #title placeholder="Add a new post here...">
+<ul class="list-group" *ngFor="let post of posts">
+    <li class="list-group-item">
+
+      {{ post.id + '. ' + post.title }}
+      <button
+      (click)="updatePost(post)"
+      class="btn-default btn-sm">
+    Update
+    </button>
+    <button
+      (click)="deletePost(post)"
+      class="btn-default btn-sm">
+    DELETE
+    </button>
+    </li>
+  </ul>
+  <h3>Display follower assignment</h3>
+

@@ -1,0 +1,9 @@
+<h3 class="alert">This is the archives page for demo purposes of routing and navigation lesson</h3>
+<ul class="list-items-group">
+  <li class="list-item" *ngFor="let archive of archives">
+<a 
+[routerLink]="['/archive', archive.year, archive.month]">
+  {{ archive.year + ' / ' + archive.month }}
+</a>
+  </li>
+</ul>

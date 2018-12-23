@@ -1,0 +1,14 @@
+<div class="zippy mt-2" (click)="toggleContent()">
+  <div class="zippy-heading">
+      {{ title }}
+  <span class="fas float-right" [ngClass]="{
+    'fa-angle-down' : !isSelected,
+    'fa-angle-up' : isSelected
+  }"></span>
+
+  </div>
+  <div class="zippy-body" [ngClass]="{
+          'expanded': isSelected}">
+          {{ title }} TBD and completed ...
+  </div>
+</div>

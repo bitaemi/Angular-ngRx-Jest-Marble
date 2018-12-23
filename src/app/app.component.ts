@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { LikesComponent } from './modules/features/likes/likes.component';
-import { FavoriteChangedEventArgs } from './modules/favorite/favorite.component';
 
-const likeButton = new LikesComponent(310, false);
 
 @Component({
   selector: 'app-root',
@@ -14,16 +11,4 @@ export class AppComponent {
     title: 'Angular7-App',
     notFavorite: true
   };
-
-  tweet = {
-    likesCount : 210,
-    isLiked: false
-  };
-
-  OnFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
-    console.log('Favorite changed:', eventArgs);
-  }
 }
-
-likeButton.pressLikeButton();
-console.log(`LikesCount: ${likeButton.likesCount}, LikeState: ${likeButton.likeState}`);
