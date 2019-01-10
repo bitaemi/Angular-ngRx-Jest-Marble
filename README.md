@@ -939,6 +939,7 @@ encapsulation: ViewEncapsulation.None
         <!-- at runtime the ng-content element will be replace entirely with:
         <div class="heading">Heading</div> -->
         <ng-content select=".heading"></ng-content>
+        <!-- the select could bu also `#element_id` or html selector: h3, button ...-->
     </div>
     <div class="panel-body">
         <!-- no need for: <ng-content select=".body"></ng-content> when we use ng-container in consumer's component-->
