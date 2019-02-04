@@ -31,6 +31,98 @@ import { GithubProfileComponent } from './modules/github-profile/github-profile.
 import { RoutingNavigationComponent } from './modules/routing-navigation/routing-navigation.component';
 import { NotFoudPageComponent } from './modules/not-foud-page/not-foud-page.component';
 import { ArchiveComponent } from './modules/archive/archive.component';
+import { environment } from '../environments/environment';
+
+import { StoreModule, MetaReducer } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+
+// not used in production
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { storeFreeze } from 'ngrx-store-freeze';
+
+
+export const metaReducers: MetaReducer<any>[] = !environment.production
+  ? [storeFreeze]
+  : [];
+
+
+export const ROUTES = [
+  {
+    path: '', pathMatch: 'full', redirectTo: 'products'
+  },
+  {
+    path: 'products',
+    loadChildren: '../products/products.module#ProductsModule',
+  },
+  {
+    path: 'favorite',
+    component: FavoriteComponent
+  },
+  {
+    path: 'courses',
+    component: CoursesComponent
+  },
+  {
+    path: 'likes',
+    component: LikesComponent
+  },
+  {
+    path: 'authors',
+    component: AuthorsComponent
+  },
+  {
+    path: 'create-course',
+    component: CreateCourseFormComponent
+  },
+  {
+    path: 'contact',
+    component: ContactFormComponent
+  },
+  {
+    path: 'like-reusable',
+    component: LikeReusableComponent
+  },
+  {
+    path: 'zippy',
+    component: ZippyComponent
+  },
+  {
+    path: 'signup',
+    component: SignupFormComponent
+  },
+  {
+    path: 'change-password',
+    component: ChangePasswordFormComponent
+  },
+  {
+    path: 'posts',
+    component: ConsumingHttpServicesComponent
+  },
+  {
+    path: 'followers/:id/:username',
+    component: GithubProfileComponent
+  },
+  {
+    path: 'followers',
+    component: DisplayFollowersComponent
+  },
+  {
+    path: 'archive/:year/:month',
+    component: ArchiveComponent
+  },
+  {
+    path: 'archives',
+    component: RoutingNavigationComponent
+  },
+  {
+    path: 'panel',
+    component: PanelComponent
+  },
+  {
+    path: '**',
+    component: NotFoudPageComponent
+  }
+];
 
 @NgModule({
   declarations: [
@@ -63,76 +155,10 @@ import { ArchiveComponent } from './modules/archive/archive.component';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    RouterModule.forRoot([
-      {
-        path: 'favorite',
-        component: FavoriteComponent
-      },
-      {
-        path: 'courses',
-        component: CoursesComponent
-      },
-      {
-        path: 'likes',
-        component: LikesComponent
-      },
-      {
-        path: 'authors',
-        component: AuthorsComponent
-      },
-      {
-        path: 'create-course',
-        component: CreateCourseFormComponent
-      },
-      {
-        path: 'contact',
-        component: ContactFormComponent
-      },
-      {
-        path: 'like-reusable',
-        component: LikeReusableComponent
-      },
-      {
-        path: 'zippy',
-        component: ZippyComponent
-      },
-      {
-        path: 'signup',
-        component: SignupFormComponent
-      },
-      {
-        path: 'change-password',
-        component: ChangePasswordFormComponent
-      },
-      {
-        path: 'posts',
-        component: ConsumingHttpServicesComponent
-      },
-      {
-        path: 'followers/:id/:username',
-        component: GithubProfileComponent
-      },
-      {
-        path: 'followers',
-        component: DisplayFollowersComponent
-      },
-      {
-        path: 'archive/:year/:month',
-        component: ArchiveComponent
-      },
-      {
-        path: 'archives',
-        component: RoutingNavigationComponent
-      },
-      {
-        path: 'panel',
-        component: PanelComponent
-      },
-      {
-        path: '**',
-        component: NotFoudPageComponent
-      }
-    ])
+    RouterModule.forRoot(ROUTES),
+    StoreModule.forRoot({}, { metaReducers }),
+    EffectsModule.forRoot([]),
+    environment.development ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [
     AuthorsService,
@@ -143,8 +169,5 @@ import { ArchiveComponent } from './modules/archive/archive.component';
   bootstrap: [AppComponent]
 })
 
-// export const metaReducers: MetaReducer<any>[] = !environment.production
-// ? [storeFreeze]
-// : [];
 export class AppModule { }
 

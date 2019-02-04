@@ -67,7 +67,17 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
   - install @ngrx/store-devtools lib to inspect different states before changing a state
 
-  - install on dev @ngrx/store-freeze lib for safety mesure to prevent to modify a state in the wrong way 
+  - install on dev @ngrx/store-freeze lib for safety mesure to prevent to modify a state in the wrong way -  in a reducer for example, this package prevents
+
+  us to modify the state - use it only on dev, appling to each reducer a metareducer, like this:
+
+  ```JavaScript
+  export const metaReducers: MetaReducer<any>[] = !environment.production
+  ? [storeFreeze]
+  : [];
+  ```
+  
+
 
 
 
