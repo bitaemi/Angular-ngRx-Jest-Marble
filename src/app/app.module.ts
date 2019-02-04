@@ -55,7 +55,7 @@ import { ArchiveComponent } from './modules/archive/archive.component';
     GithubProfileComponent,
     RoutingNavigationComponent,
     NotFoudPageComponent,
-    ArchiveComponent,
+    ArchiveComponent
   ],
   imports: [
     BrowserModule,
@@ -142,4 +142,9 @@ import { ArchiveComponent } from './modules/archive/archive.component';
   ],
   bootstrap: [AppComponent]
 })
+
+// export const metaReducers: MetaReducer<any>[] = !environment.production
+// ? [storeFreeze]
+// : [];
 export class AppModule { }
+
