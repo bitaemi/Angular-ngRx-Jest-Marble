@@ -62,10 +62,6 @@
           "name": "pepper"
         },
         {
-          "id": 3,
-          "name": "basil"
-        },
-        {
           "id": 4,
           "name": "chili"
         },
@@ -76,6 +72,14 @@
         {
           "id": 2,
           "name": "bacon"
+        },
+        {
+          "id": 3,
+          "name": "basil"
+        },
+        {
+          "id": 6,
+          "name": "mushroom"
         }
       ],
       "id": 1
@@ -134,8 +138,69 @@
     },
     {
       "name": "pepperoni",
-      "toppings": [],
+      "toppings": [
+        {
+          "id": 4,
+          "name": "chili"
+        },
+        {
+          "id": 3,
+          "name": "basil"
+        },
+        {
+          "id": 9,
+          "name": "pepper"
+        },
+        {
+          "id": 10,
+          "name": "pepperoni"
+        },
+        {
+          "id": 12,
+          "name": "tomato"
+        },
+        {
+          "id": 8,
+          "name": "onion"
+        },
+        {
+          "id": 6,
+          "name": "mushroom"
+        },
+        {
+          "id": 7,
+          "name": "olive"
+        }
+      ],
       "id": 4
+    },
+    {
+      "name": "Special pizza",
+      "toppings": [
+        {
+          "id": 3,
+          "name": "basil"
+        },
+        {
+          "id": 4,
+          "name": "chili"
+        }
+      ],
+      "id": 5
+    },
+    {
+      "name": "Special pizza",
+      "toppings": [
+        {
+          "id": 3,
+          "name": "basil"
+        },
+        {
+          "id": 4,
+          "name": "chili"
+        }
+      ],
+      "id": 6
     }
   ]
 }
