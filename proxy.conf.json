@@ -1,0 +1,10 @@
+{
+    "/pizzas": {
+      "target": "http://localhost:3000",
+      "secure": false
+    },
+    "/toppings": {
+      "target": "http://localhost:3000",
+      "secure": false
+    }
+  }

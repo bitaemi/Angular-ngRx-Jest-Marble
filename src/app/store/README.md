@@ -63,6 +63,8 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
  ## Implementation
 
+``ng serve`` will start Angular app at port 4200
+
   - install @ngrx/effects lib to handle side effects
 
   - install @ngrx/store-devtools lib to inspect different states before changing a state
@@ -76,8 +78,18 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
   ? [storeFreeze]
   : [];
   ```
-  
+Start the app with proxy server:
 
+``npm run start:proxy`` (see the package.json config)
 
+We use db.json(! outside of /src/assets/ or /src/app/ folder -   to avoid Angular from keeping a watch on data file) as fake server to mock data so:
+
+``npm install json-server --save-dev``
+
+The implementation using the json-server will use port 3000:
+
+``npm run mock:server`` to start json server to watch after data changes inside db.json
+
+Article about using json server with Angular 7 [here](https://medium.com/@kaustubhtalathi/mock-data-for-angular-5-applications-with-json-server-part-1-d377eced223b).
 
 
