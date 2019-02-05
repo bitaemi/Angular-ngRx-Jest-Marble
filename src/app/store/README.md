@@ -93,7 +93,7 @@ The implementation using the json-server will use port 3000:
 
 Article about using json server with Angular 7 [here](https://medium.com/@kaustubhtalathi/mock-data-for-angular-5-applications-with-json-server-part-1-d377eced223b).
 
- - Step - add action constants and creators: 
+ ### Step - add action constants and creators: 
 
 For type checking we create a customized type: 
 
@@ -144,13 +144,13 @@ export function reducer(
 }
 ```
 
- - Step - create and register the reducer:
+### Step - create and register the reducer:
 
 For this dispach action we need a status( loading, failed, success)
 
 Adding `StoreModule.forFeature('products', reducers)` to imports array of the products module will enable the lazy loading, binding the `reducers` from reducers folder.
 
-- Step - Step composition with selectors:
+### Step: composition with selectors:
 
 Refactor by setting the container component to accept the store and remove all curentlly used services.
 
@@ -209,3 +209,21 @@ export const getPizzasLoading = createSelector(getPizzaState, pizzas.getPizzasLo
 ```
  
 So, selectors allow us to pass to a particular component, only that needed slice from the app state (lazy loading for optimization) 
+
+### Side Effects Model for ngRx/store
+
+- listen for ngrx/store actions
+
+- isolate side effects from component
+
+- communicate outside of Angular
+
+EFFECT =  just a mechanism to fetch data from the STORE and put back in the STORE
+
+Reducer and effect could be interested in the same data. Difference is  that the reducer is a pure function, is synctonous, but the EFFECT can return data from an outside 
+
+the Angular app.
+
+the EFFECT is an observable stream, and we be passed it as a response to the reducer via a dispatch action:
+
+![Effects DataFlow Diagram](effects-flow.png)

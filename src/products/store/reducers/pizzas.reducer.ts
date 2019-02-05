@@ -1,5 +1,5 @@
 import { Pizza } from 'src/products/models/pizza.model';
-import * as Pizzas from '../actions/pizzas.actions'
+import * as Pizzas from '../actions/pizzas.action'
 
 export interface PizzaState {
     data: Pizza[];

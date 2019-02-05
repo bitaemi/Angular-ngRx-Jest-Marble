@@ -1,6 +1,4 @@
-import { async } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
-import { getAllPizzas } from './../../store/reducers/index';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Pizza } from '../../models/pizza.model';
@@ -38,5 +36,6 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.pizzas$ = this.store.select(productsStore.getAllPizzas);
+    this.store.dispatch(new productsStore.LoadPizzas());
   }
 }
