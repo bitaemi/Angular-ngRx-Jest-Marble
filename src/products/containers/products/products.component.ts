@@ -32,7 +32,7 @@ import * as productsStore  from '../../store'
 export class ProductsComponent implements OnInit {
   pizzas$: Observable<Pizza[]>;
 
-  constructor(private store: Store<productsStore.ProductState>) {}
+  constructor(private store: Store<productsStore.ProductsState>) {}
 
   ngOnInit() {
     this.pizzas$ = this.store.select(productsStore.getAllPizzas);

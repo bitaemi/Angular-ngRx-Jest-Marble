@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap, catchError } from 'rxjs/operators';
 
@@ -15,7 +15,8 @@ export class PizzasEffects {
   ) {}
 
   @Effect()
-  loadPizzas$ = this.actions$.ofType(pizzaActions.LOAD_PIZZAS).pipe(
+  loadPizzas$ = this.actions$.pipe(
+    ofType(pizzaActions.LOAD_PIZZAS),
     switchMap(() => {
       return this.pizzaService
         .getPizzas()

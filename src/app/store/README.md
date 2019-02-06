@@ -9,6 +9,8 @@
 
 # NgRx Implementation
 
+For dev add Augury and Redux Chrome extensions.
+
 ## Why REACTIVE
 
 {
@@ -73,7 +75,7 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
   us to modify the state - use it only on dev, appling to each reducer a metareducer, like this:
 
-  ```JavaScript
+  ```TypeScript
   export const metaReducers: MetaReducer<any>[] = !environment.production
   ? [storeFreeze]
   : [];
@@ -101,7 +103,7 @@ For type checking we create a customized type:
 
 Create a centralized store for products.  We need to dispach an action to display products. 
 
-```JavaScript
+```TypeScript
 export interface PizzaState {
     data: Pizza[];
     loaded: boolean;
@@ -156,7 +158,7 @@ Refactor by setting the container component to accept the store and remove all c
 
 In the reducer we export all the pizzas state.
 
-```JavaScript
+```TypeScript
 
 export interface ProductState {
     pizzas: pizzas.PizzaState
@@ -173,7 +175,7 @@ Use  ActionReducerMap, createFeatureSelector, createSelector methods from '@ngrx
 
 Add the products structure in the apps state tree:
 
-```JavaScript
+```TypeScript
 const state = {
     products: {
         pizzas: {
@@ -186,12 +188,12 @@ const state = {
 ```
 First get the products from the state tree (and we add the ProductState as a generic type for the featureSelector):
 
-```JavaScript
+```TypeScript
 export const getProductsState = createFeatureSelector<ProductState>('products');
 ```
 Create a generic selector:
 
-```JavaScript
+```TypeScript
 // ..
 
 export const getPizzaState = createSelector(
@@ -202,7 +204,7 @@ export const getPizzaState = createSelector(
 
 We make a selector for each different properties, at different levels, that we need from the state tree:
 
-```JavaScript
+```TypeScript
 export const getAllPizzas = createSelector(getPizzaState, pizzas.getPizzas);
 export const getPizzasLoaded = createSelector(getPizzaState, pizzas.getPizzasLoaded);
 export const getPizzasLoading = createSelector(getPizzaState, pizzas.getPizzasLoading);
@@ -227,3 +229,31 @@ the Angular app.
 the EFFECT is an observable stream, and we be passed it as a response to the reducer via a dispatch action:
 
 ![Effects DataFlow Diagram](effects-flow.png)
+
+### Optimize Data Structures with Entities
+
+ - change the data[] array from the action.payload  and flatten it into  `entities` pure object:
+
+ ```TypeScript
+ const pizzas = action.payload;
+
+    const entities = pizzas.reduce(
+    (entities: { [id: number]: Pizza }, pizza: Pizza) => {
+        return {
+        ...entities,
+        [pizza.id]: pizza,
+        };
+    },
+    {
+        ...state.entities,
+    }
+    );
+```
+and obtain all pizzas entities using a selector to map the id of each entity and return a new array  containing the entities:
+
+```TypeScript
+    export const getAllPizzas = createSelector(
+        getPizzasEntities, entities => {
+        return Object.keys(entities).map(id => entities[parseInt(id, 10)]);
+    });
+```
