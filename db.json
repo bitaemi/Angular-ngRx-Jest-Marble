@@ -96,14 +96,6 @@
           "name": "bacon"
         },
         {
-          "id": 3,
-          "name": "basil"
-        },
-        {
-          "id": 1,
-          "name": "anchovy"
-        },
-        {
           "id": 8,
           "name": "onion"
         },
@@ -118,6 +110,14 @@
         {
           "id": 5,
           "name": "mozzarella"
+        },
+        {
+          "id": 3,
+          "name": "basil"
+        },
+        {
+          "id": 4,
+          "name": "chili"
         }
       ],
       "id": 2

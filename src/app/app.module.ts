@@ -35,6 +35,9 @@ import { environment } from '../environments/environment';
 
 import { StoreModule, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { reducers, CustomSerializer } from './store';
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+
 
 // not used in production
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -156,7 +159,8 @@ export const ROUTES = [
     ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    StoreModule.forRoot({}, { metaReducers }),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreRouterConnectingModule,
     EffectsModule.forRoot([]),
     environment.development ? StoreDevtoolsModule.instrument() : [],
   ],
@@ -164,6 +168,7 @@ export const ROUTES = [
     AuthorsService,
     PostService,
     { provide: ErrorHandler, useClass: AppErrorHandler },
+    { provide: RouterStateSerializer, useClass: CustomSerializer },
     FollowersService
   ],
   bootstrap: [AppComponent]

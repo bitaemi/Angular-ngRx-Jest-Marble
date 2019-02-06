@@ -247,7 +247,7 @@ the EFFECT is an observable stream, and we be passed it as a response to the red
     {
         ...state.entities,
     }
-    );
+);
 ```
 and obtain all pizzas entities using a selector to map the id of each entity and return a new array  containing the entities:
 
@@ -257,3 +257,53 @@ and obtain all pizzas entities using a selector to map the id of each entity and
         return Object.keys(entities).map(id => entities[parseInt(id, 10)]);
     });
 ```
+### Hooking up @ngRx-router-store
+
+Create a store in the main app.
+
+In the reducer:
+
+```TypeScript
+export interface RouterStateUrl {
+    url: string;
+    queryParams: Params;
+    params: Params;
+}
+
+export interface State {
+    routerReducer: fromRouter.RouterReducerState<RouterStateUrl>
+}
+```
+The router reducer is conforming to the format of RouterStateUrl object:
+
+```TypeScript
+
+export const reducers: ActionReducerMap<State> = {
+    routerReducer: fromRouter.routerReducer
+}
+```
+
+In app's module imports array, initialiaze app state tree:
+
+```TypeScript
+    StoreModule.forRoot(reducers, { metaReducers }),
+```
+
+    Destructure the url from routerState:
+
+```TypeScript
+    const { url } = routerState;
+```
+![chart from REDUX ngRx Store Devtools](redux-chrome-extension-chart.png)
+
+Add the ``StoreRouterConnectingModule`` to app module's imports array;
+
+Add into the providers array the:
+
+`{ provide: RouterStateSerializer, useClass: CustomSerializer }`
+
+After bounding the routerState to the store, we do not need to inject router and ActivatedRouter into components constructors.
+
+The async pipe will subscribe and unsubscribe from the  pizza$ stream of data:
+
+``pizza$ | async``
