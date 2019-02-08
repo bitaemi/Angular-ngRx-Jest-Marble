@@ -55,6 +55,30 @@ export function reducer(
         loaded: false,
       };
     }
+    
+    case fromPizzas.UPDATE_PIZZAS:
+    case fromPizzas.CREATE_PIZZAS: {
+        const pizza = action.payload;
+        const entities = {
+        ...state.entities,
+        [pizza.id]: pizza,
+        }
+        return {
+            ...state,
+            entities
+        };
+      }
+          
+    case fromPizzas.REMOVE_PIZZAS: {
+        const pizza = action.payload;
+        //use destructuring assignment mark the removed pizza and change the entities of the app's state  
+        const { [pizza.id]: removed, ...entities } = state.entities;
+        // bind the new entities to the returned state
+        return {
+            ...state,
+            entities
+        };
+    }
   }
 
   return state;

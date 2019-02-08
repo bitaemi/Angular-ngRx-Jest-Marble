@@ -100,6 +100,21 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+ - [Why use REACTIVE](./src/app/store/README.md#why-reactive) 
+  - [Implementation](./src/app/store/README.md#implementation)
+    - [Step - add action constants and creators](./src/app/store/README.md#step---add-action-constants-and-creators)
+    - [Step - create and register the reducer](./src/app/store/README.md#step---create-and-register-the-reducer)
+    - [Step: composition with selectors](./src/app/store/README.md#step-composition-with-selectors)
+    - [Side Effects Model for ngRx/store](./src/app/store/README.md#side-effects-model-for-ngrxstore)
+    - [Optimize Data Structures with Entities](./src/app/store/README.md#optimize-data-structures-with-entities)
+    - [Hooking up @ngRx-router-store](./src/app/store/README.md#hooking-up-ngrx-router-store)
+    - [Extending the State Tree](./src/app/store/README.md#extending-the-state-tree)
+    - [Entity Patterns, CRUD opperations](./src/app/store/README.md#entity-patterns-crud-opperations)
+    - [Routing via Dispatch](./src/app/store/README.md#routing-via-dispatch)
+    - [State Preload  and Protection via Guards](./src/app/store/README.md#state-preload--and-protection-via-guards)
+    - [Observables and Change Detection](./src/app/store/README.md#observables-and-change-detection)
+    - [Unit Testing](./src/app/store/README.md#unit-testing)
+
 ##  Angular for busy devs
 
 ### 1. TOOLS for Angular Development
@@ -144,6 +159,7 @@ MUST USE Shortcuts with VS Code:
     Ctrl + K + W - close all tabs
     Ctrl + Tab keep Ctrl pressed and use Tab or up/down arrows to navigate between opened files
     Shift + Ctrl + O - go to method
+    Shift + F12 - method  usages
 
 #### 1.2. Using Angular CLI for development
 
@@ -170,7 +186,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ##### 1.2.5. Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io) (karma is the tests runner and jasmine is the syntax).
 
 ##### 1.2.6. Running end-to-end tests
 
@@ -1982,17 +1998,4 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
  - support for: eagerly loaded modules & lazily loaded modules
 
 
- - [Why REACTIVE](./src/app/store/README.md#why-reactive) 
-  - [Implementation](./src/app/store/README.md#implementation)
-    - [Step - add action constants and creators](./src/app/store/README.md#step---add-action-constants-and-creators)
-    - [Step - create and register the reducer](./src/app/store/README.md#step---create-and-register-the-reducer)
-    - [Step: composition with selectors](./src/app/store/README.md#step-composition-with-selectors)
-    - [Side Effects Model for ngRx/store](./src/app/store/README.md#side-effects-model-for-ngrxstore)
-    - [Optimize Data Structures with Entities](./src/app/store/README.md#optimize-data-structures-with-entities)
-    - [Hooking up @ngRx-router-store](./src/app/store/README.md#hooking-up-ngrx-router-store)
-    - [Extending the State Tree](./src/app/store/README.md#extending-the-state-tree)
-    - [Entity Patterns, CRUD opperations](./src/app/store/README.md#entity-patterns-crud-opperations)
-    - [Routing via Dispatch](./src/app/store/README.md#routing-via-dispatch)
-    - [State Preload  and Protection via Guards](./src/app/store/README.md#state-preload--and-protection-via-guards)
-    - [Observables and Change Detection](./src/app/store/README.md#observables-and-change-detection)
-    - [Unit Testing](./src/app/store/README.md#unit-testing)
+ - [REDUX Implementation](./src/app/store/README.md) 

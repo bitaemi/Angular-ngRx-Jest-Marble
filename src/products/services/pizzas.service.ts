@@ -20,7 +20,9 @@ export class PizzasService {
   createPizza(payload: Pizza): Observable<Pizza> {
     return this.http
       .post<Pizza>(`/pizzas`, payload)
-      .pipe(catchError((error: any) => Observable.throw(error.json())));
+      .pipe(
+        catchError((error: any) => Observable.throw(error.json()))
+      );
   }
 
   updatePizza(payload: Pizza): Observable<Pizza> {

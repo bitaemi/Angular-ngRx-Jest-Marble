@@ -317,25 +317,102 @@ Add into the providers array the:
 
 After bounding the routerState to the store, we do not need to inject router and ActivatedRouter into components constructors.
 
-The async pipe will subscribe and unsubscribe from the  pizza$ stream of data:
+The async pipe will subscribe and unsubscribe from the  ``pizza$`` stream of data:
 
 ``pizza$ | async``
 
 ### Extending the State Tree
 
-Set up a new set of actions for topings, similar with the one for pizzas.
+Set up a new set of actions for toppings, similar with the one for pizzas.
 
-reducers **should be** in files named: feature.reducer.ts,
+reducers should be in files named: feature.reducer.ts,
 
 effects -> feature.effect.ts
 
 actions -> feature.action.ts
 
-Roout Guards are necesar.
+Route Guards are necessar.
 
 ### Entity Patterns, CRUD opperations
 
+- for each event create the required actions
+
+```JavaScript
+// remove pizzas
+
+export const REMOVE_PIZZAS = '[Products] Remove Pizzas';
+export const REMOVE_PIZZAS_FAIL = '[Products] Remove Pizzas Fail';
+export const REMOVE_PIZZAS_SUCCESS = '[Products] Remove Pizzas Success';
+
+export class RemovePizza implements Action {
+  readonly type = REMOVE_PIZZAS;
+  constructor(public payload: any) {}
+}
+
+export class RemovePizzaSuccess implements Action {
+  readonly type = REMOVE_PIZZAS_SUCCESS;
+  constructor(public payload: Pizza) {}
+}
+
+export class RemovePizzaFail implements Action {
+  readonly type = REMOVE_PIZZAS_FAIL;
+  constructor(public payload: any) {}
+}
+```
+
+- for each action (e.g. a REMOVE event) add the corresponding  reducer:
+
+```JavaScript
+
+    case fromPizzas.REMOVE_PIZZAS: {
+        const pizza = action.payload;
+        //use destructuring assignment mark the removed pizza and change the entities of the app's state  
+        const { [pizza.id]: removed, ...entities } = state.entities;
+        // bind the new entities to the returned state
+        return {
+            ...state,
+            entities
+        };
+    }
+```
+
+- for each event that has to propagate to the server ( e.g CREATE operation) add the corresponding effect by filtering the actions stream of data. 
+
+ This filter will use only the the specified by type actions to get the payload of the action and will switch to a new stream of data, obtained after getting the response from  the data server .
+
+Here,this filter will use only the `CREATE_PIZZAS` actions to get the payload of the action and will switch to a new stream of data, obtained `POSTING` to json-server via `createPizza` method :
+
+```JavaScript
+ @Effect()
+  createPizza$ = this.actions$.pipe(
+    ofType(pizzaActions.CREATE_PIZZAS),
+    map((action: pizzaActions.CreatePizza) => action.payload),
+    switchMap((pizza) => { 
+      return this.pizzaService
+        .createPizza(pizza)
+        .pipe(
+          map(pizza => new pizzaActions.CreatePizzaSuccess(pizza)),
+          catchError(error => of(new pizzaActions.CreatePizzaFail(error))
+          )
+        
+      )
+    })
+  );
+```
+
+- for each feature dispatch the corresponding action in the component's methods, for eaxample:
+```JavaScript
+  onRemove(event: Pizza) {
+    const remove = window.confirm('Are you sure?');
+    if (remove) {  
+      this.store.dispatch(new fromStore.RemovePizza(event));
+
+    }
+  }
+```
+
 ### Routing via Dispatch
+
 
 ### State Preload  and Protection via Guards
 
