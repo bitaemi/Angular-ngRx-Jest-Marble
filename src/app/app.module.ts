@@ -37,6 +37,7 @@ import { StoreModule, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, CustomSerializer } from './store';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 // not used in production
@@ -154,6 +155,7 @@ export const ROUTES = [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,

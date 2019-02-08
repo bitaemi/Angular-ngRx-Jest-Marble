@@ -4,6 +4,19 @@
 
 - [NgRx Implementation](#ngrx-implementation)
   - [Why REACTIVE](#why-reactive)
+  - [Implementation](#implementation)
+    - [Step - add action constants and creators](#step---add-action-constants-and-creators)
+    - [Step - create and register the reducer](#step---create-and-register-the-reducer)
+    - [Step: composition with selectors](#step-composition-with-selectors)
+    - [Side Effects Model for ngRx/store](#side-effects-model-for-ngrxstore)
+    - [Optimize Data Structures with Entities](#optimize-data-structures-with-entities)
+    - [Hooking up @ngRx-router-store](#hooking-up-ngrx-router-store)
+    - [Extending the State Tree](#extending-the-state-tree)
+    - [Entity Patterns, CRUD opperations](#entity-patterns-crud-opperations)
+    - [Routing via Dispatch](#routing-via-dispatch)
+    - [State Preload  and Protection via Guards](#state-preload--and-protection-via-guards)
+    - [Observables and Change Detection](#observables-and-change-detection)
+    - [Unit Testing](#unit-testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -45,6 +58,8 @@ Both in a) and b) rective styles we use immutable update patterns:
 
 ![One-way DataFlow Diagram](reactive-dataFlow.png)
 
+ - dispatch = deal with (a task or opponent) quickly and efficiently
+
 we do not change the data stream from the input, but rather obtain a new data, and use it.
 
 NgRx library allows to react to state change in an observable stream, we have an observable driven state management.
@@ -63,7 +78,7 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
  - if objects changed after a mutation, we ignore the ChangeDetectionStrategy and we use observables to push new changes down the component tree
 
- ## Implementation
+## Implementation
 
 ``ng serve`` will start Angular app at port 4200
 
@@ -95,7 +110,7 @@ The implementation using the json-server will use port 3000:
 
 Article about using json server with Angular 7 [here](https://medium.com/@kaustubhtalathi/mock-data-for-angular-5-applications-with-json-server-part-1-d377eced223b).
 
- ### Step - add action constants and creators: 
+ ### Step - add action constants and creators
 
 For type checking we create a customized type: 
 
@@ -146,13 +161,13 @@ export function reducer(
 }
 ```
 
-### Step - create and register the reducer:
+### Step - create and register the reducer
 
 For this dispach action we need a status( loading, failed, success)
 
 Adding `StoreModule.forFeature('products', reducers)` to imports array of the products module will enable the lazy loading, binding the `reducers` from reducers folder.
 
-### Step: composition with selectors:
+### Step: composition with selectors
 
 Refactor by setting the container component to accept the store and remove all curentlly used services.
 
@@ -222,11 +237,9 @@ So, selectors allow us to pass to a particular component, only that needed slice
 
 EFFECT =  just a mechanism to fetch data from the STORE and put back in the STORE
 
-Reducer and effect could be interested in the same data. Difference is  that the reducer is a pure function, is synctonous, but the EFFECT can return data from an outside 
+Reducer and effect could be interested in the same data. Difference is  that the reducer is a pure function, is synchronous, but the EFFECT can return data from outside 
 
-the Angular app.
-
-the EFFECT is an observable stream, and we be passed it as a response to the reducer via a dispatch action:
+the Angular app. The EFFECT is an **observable stream**, and we will be passing the stream of data as a response to the reducer via a dispatch action:
 
 ![Effects DataFlow Diagram](effects-flow.png)
 
@@ -307,3 +320,25 @@ After bounding the routerState to the store, we do not need to inject router and
 The async pipe will subscribe and unsubscribe from the  pizza$ stream of data:
 
 ``pizza$ | async``
+
+### Extending the State Tree
+
+Set up a new set of actions for topings, similar with the one for pizzas.
+
+reducers **should be** in files named: feature.reducer.ts,
+
+effects -> feature.effect.ts
+
+actions -> feature.action.ts
+
+Roout Guards are necesar.
+
+### Entity Patterns, CRUD opperations
+
+### Routing via Dispatch
+
+### State Preload  and Protection via Guards
+
+### Observables and Change Detection
+
+### Unit Testing

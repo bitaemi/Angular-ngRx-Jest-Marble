@@ -1983,4 +1983,16 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
 
  - [Why REACTIVE](./src/app/store/README.md#why-reactive) 
-
+  - [Implementation](./src/app/store/README.md#implementation)
+    - [Step - add action constants and creators](./src/app/store/README.md#step---add-action-constants-and-creators)
+    - [Step - create and register the reducer](./src/app/store/README.md#step---create-and-register-the-reducer)
+    - [Step: composition with selectors](./src/app/store/README.md#step-composition-with-selectors)
+    - [Side Effects Model for ngRx/store](./src/app/store/README.md#side-effects-model-for-ngrxstore)
+    - [Optimize Data Structures with Entities](./src/app/store/README.md#optimize-data-structures-with-entities)
+    - [Hooking up @ngRx-router-store](./src/app/store/README.md#hooking-up-ngrx-router-store)
+    - [Extending the State Tree](./src/app/store/README.md#extending-the-state-tree)
+    - [Entity Patterns, CRUD opperations](./src/app/store/README.md#entity-patterns-crud-opperations)
+    - [Routing via Dispatch](./src/app/store/README.md#routing-via-dispatch)
+    - [State Preload  and Protection via Guards](./src/app/store/README.md#state-preload--and-protection-via-guards)
+    - [Observables and Change Detection](./src/app/store/README.md#observables-and-change-detection)
+    - [Unit Testing](./src/app/store/README.md#unit-testing)
