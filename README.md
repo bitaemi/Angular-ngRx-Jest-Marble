@@ -1983,7 +1983,7 @@ Common libraries to include at need:
 @angular/http
 @angular/router
 
-## NgRx Implementation
+## II. NgRx Implementation
 
 Understanding the REDUX PATTERN is the key for understanding ngRx Library and using it to programm in a reactive style.
 
@@ -1998,4 +1998,6 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
  - support for: eagerly loaded modules & lazily loaded modules
 
 
- - [REDUX Implementation](./src/app/store/README.md) 
+ - [Elaborated REDUX Implementation](./src/app/store/README.md) 
+ 
+## III. [Small Redux Store](https://github.com/bitaemi/redux-store) 
