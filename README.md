@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Angular for busy devs](#angular-for-busy-devs)
+- [I. Angular for busy devs](#i-angular-for-busy-devs)
   - [1. TOOLS for Angular Development](#1-tools-for-angular-development)
     - [1.1. Visual Studio Code](#11-visual-studio-code)
     - [1.2. Using Angular CLI for development](#12-using-angular-cli-for-development)
@@ -96,26 +96,15 @@
     - [10.6. Query Parameters](#106-query-parameters)
     - [10.8. SwitchMap Operator](#108-switchmap-operator)
     - [10.9. Programmatic navigation](#109-programmatic-navigation)
-- [NgRx Implementation](#ngrx-implementation)
+  - [11. Automated testing, TDD, Unit Testing](#11-automated-testing-tdd-unit-testing)
+- [II. NgRx Implementation - REDUX Store in Angular](#ii-ngrx-implementation---redux-store-in-angular)
+- [III. Small Redux Store](#iii-small-redux-store)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
- - [Why use REACTIVE](./src/app/store/README.md#why-reactive) 
-  - [Implementation](./src/app/store/README.md#implementation)
-    - [Step - add action constants and creators](./src/app/store/README.md#step---add-action-constants-and-creators)
-    - [Step - create and register the reducer](./src/app/store/README.md#step---create-and-register-the-reducer)
-    - [Step: composition with selectors](./src/app/store/README.md#step-composition-with-selectors)
-    - [Side Effects Model for ngRx/store](./src/app/store/README.md#side-effects-model-for-ngrxstore)
-    - [Optimize Data Structures with Entities](./src/app/store/README.md#optimize-data-structures-with-entities)
-    - [Hooking up @ngRx-router-store](./src/app/store/README.md#hooking-up-ngrx-router-store)
-    - [Extending the State Tree](./src/app/store/README.md#extending-the-state-tree)
-    - [Entity Patterns, CRUD opperations](./src/app/store/README.md#entity-patterns-crud-opperations)
-    - [Routing via Dispatch](./src/app/store/README.md#routing-via-dispatch)
-    - [State Preload  and Protection via Guards](./src/app/store/README.md#state-preload--and-protection-via-guards)
-    - [Observables and Change Detection](./src/app/store/README.md#observables-and-change-detection)
-    - [Unit Testing](./src/app/store/README.md#unit-testing)
 
-##  Angular for busy devs
+
+##  I. Angular for busy devs
 
 ### 1. TOOLS for Angular Development
 
@@ -1983,7 +1972,9 @@ Common libraries to include at need:
 @angular/http
 @angular/router
 
-## II. NgRx Implementation
+### 11. [Automated testing, TDD, Unit Testing](./src/README.md)
+
+## II. NgRx Implementation - REDUX Store in Angular
 
 Understanding the REDUX PATTERN is the key for understanding ngRx Library and using it to programm in a reactive style.
 
@@ -1999,5 +1990,19 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
 
  - [Elaborated REDUX Implementation](./src/app/store/README.md) 
+
+- [Why use REACTIVE](./src/app/store/README.md#why-reactive) 
+- [Implementation](./src/app/store/README.md#implementation)
+  - [Step - add action constants and creators](./src/app/store/README.md#step---add-action-constants-and-creators)
+  - [Step - create and register the reducer](./src/app/store/README.md#step---create-and-register-the-reducer)
+  - [Step: composition with selectors](./src/app/store/README.md#step-composition-with-selectors)
+  - [Side Effects Model for ngRx/store](./src/app/store/README.md#side-effects-model-for-ngrxstore)
+  - [Optimize Data Structures with Entities](./src/app/store/README.md#optimize-data-structures-with-entities)
+  - [Hooking up @ngRx-router-store](./src/app/store/README.md#hooking-up-ngrx-router-store)
+  - [Extending the State Tree](./src/app/store/README.md#extending-the-state-tree)
+  - [Entity Patterns, CRUD opperations](./src/app/store/README.md#entity-patterns-crud-opperations)
+  - [Routing via Dispatch](./src/app/store/README.md#routing-via-dispatch)
+  - [State Preload  and Protection via Guards](./src/app/store/README.md#state-preload--and-protection-via-guards)
+  - [Observables and Change Detection](./src/app/store/README.md#observables-and-change-detection)
  
 ## III. [Small Redux Store](https://github.com/bitaemi/redux-store) 
