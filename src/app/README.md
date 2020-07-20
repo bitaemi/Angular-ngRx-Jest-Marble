@@ -476,6 +476,7 @@ Thus, as a conclusion, we can draw the following architecture for an Angular App
 ```HTML
     <img [src] = "imageUrl" />
 ```
+
 where src is a DOM property and the imageUrl is a field in the component:
 
 ```TypeScript
@@ -483,6 +484,15 @@ export class CoursesComponent {
     imageUrl = "http://lorepixel.com/400/200";
 }
 ```
+Also 
+
+```HTML
+<h1>{{ title }}</h1>
+<!-- the same with: -->
+<h1 [textContent]="title"></h1> <!-- textContent is a property og the DOM object, not an attribute of an HTML -->
+<!-- most attribute elements have a one to one mapping to the properties of the DOM object, but there are a few exceptions -->
+```
+
 So the result of interpolation is the same with the one of property binding.
 
 Property binding works only one way: from component to the DOM. Any update from component will update the DOM, but any changes in the DOM are not reflected back into the component.

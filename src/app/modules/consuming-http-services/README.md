@@ -504,7 +504,7 @@ deletePost(post) {
 
 Observables are LAZY = nothing happens untill you subscribe to them.
 
-Promisses are EAGER = as soon as you create a promise, the code is executed.
+Promisses are EAGER = as soon as you create a promise ( you invoke it's constructor), the code is executed.
 
 With OBSERVABLES we have powerfull operators that do not exist with promisses and allow us to programm in reactive coding style, using RxJs Extensions (libraries).
 

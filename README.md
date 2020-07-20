@@ -32,7 +32,7 @@
 
 To make you curious:
 
-![angular-architecture](./src/app/readme-design/angular-architecture.JPG)
+![angular-architecture](./src/app/angular-readme/angular-architecture.JPG)
 
 Go and study: [Building Blocks of Angular App](./src/app/README.md#3-building-blocks-of-angular-app)
 
@@ -354,4 +354,4 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
  
 # III. [Small Redux Store](https://github.com/bitaemi/redux-store) 
 
-# IV. [Angular interview questions](./src/app/README.md#angular-interview-questions)
+# IV. [Angular interview questions](./src/app/angular-readme/README.md#angular-interview-questions)
