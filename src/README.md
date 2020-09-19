@@ -8,6 +8,12 @@
   - [2.2 When NOT to Introduce TDD :](#22-when-not-to-introduce-tdd-)
   - [2.3 Mesure Success with TDD](#23-mesure-success-with-tdd)
 - [3. Unit testing](#3-unit-testing)
+  - [3.0. Simple Unit Testing Examples](#30-simple-unit-testing-examples)
+    - [Setup methods for testing](#setup-methods-for-testing)
+    - [Test component that has injected a FormBuilder](#test-component-that-has-injected-a-formbuilder)
+    - [Test a component with event emitter](#test-a-component-with-event-emitter)
+    - [Test a component that has an injected service](#test-a-component-that-has-an-injected-service)
+  - [Unit Testing Limitations -> Integration Tests](#unit-testing-limitations---integration-tests)
   - [3.1 Angular Tests with Jest](#31-angular-tests-with-jest)
     - [3.1.2. Jest is better](#312-jest-is-better)
     - [3.1.3. Installation steps:](#313-installation-steps)
@@ -75,8 +81,237 @@ TDD - is a process that can be used with integration tests, automated tests, uni
 
 # 3. Unit testing
 
+Unit testing means testing the component in isolation
+
 - tests last (prod code is written first, then the tests after)
 - tests first (unit tests are written first, after is written the code)
+
+## 3.0. Simple Unit Testing Examples
+  - no integration with template, file system, database, services, routes
+  - in test.ts set the context just the unit-testing-demos
+```TypeScript
+const context = require.context('./app/components/unit-testing-demos/', true, /\.spec\.ts$/);
+```
+  - in console run `ng test` - we use Jsmine framework to write our tests and the Karma engine which will open up a browser window with running tests results
+  - to generate the code coverage reports:
+  `ng test --no-watch --code-coverage` - this runs test and creates a folder `coverage` in main directory containing coverage reports
+  - define as many tests as there are execution paths for all methods of the component
+  - a test or spec is defined by it() function
+  - each test should run in an isolated world
+
+Example of component testing:
+
+### Setup methods for testing
+
+```TypeScript
+import { VoteComponent } from './vote.component';
+
+describe('VoteComponent', () => {
+  let component: VoteComponent;
+  // Arrage
+  // each test should run in an isolated world
+  beforeAll(() => {
+    // what needs to be executed before all tests
+  });
+
+  beforeEach(() => {
+    // setup
+    // before each test component should be reinitialized so that previously runned test won't affect running test
+    component = new VoteComponent();
+  })
+
+  afterEach(() => {
+    // tear down
+  });
+
+  // define as many tests as there are execution paths for all methods of the component
+  // a test or spec is defined by it() function
+  it('should increment totalVotes when upvoted', () => {
+    // Act - call a method
+    component.upVote();
+    // Assert
+    expect(component.totalVotes).toBe(1);
+  });
+
+  it('should decrement totalVotes when downvoted', () => {
+    // Act - call a method
+    component.downVote();
+    // Assert
+    expect(component.totalVotes).toBe(-1);
+  });
+  afterAll(() => {
+    // what needs to be executed after all tests
+  })
+});
+``` 
+### Test component that has injected a FormBuilder
+
+```TypeScript
+export class TodoFormComponent { 
+  form: FormGroup; 
+
+  constructor(fb: FormBuilder) {
+    this.form = fb.group({
+      name: ['', Validators.required],
+      email: [''],
+    });
+  }
+}
+```
+we have the following unit tests:
+
+```TypeScript
+describe('TodoFormComponent', () => {
+  var component: TodoFormComponent; 
+
+  beforeEach(() => {
+    component = new TodoFormComponent(new FormBuilder());
+  });
+
+  it('should create a form with 2 controls', () => {
+    expect(component.form.contains('name')).toBeTruthy();
+    expect(component.form.contains('email')).toBeTruthy();
+
+  });
+
+  it('should make the name control required', () => {
+    let control = component.form.get('name');
+    control.setValue('');
+    expect(control.valid).toBeFalsy();
+  });
+});
+```
+### Test a component with event emitter
+```TypeScript
+import { EventEmitter } from '@angular/core'; 
+
+export class VoteComponent { 
+  totalVotes = 0; 
+  voteChanged = new EventEmitter();
+
+  upVote() { 
+    this.totalVotes++;
+    this.voteChanged.emit(this.totalVotes);
+  }
+}
+```
+unit test:
+```TypeScript
+ it('should raise voteChanged event when upvoted', () => {
+    // beause event emitter is an observabale we can subscribe to get the event raised
+    // INITIALIZATION
+    let totalVotes = null;
+    component.voteChanged.subscribe(tv => totalVotes = tv);
+    // ACT
+    component.upVote();
+    // expect(component.totalVotes).not.toBeNull(); this test will pass even though we have a bug in the component
+    expect(component.totalVotes).toBe(1);
+  });
+  ```
+
+  ### Test a component that has an injected service
+Component:
+
+```TypeScript
+  import { TodoService } from './todo.service'
+
+export class TodosComponent { 
+  todos: any[] = [];
+  message; 
+
+  constructor(private service: TodoService) {}
+
+  ngOnInit() { 
+    this.service.getTodos().subscribe(t => this.todos = t);
+  }
+
+  add() { 
+    var newTodo = { title: '... ' };
+    this.service.add(newTodo).subscribe(
+      t => this.todos.push(t),
+      err => this.message = err);
+  }
+
+  delete(id) {
+    if (confirm('Are you sure?'))
+      this.service.delete(id).subscribe();
+  }  
+}
+```
+Testing:
+```TypeScript
+describe('TodosComponent', () => {
+	let component: TodosComponent;
+	let service: TodoService;
+
+	beforeEach(() => {
+		service = new TodoService(null); // We cheat - anyway we will not use the Http protocol
+		component = new TodosComponent(service);
+	});
+
+
+  xit('should set todos property with the items returned from server', () => {
+    let todos = [1, 2, 3];
+    // Arrange:
+    // we want to change the implementation of the getTodos method by using the spyOn method from Jasmine
+    // with spyOn we get control over a method in a class - can check if a method has been called, we can change it's implementation or return a different value
+    spyOn(service, 'getTodos').and.returnValue(from([[1, 2, 3]]));
+    // Action
+    component.ngOnInit();
+    // Assert
+    expect(component.todos.length).toBe(3);
+    expect(component.todos).toBe(todos);
+  });
+
+  it('should call the server to save the chages when a new todo item is added'), () => {
+    // arrange - make sure that the add method from service is called
+    let spy = spyOn(service, 'add').and.callFake(todoItem => {
+      return empty();//from([[1, 2, 3, 4]]);
+    });
+    component.add();
+    expect(spy).toHaveBeenCalled();
+  }
+  it('should add a new todo from the server'), () => {
+    let todo = { id: 1 };
+    // arrange - make sure that the add method from service is called
+    let spy = spyOn(service, 'add').and.returnValue(from([{ id: 1 }]));
+    component.add();
+    expect(component.todos.indexOf(todo)).toBeGreaterThan(-1);
+  }
+
+  it('should set the message property when server gets an error when adding a new todo'), () => {
+    let error = 'error from the server';
+    // arrange - make sure that the add method from service is called
+    let spy = spyOn(service, 'add').and.returnValue(Observable.throw(error));
+    component.add();
+    expect(component.message).toBe(error);
+  }
+  it('should call the server to delete a todo item if the user confirms'), () => {
+    let todoId = 1;
+    // arrange - make sure that the add method from service is called
+    spyOn(window, 'confirm').and.returnValue(true);
+    let spy = spyOn(service, 'delete').and.returnValue(empty());
+    // act
+    component.delete(todoId);
+    expect(spy).toHaveBeenCalledWith(todoId);
+  }
+  it('should NOT call the server to delete a todo item if the user cancels'), () => {
+    let todoId = 1;
+    // arrange - make sure that the add method from service is called
+    spyOn(window, 'confirm').and.returnValue(false);
+    let spy = spyOn(service, 'delete').and.returnValue(empty());
+    // act
+    component.delete(todoId);
+    expect(spy).not.toHaveBeenCalled();
+  }
+
+});
+```
+## Unit Testing Limitations -> Integration Tests
+
+- routing
+- template bindings
+
 
 ## 3.1 Angular Tests with Jest
 
@@ -141,6 +376,10 @@ In console:
 - if you run tests for the first time will create the snapshots automatically -> `expect(fixture).toMatchSnapshot()` assertion
 
 ## 3.2  Unit Testing RxJs with Marble Diagrams
+
+```Bash
+npm i -D jasmine-marbles # install jasmine marbles library as a dev dependency
+``` 
 
 - test Observable synchronously
 - make Observable stream predictable
