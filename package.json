@@ -34,7 +34,8 @@
     "redux-observable": "^1.0.0",
     "rxjs": "^6.4.0",
     "rxjs-compat": "^6.3.3",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "@auth0/angular-jwt": "^2.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.0",

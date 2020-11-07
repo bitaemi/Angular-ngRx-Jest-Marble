@@ -1,3 +1,9 @@
+import { JwtModule } from '@auth0/angular-jwt';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { LoginComponent } from './login/login.component';
+import { AboutComponent } from './admin/about/about.component';
+import { JwtUnAuthorizedInterceptorService } from './services/jwt-un-authorized-interceptor.service';
+import { JwtInterceptorService } from './services/jwt-interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +49,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // not used in production
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { storeFreeze } from 'ngrx-store-freeze';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AlertDirective } from './directives/alert.directive';
+import { RepeaterDirective } from './directives/repeater.directive';
+import { SharedModule } from './shared/shared.module';
+import { EmployeeModule } from './employee/employee.module';
 
 
 export const metaReducers: MetaReducer<any>[] = !environment.production
@@ -151,7 +162,12 @@ export const ROUTES = [
     GithubProfileComponent,
     RoutingNavigationComponent,
     NotFoudPageComponent,
-    ArchiveComponent
+    ArchiveComponent,
+    AboutComponent,
+    LoginComponent,
+    SignUpComponent,
+    AlertDirective,
+    RepeaterDirective,
   ],
   imports: [
     BrowserModule,
@@ -165,13 +181,33 @@ export const ROUTES = [
     StoreRouterConnectingModule,
     EffectsModule.forRoot([]),
     environment.development ? StoreDevtoolsModule.instrument() : [],
+    SharedModule,
+    AppRoutingModule,
+    EmployeeModule,
+    JwtModule.forRoot( {
+      config: {
+        tokenGetter: () => {
+          return (sessionStorage.getItem("currentUser")? JSON.parse(sessionStorage.getItem("currentUser")).token : null)
+        }
+      }
+    })
   ],
   providers: [
     AuthorsService,
     PostService,
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: RouterStateSerializer, useClass: CustomSerializer },
-    FollowersService
+    FollowersService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtUnAuthorizedInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
