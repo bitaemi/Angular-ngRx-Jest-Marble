@@ -388,7 +388,10 @@ The clean approach for the Point class declaration is to prefix the parameters o
 
 ### 2.3.8. Modules
 
-Module = container of related components. A module is a file with an export class declaration:
+Module = container of related components. 
+A module is a file with an export class declaration:
+
+```ng g class Point``` # generates point.ts file which we can use a data model
 
 point.ts file:
 ```TypeScript
@@ -444,7 +447,8 @@ courses; //add required fields of the component
 
    Avoid Writing Boiler-Plate Code using the reliable way to create a new component:
 
-   ```ng g c course``` - generate a component named courses
+   ```ng g c courses``` - generate a component named courses
+   ```ng g c UpdateTask```- generates update-tasks.ts, .html, .scss files inside update-tasks folder
 
 ## 3.2. Module
 
@@ -597,7 +601,7 @@ This willl generate an injectable service. We need the ```@Injectable()``` decor
 ## Angular App Architecture
 
 Thus, as a conclusion, we can draw the following architecture for an Angular App
-![angular-architecture](./readme-design/angular-architecture.JPG)
+![angular-architecture](./angular-readme/angular-architecture.JPG)
 
 ## 4. Displaying Data and Handling Events
 

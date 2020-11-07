@@ -10,6 +10,7 @@
 - [How to hide an element on page](#how-to-hide-an-element-on-page)
 - [CSS preprocessor](#css-preprocessor)
 - [CSS encapsulation](#css-encapsulation)
+- [How to create a new array/object from existent array/object](#how-to-create-a-new-arrayobject-from-existent-arrayobject)
 - [Imediatlly Invokable Function Expression - IIFE](#imediatlly-invokable-function-expression---iife)
 - [How to use IIFE scoped vars globally](#how-to-use-iife-scoped-vars-globally)
 - [let vs var](#let-vs-var)
@@ -100,7 +101,7 @@ OR use flexbox:
 }
 ```
 # How to hide an element on page 
- - is better to use `display: none` than hidden attribute
+ - is better to use `display: none` than hidden attribute; hidden keeps the element in the DOM (element takes space)
 # CSS preprocessor 
  LESS, SASS - help in CSS writing, SASS has if/then/else statements, for loops, while loops, and each loops, @extend (extend another class - basicaly copies the code from another CSS class into that class that extends it), @include and different mixins that help to write succint and inteligile code-  for example:
 
@@ -134,15 +135,21 @@ The styles specified within the `@Component` metadata, apply only inside that co
 
  // use style array or styleURLs array
  ```
+# How to create a new array/object from existent array/object
+
+I have tried using ``splice()`` or ``{...oldObj}``(spread operator), however for multiple levels object/arrays, in order not to mutate the initial object, the safe way is: 
+```JavaScript
+let newObj = JSON.parse(JSON.stringify(initalObj)); // transform object into string(which is unmmutable) and backto object
+```
 # Imediatlly Invokable Function Expression - IIFE
 
 # How to use IIFE scoped vars globally 
-- without `use strict` mode, you can declare variables without the `var` or `let` keywords, thus those variables will be global - on the global object (Window) - but is a bad practice to cluter global object
+- without `use strict` mode, you can declare variables without the `var` or `let` keywords, thus those variables will be global - on the global object (Window) - but it is a bad practice to cluter global object
 
 # let vs var
 
 Variables declared with `let` are not hoisted (allocated memorie on top of the file) because they are visible only inside their declaration block (not outside - they have a local scope);
-Variables declared with `var` are visible inside the block/function where they where declared, and also in the enclosing function (in the outer function of ther declaration - this si the closure - scope chain)
+Variables declared with `var` are visible inside the block/function where they where declared, and also in the enclosing function (in the outer function of their declaration - this si the closure - scope chain)
 
 # Angular lifecycle hooks 
 - with these we can respond and act at a specific moment in the life of a component

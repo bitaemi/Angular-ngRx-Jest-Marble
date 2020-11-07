@@ -13,6 +13,7 @@
     - [Test component that has injected a FormBuilder](#test-component-that-has-injected-a-formbuilder)
     - [Test a component with event emitter](#test-a-component-with-event-emitter)
     - [Test a component that has an injected service](#test-a-component-that-has-an-injected-service)
+  - [NgZone](#ngzone)
   - [Unit Testing Limitations -> Integration Tests](#unit-testing-limitations---integration-tests)
   - [3.1 Angular Tests with Jest](#31-angular-tests-with-jest)
     - [3.1.2. Jest is better](#312-jest-is-better)
@@ -306,6 +307,33 @@ describe('TodosComponent', () => {
   }
 
 });
+```
+## NgZone
+
+```TypeScript
+export class QuestionsIndexComponent
+{
+  n: number = 0;
+  // if you do not need your data update in the view constantly, for operastions that happen inside a component
+  // then, you would use ngZone - here you will get updated data of compont only when click event triggers method1 of component
+  constructor(@Inject(NgZone) private zone: NgZone)
+  {
+    this.zone.runOutsideAngular( () => {
+      // run this code in the background, outside Angular Zone - thus outside component's zone => component view does not get updated via data binding (e.g {{n}} in the html template)
+      setInterval( () => {
+        this.n = this.n + 1;
+        console.log(this.n);
+      }, 300);
+    } );
+  }
+
+  method1()
+  {
+  }
+```
+```HTML
+<span>{{n}}</span>
+  <input type="button" value="Click me" (click)="method1()">
 ```
 ## Unit Testing Limitations -> Integration Tests
 
