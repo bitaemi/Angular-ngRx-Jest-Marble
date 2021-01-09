@@ -2,18 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [HTML 5 semantic tags benefits](#html-5-semantic-tags-benefits)
-- [HTML 5 APIs used:](#html-5-apis-used)
-- [How to create responsive css pages](#how-to-create-responsive-css-pages)
-- [How to create responsive css pages without any css framework](#how-to-create-responsive-css-pages-without-any-css-framework)
-- [Place an element at center of page:](#place-an-element-at-center-of-page)
-- [How to hide an element on page](#how-to-hide-an-element-on-page)
-- [CSS preprocessor](#css-preprocessor)
-- [CSS encapsulation](#css-encapsulation)
-- [How to create a new array/object from existent array/object](#how-to-create-a-new-arrayobject-from-existent-arrayobject)
-- [Imediatlly Invokable Function Expression - IIFE](#imediatlly-invokable-function-expression---iife)
-- [How to use IIFE scoped vars globally](#how-to-use-iife-scoped-vars-globally)
-- [let vs var](#let-vs-var)
 - [Angular lifecycle hooks](#angular-lifecycle-hooks)
 - [Passing  data from parent to child component via `@Input` decorator and input property:](#passing--data-from-parent-to-child-component-via-input-decorator-and-input-property)
 - [Passing data from child to parent via `@Output` decorator and `EventEmitter`;](#passing-data-from-child-to-parent-via-output-decorator-and-eventemitter)
@@ -25,141 +13,53 @@
 - [`@VewChild`](#vewchild)
 - [Http Header Interceptor](#http-header-interceptor)
 - [Git stash](#git-stash)
-- [Security principles cookies, local storage](#security-principles-cookies-local-storage)
 - [Store critical data - observables, ngrx](#store-critical-data---observables-ngrx)
-- [foreach vs map](#foreach-vs-map)
 - [RXJS observables](#rxjs-observables)
-- [Promise vs observable](#promise-vs-observable)
 - [Unit testing framework](#unit-testing-framework)
-- [CORS - Cross Origin Resouce Sharing](#cors---cross-origin-resouce-sharing)
-- [What is `this` object?](#what-is-this-object)
-- [How to change `this`? -](#how-to-change-this--)
-- [Arrow functions - arrow functions](#arrow-functions---arrow-functions)
+- [Routing](#routing)
+- [Services](#services)
+- [Template](#template)
+- [Explain the difference between Angular expressions and JavaScript expressions?](#explain-the-difference-between-angular-expressions-and-javascript-expressions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
-# HTML 5 semantic tags benefits
-- simplify the work for browsers, search engines and developers (header, nav, section, article, aside, footer)
-media (video and audio elements) - these come with different JS methods(play, pause, load);
-
-# HTML 5 APIs used:
-- media (video and audio elements) - these come with different JS methods(play, pause, load);
-- text track API (subtitles, captions, chapters, metadata)
-- drag and drop API - brings native drag and drop support to the browser
-- Offline - Application Cache API - creates a manifest used by the user browser to keep a copy of the files loded by the site, in the browser
-- User Interaction - use contenteditable combine with local storage to track changes to documents
-- History, Canvas 2D, Web Storage, Web Sokets - alows page to send 2 way messages between server and browser
-- Local Storage - HTML Web Storage API - more secure than cookies and large amounts of data can be stored,
-- SSE - Server Sent Events - updates from server to the web page come automatically
-
-# How to create responsive css pages 
-- We can do it either using frameworks like: bootstrap, material, ant or using CSS grid layout
-
-# How to create responsive css pages without any css framework
-
-We make use of the powerfull, 2 dimentional CSS grid layout available, supported by most browsers. We combine it with flexbox display and media-queries styles. We can also test using the breaking points offered by google Chrome inspector, but is better to also test on different divices, different browsers (Windows, MacOs, Android, iOS). We have grid: container, items, cells, traks(rows or columns), areas;
-
-The Most Powerful Lines in Grid is fluid width columns that break into more or less columns as space is available, with no media queries!
-
-```CSS
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* This is better for small screens, once min() is better supported */
-  /* grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); */
-  grid-gap: 1rem;
-  /* This is the standardized property now, but has slightly less support */
-  /* gap: 1rem */
-}
-```
-[https://css-tricks.com/snippets/css/complete-guide-grid/](https://css-tricks.com/snippets/css/complete-guide-grid/)
-
-# Place an element at center of page:
-
-Use transform: translate with position:fixed:
-```CSS
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-  // because the translate value from transform is based on the dimention of the element we want to center 
-}
-```
-OR use flexbox:
-```CSS
-.box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.box div {
-  width: 100px;
-  height: 100px;
-}
-```
-# How to hide an element on page 
- - is better to use `display: none` than hidden attribute; hidden keeps the element in the DOM (element takes space)
-# CSS preprocessor 
- LESS, SASS - help in CSS writing, SASS has if/then/else statements, for loops, while loops, and each loops, @extend (extend another class - basicaly copies the code from another CSS class into that class that extends it), @include and different mixins that help to write succint and inteligile code-  for example:
-
-```CSS
-.bam {
-  @include background(
-    image-url("foo.png"),
-    linear-gradient(top left, #333, #0c0),
-    radial-gradient(#c00, #fff 100px)
-  );
-}
-```
-this transpliled turns into the CSS that provide the gradient background required for all browsers:
-
-```CSS
-.bam {
-  background: url('/foo.png'), -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #333333), color-stop(100%, #00cc00)), -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100, color-stop(0%, #cc0000), color-stop(100%, #ffffff));
-  background: url('/foo.png'), -webkit-linear-gradient(top left, #333333, #00cc00), -webkit-radial-gradient(#cc0000, #ffffff 100px);
-  background: url('/foo.png'), -moz-linear-gradient(top left, #333333, #00cc00), -moz-radial-gradient(#cc0000, #ffffff 100px);
-  background: url('/foo.png'), -o-linear-gradient(top left, #333333, #00cc00), -o-radial-gradient(#cc0000, #ffffff 100px);
-  background: url('/foo.png'), -ms-linear-gradient(top left, #333333, #00cc00), -ms-radial-gradient(#cc0000, #ffffff 100px);
-  background: url('/foo.png'), linear-gradient(top left, #333333, #00cc00), radial-gradient(#cc0000, #ffffff 100px);
-}
-```
-# CSS encapsulation
-
-The styles specified within the `@Component` metadata, apply only inside that component. They are not inherited by any component. We can manipulate the view encapsulation seting the encapsulation in metadata:
-
-```TypeScript
- encapsulation: ViewEncapsulation.None // don't provide any template or style encapsulation
-
- // use style array or styleURLs array
- ```
-# How to create a new array/object from existent array/object
-
-I have tried using ``splice()`` or ``{...oldObj}``(spread operator), however for multiple levels object/arrays, in order not to mutate the initial object, the safe way is: 
-```JavaScript
-let newObj = JSON.parse(JSON.stringify(initalObj)); // transform object into string(which is unmmutable) and backto object
-```
-# Imediatlly Invokable Function Expression - IIFE
-
-# How to use IIFE scoped vars globally 
-- without `use strict` mode, you can declare variables without the `var` or `let` keywords, thus those variables will be global - on the global object (Window) - but it is a bad practice to cluter global object
-
-# let vs var
-
-Variables declared with `let` are not hoisted (allocated memorie on top of the file) because they are visible only inside their declaration block (not outside - they have a local scope);
-Variables declared with `var` are visible inside the block/function where they where declared, and also in the enclosing function (in the outer function of their declaration - this si the closure - scope chain)
-
 # Angular lifecycle hooks 
-- with these we can respond and act at a specific moment in the life of a component
+- with these methods we can respond and act at a specific moment in the life of a component
+A Mermaid diagram can be seen below using Mermaid Preview Extention in VSCode (waiting for GitHub support to preview in browser)
+```mermaid
+gantt
+dateFormat  YYYY-MM-DD
+title Angular Life Cycle Hooks of Components & Directives
 
-`ngOnChanges` - respond when Angular sets or resets data-bound input properties; receives a SimpleChanges object of current and previous property values
+section Create 
+Constructor()           :done,    des1, 2014-01-06,2014-01-08
+section Initialize Component
+OnChanges.ngOnChanges()              :active, des2, 2014-01-08, 3d
+OnInit.ngOnInit               :         des3, 2014-01-09, 3d
+section Other Change Detections
+DoCheck.ngDoCheck()               :active,  des4, after des3, 3d
+ngAfterContentInit()                :         des5, after des3, 3d
+ngAfterContentChecked()               :         des6, after des3, 3d
+ngAfterViewInit()               :         des7, after des3, 3d
+ngAfterViewChecked()                :         des8, after des3, 3d
+section A Change in View was Detected (e.g. mouse click)
+DoCheck.ngDoCheck()               :active,  des11, after des8, 3d
+ngAfterContentChecked()               :         des12, after des8, 3d
+ngAfterViewChecked()                :         des13, after des8, 3d
+section Delete Component(Change route)
+ngOnDestroy()                :         des10, after des13, 3d
 
-`ngOnInit` - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
-`ngDoCheck` - detect or act upon changes that Angular cannot detect on it's own
-`ngAfterContentInit`, `ngAfterContentChecked`, `ngAfterViewInit`, `ngAfterViewChecked`,
+```      
+`ngOnChanges` - once - respond when Angular sets (one time, after componet construction) or resets(after each ngDoCheck) data-bound input properties; receives a SimpleChanges object of current and previous property values
+
+`ngOnInit` - once - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
+`ngDoCheck` - executes when an event occures, before change "detection process" occures.Used to identify wheather change detection process occures or not. Thus, helps to detect or act upon changes that Angular cannot detect on it's own (if you we use 3rd parties controls that Angular cannot recognize - e.g you have JavaScript code that executes outside like a click event))
+`ngAfterContentInit` - exe one time in the life of a component, after suppling the component along with parent component (use it to get the content properties of children components), 
+`ngAfterContentChecked` - executes each time, after "change detection" process of the component data,
+`ngAfterViewInit` - once, after initializing all elements in the template of the component - use it if we need to manipulate properties of the view children(inner templates),
+`ngAfterViewChecked` -  executes each time, after "change detection" process of "View" of the component,
 `ngOnDestroy` - use it to cleanup: unsubscribe to observables or detach event handlers, just before Angular destroys the component
+
+  For testing use this file: [https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts](https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts)
 
 # Passing  data from parent to child component via `@Input` decorator and input property:
 In the child component js we pass the input properties using the `@Input` decorator
@@ -398,24 +298,15 @@ Using the `get` method of the HTTPClient and providing as params the `url` of th
 
 I usualy use the simplest path of working with the stash of code changes :
 
-git stash // when I wand to have the changes I worked on 
-git checkout on_some branch or some commit
-git stash list // to see what I have in stash
-git stash pop // take from stash and put in my working branch
+```bash
+git stash # when I wand to have the changes I worked on 
+git checkout on_some # branch or some commit
+git stash list # to see what I have in stash
+git stash pop # take from stash and put in my working branch
 
-or git stash clear to have a clean stash of changes
-
-
-# Security principles cookies, local storage 
-- Angular is great when it comes to security. Helps with XSS, XSRF, sanitizing inputs. Cookies introduce vulnerabilitie,Nowdays to prevent XSRF, by using web tokens and identity servers we can have secure implementations - like the Single Sign On experience, implementations  of OIDC protocol, OAuth 2;
-We can also use less cookies and instead use web tokens, local storage;
-We have to pay attention not to send any sensitive date in the router params or in JSON payloads among APIs requests.
-
+git stash clear # to have a clean stash of changes
+```
 # Store critical data - observables, ngrx
-
-# foreach vs map
-
-both are applied to an array and receive a callback fc. as param; `forEach` mutates the array, by alling the callback on each elem of the array; map, does not mutate the array, it returns a new array from the initial array, by apping the function receveide as param, to each element from the initial array
 
 # RXJS observables
 
@@ -430,7 +321,6 @@ RxJs operators - some are chainable methods:
 - filter, 
 - switchMap operator cancels previous stream of data/subscription, making a new one
 
-# Promise vs observable
 # Unit testing framework 
 - I've recently used Jest; 
 In the past I've used Jasmine with Karma, but Jest is better  because it takes exactly what test fails and at which line. I've tested  Observables in Angular, using Marble Diagrams;
@@ -466,20 +356,19 @@ describe('AuthorsComponent', () => {
   });
 });
 ```
-# CORS - Cross Origin Resouce Sharing 
-- is a standard used to allow some cross origin requests, while rejecting others. In sites that offer embeded services we might have to relax some certain restriction, or else we will encouter: CORS error -  the same origin policy disallows reading from remote resource;
+# Routing 
+– An Angular router is responsible for interpreting a browser URL as an instruction to navigate to a client-generated view. The router is bound to links on a page to tell Angular to navigate the application view when a user clicks on it.
 
-# What is `this` object? 
-= the CONTEXT, the environment
-- inside a function that is the value of a property for an object `ownerObject`, the `this` keyword represents the `ownerObject` object;
+# Services 
+– A very broad category, a service can be anything ranging from a value and function to a feature that is required by an Angular app. Technically, a service is a class with a well-defined purpose.
 
-# How to change `this`? - 
-By the means of:
-call / bind / apply - set custom vals for this ( = alter the execution context)
-All three functions(call, bind, apply) can be used to set values for `this` object.
-The `apply()` method calls a function with a given `this` value, and arguments provided as an array (or an array-like object).
-`bind()` creates a new function, from the initial one, where the value of `this` is the value provided as param: const bindedFc= unbindedFc.bind(param)
+# Template 
+– Each component’s view is associated with its companion template. A template in Angular is a form of HTML tags that lets Angular know that how it is meant to render the component.
 
-# Arrow functions - arrow functions
-- short notation for anonymous functions, (the `=>` means return). An arrow function expression is similar to what in other programming languages is known as lambda functions;
-- a great aspect is that the arrow function alredy binds the `this` keyword from inside the function to the context object where the arrow function is placed; thus if function is declare inside a component, this will be the context of that component;
+# Explain the difference between Angular expressions and JavaScript expressions?
+
+ Although both Angular expressions and JavaScript expressions can contain literals, operators, and variables, there are some notable dissimilarities between the two. Important differences between Angular expressions and JavaScript expressions are enlisted below:
+
+- Filters support: Angular expressions support filters while JavaScript expressions do not
+- Possible inside HTML tags: It is possible to write Angular expressions inside the HTML tags. JavaScript expressions, contrarily, can’t be written inside the HTML tags
+-  No conditionals, exceptions, loops: While JavaScript expressions support conditionals, exceptions, and loops, Angular expressions don’t

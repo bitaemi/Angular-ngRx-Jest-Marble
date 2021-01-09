@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Angular Development](#angular-development)
+    - [VS Code Extentions and shortcuts](#vs-code-extentions-and-shortcuts)
     - [Using Angular CLI for development](#using-angular-cli-for-development)
     - [Angular App Sructure](#angular-app-sructure)
   - [2.3. Typescript Fundamentals](#23-typescript-fundamentals)
@@ -40,6 +41,7 @@
   - [4.9. Pipes](#49-pipes)
   - [5. Building Reusable Components](#5-building-reusable-components)
     - [5.1. Component API, Input and Output Properties](#51-component-api-input-and-output-properties)
+    - [Life Cycle Hooks](#life-cycle-hooks)
     - [5.2. Templates and Styles](#52-templates-and-styles)
   - [5.3. View Encapsulation](#53-view-encapsulation)
   - [5.4. ngContent and ngContainer](#54-ngcontent-and-ngcontainer)
@@ -88,13 +90,6 @@
   - [10.8. SwitchMap Operator](#108-switchmap-operator)
   - [10.9. Programmatic navigation](#109-programmatic-navigation)
 - [Angular interview questions](#angular-interview-questions)
-  - [Routing](#routing)
-  - [Services](#services)
-  - [Template](#template)
-  - [Explain the difference between Angular expressions and JavaScript expressions?](#explain-the-difference-between-angular-expressions-and-javascript-expressions)
-  - [Filters support](#filters-support)
-  - [Possible inside HTML tags](#possible-inside-html-tags)
-  - [No conditionals, eceptions, loops](#no-conditionals-eceptions-loops)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -109,21 +104,33 @@ Install node:
 
 `npm node-sass`
 
-Installed extensions:
+### VS Code Extentions and shortcuts
+  Usefull VS Code extensions:
 
-  VS Live Share
-
-  npm Intellisense
-
-  Debugger For Chrome
-
-  TS Lint
-
-  Auto Import
-
-  Sass
-
-  Npm
+- Angular Snippets by John Papa
+- Annotator
+- Auto Import
+- Beautify, Prettier Now, Prettier - Code Formatter
+- Browser Preview
+- Debugger for Chrome
+- ES6-String-HTML
+- ESLint, TS Lint
+- GitLens
+- HTML Class Suggestions; HTML Format;  Intellicense for CSS class names in HTML
+- HTML to CSS autocompletion;
+- JSON Pretty Printer
+- TypeScript Hero
+- Markdown Preview
+- Mermaid Markdown
+- REST Client
+- vscode-angular
+- Remote - WSL
+- Npm; Npm intellicense
+- ES6-string-html
+- VS Live Share
+- Debugger For Chrome
+- Auto Import
+- Sass
 
 MUST USE Shortcuts with VS Code:
 
@@ -756,8 +763,8 @@ Buit-in PIPES:
 
       percent
 
-PIPES are chainable.
- Supply arguments to some pipes using `:`
+**!PIPES are chainable via multiple '|'**
+**!Supply arguments to some pipes using `:`**
 
 ```HTML
 <div>{{ course.title | uppercase}}
@@ -797,6 +804,27 @@ Nameing convention: summary.pipe.ts holds pipe's implementation
 Also add the SummaryPipe in the module's @ngModule declarations array.
 
 or simply generate your pipe files: ```ng g p title-casing```
+
+``ng g p NumberToWords # this will generate the number-to-words folder with files inside pipes directory, included in shared module``
+
+**When we supply arrays or objects as values to filter+transform via pipe, that pipe requires to be impure in order to detect changes inside the arrays/objects we filter and display in the view!**
+``ng g pipe Filter`` (look into filter.pipe.ts file)
+
+In order to make the pipe re-execute not only when it detects the change of reference of objects/arrays passed as value to filter, but also when the content of objects/arrays passed to filter has changed(e.g. some elemets added inside the array/object's properties have changed), we use:
+
+```TypeScript
+@Pipe({
+  name: 'filter',
+  pure: false // this will cause the pipe to be slower, as it checks for object changes(e.g inside the array of projects)
+})
+```
+usage: 
+```HTML
+<div *ngFor="let project of projects | filter: searchBy : searchText | paging : currentPageIndex : pageSize; let i = index">
+```
+We have chained `filter` and `paging` pipe. For large data sets it is recomended to have the pagination on server side.
+However, for client side pagination we can use the folowing pipe:
+
 ## 5. Building Reusable Components
 
    ### 5.1. Component API, Input and Output Properties
@@ -874,6 +902,10 @@ onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
   ```HTML
   <app-favorite [notFavorite]="post.notFavorite"  (changeAliass)="OnFavoriteChange($event)"></app-favorite>
   ```
+  ### Life Cycle Hooks
+
+   More on: [https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/angular-readme/README.md#angular-lifecycle-hooks](https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/angular-readme/README.md#angular-lifecycle-hooks)
+
   ### 5.2. Templates and Styles
 
 Each component has a template (HTML file) to render component's view. But all our external templates are actually
@@ -987,7 +1019,7 @@ encapsulation: ViewEncapsulation.None
 ```
 ## 6. Directives
 
-![directives](./readme-design/directives.JPG)
+![directives](./angular-readme/directives.JPG)
 
    ## 6.1. Built-In Directives
 
@@ -1076,8 +1108,6 @@ Otherwise it's better to use ``*ngIf`` to remove it from the DOM and free up the
         this.courses.splice(index, 1);
     }
 ```
-
-
    ### ngFor and trackBy
 
    Angular by default tracks objects by their identity (the reference into the memory).
@@ -1199,6 +1229,7 @@ gets gets parsed into:
 
    ``ng g d input-format``
 
+    The host is the DOM element on which we apply the directive (e.g. p or div or span ... here it is the input tag)
     Use the ``@HostListener`` DECORATOR, to subscribe to the events raised from the host:
 
 ```TypeScript
@@ -1990,28 +2021,21 @@ Common libraries to include at need:
 @angular/router
 
 # Angular interview questions
-
-
-## Routing 
-– An Angular router is responsible for interpreting a browser URL as an instruction to navigate to a client-generated view. The router is bound to links on a page to tell Angular to navigate the application view when a user clicks on it.
-
-## Services 
-– A very broad category, a service can be anything ranging from a value and function to a feature that is required by an Angular app. Technically, a service is a class with a well-defined purpose.
-
-## Template 
-– Each component’s view is associated with its companion template. A template in Angular is a form of HTML tags that lets Angular know that how it is meant to render the component.
-
-## Explain the difference between Angular expressions and JavaScript expressions?
-
- Although both Angular expressions and JavaScript expressions can contain literals, operators, and variables, there are some notable dissimilarities between the two. Important differences between Angular expressions and JavaScript expressions are enlisted below:
-
-## Filters support
- Angular expressions support filters while JavaScript expressions do not
-##  Possible inside HTML tags
-
-It is possible to write Angular expressions inside the HTML tags. JavaScript expressions, contrarily, can’t be written inside the HTML tags
-
-## No conditionals, eceptions, loops
-
- While JavaScript expressions support conditionals, exceptions, and loops, Angular expressions don’t
-
+- [Angular lifecycle hooks](./angular-readme/README.md#angular-lifecycle-hooks)
+- [Passing  data from parent to child component via `@Input` decorator and input property:](./angular-readme/README.md#passing--data-from-parent-to-child-component-via-input-decorator-and-input-property)
+- [Passing data from child to parent via `@Output` decorator and `EventEmitter`;](./angular-readme/README.md#passing-data-from-child-to-parent-via-output-decorator-and-eventemitter)
+- [Passing input to sibling(frate) components :](./angular-readme/README.md#passing-input-to-siblingfrate-components-)
+- [Passing data between non related components - use BehavioralSubject](./angular-readme/README.md#passing-data-between-non-related-components---use-behavioralsubject)
+- [Using ReplaySubject:](./angular-readme/README.md#using-replaysubject)
+- [Pass data between component using Angular Route:](./angular-readme/README.md#pass-data-between-component-using-angular-route)
+- [Subject vs behavior subject](./angular-readme/README.md#subject-vs-behavior-subject)
+- [`@VewChild`](./angular-readme/README.md#vewchild)
+- [Http Header Interceptor](./angular-readme/README.md#http-header-interceptor)
+- [Git stash](./angular-readme/README.md#git-stash)
+- [Store critical data - observables, ngrx](./angular-readme/README.md#store-critical-data---observables-ngrx)
+- [RXJS observables](./angular-readme/README.md#rxjs-observables)
+- [Unit testing framework](./angular-readme/README.md#unit-testing-framework)
+- [Routing](./angular-readme/README.md#routing)
+- [Services](./angular-readme/README.md#services)
+- [Template](./angular-readme/README.md#template)
+- [Explain the difference between Angular expressions and JavaScript expressions?](./angular-readme/README.md#explain-the-difference-between-angular-expressions-and-javascript-expressions)

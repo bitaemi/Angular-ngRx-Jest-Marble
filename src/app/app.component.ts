@@ -3,7 +3,7 @@ import { LoginService } from './services/login.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLoggerService } from './services/router-logger.service';
 import { Router, NavigationEnd } from '@angular/router';
-import { fadeAnimation, slideUpAnimation, zoomUpAnimation, zoomLeftAnimation, slideLeftOrRightAnimation, keyFrameAnimation } from "./my-animations";
+import { fadeAnimation, slideUpAnimation, zoomUpAnimation, zoomLeftAnimation, slideLeftOrRightAnimation, keyFrameAnimation } from "./shared/shared-utils/my-animations";
 
 @Component({
   selector: 'app-root',
