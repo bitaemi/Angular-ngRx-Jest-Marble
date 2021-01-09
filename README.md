@@ -4,6 +4,7 @@
 
 - [I. Angular for busy devs](#i-angular-for-busy-devs)
   - [Angular App Architecture](#angular-app-architecture)
+    - [Automate deployments using Gulp or Webpack](#automate-deployments-using-gulp-or-webpack)
     - [Webpack](#webpack)
     - [2. Typescript Fundamentals](#2-typescript-fundamentals)
     - [3. Building Blocks of Angular App](#3-building-blocks-of-angular-app)
@@ -25,10 +26,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 #  I. Angular for busy devs
-
 ## Angular App Architecture
 
 To make you curious:
@@ -39,6 +37,27 @@ Go and study:
 [Angular development](./src/app/README.md#angular-development)
 [Building Blocks of Angular App](./src/app/README.md#3-building-blocks-of-angular-app)
 
+### Automate deployments using Gulp or Webpack
+
+``npm i gulp --save-dev``
+One way to automate the build of distributables=web dev artifacts and the copying process on the server is to use Gulp.
+Look into gulpfile.js
+```JavaScript
+gulp.task("Copy-dist-to-wwwroot", () => {
+    return gulp.src("./dist/TaskManager/**/*")
+        .pipe(gulp.dest("C:\\Angular\\MvcTaskManager\\MvcTaskManager\\wwwroot"));
+});
+
+// by default, whach the dist folder, any time the any of the files from dist folder changes, then copy the files on the server to render
+gulp.task("default", () => {
+    gulp.watch("./dist/TaskManager", gulp.series("Copy-dist-to-wwwroot"));
+});
+```
+```bash
+ng build --watch #starts Angular app and watches for changes
+# open new terminal window and start gulp:
+gulp #each ttime code is changed it recompiles the app and copies dist files into wwwroot
+```
 ###  Webpack
 
 Angular's CLI uses a tool called Webpack, which is a build automation tool. It gets all of our scripts and style sheets,combines them, puts them in a bundle, and then minifies that bundle, and this is for optimization.
@@ -48,8 +67,9 @@ Each time you change your code Webpack automatically recompiles your application
 Webpack automatically injects all the scripts into our index.html, at runtime:
   tyles.bundle.js is a container for all the styles of the app compiled into one bundle
 
-No need to do it with Angular CLI, but just to mention it: [Set-up Webpack and Babel for your web-server](https://gist.github.com/bitaemi/d429293325696eb11aaba058fd094f67)
-  
+No need to do it with Angular CLI, but just to mention it (a full webpack config and doc is here):
+[https://github.com/bitaemi/React-app-Hooks-Context-reducers/tree/master/webpack-configs-apps](https://github.com/bitaemi/React-app-Hooks-Context-reducers/tree/master/webpack-configs-apps)
+
 ### 2. Typescript Fundamentals
 
   - [2. Types](./src/app/README.md#232-types)
@@ -221,7 +241,7 @@ Understanding the REDUX PATTERN is the key for understanding ngRx Library and us
 
  - manage state using the ngRx STORE
 
- - redux with observables = manage the state usesing observables streams of data
+ - redux with observables = manage the state useing observables streams of data
 
  - immutable @Inputs (modify the copies of objects, and create new objects using the reference of the initial object)
 

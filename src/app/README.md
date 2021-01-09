@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Angular Development](#angular-development)
+    - [VS Code Extentions and shortcuts](#vs-code-extentions-and-shortcuts)
     - [Using Angular CLI for development](#using-angular-cli-for-development)
     - [Angular App Sructure](#angular-app-sructure)
   - [2.3. Typescript Fundamentals](#23-typescript-fundamentals)
@@ -40,6 +41,7 @@
   - [4.9. Pipes](#49-pipes)
   - [5. Building Reusable Components](#5-building-reusable-components)
     - [5.1. Component API, Input and Output Properties](#51-component-api-input-and-output-properties)
+    - [Life Cycle Hooks](#life-cycle-hooks)
     - [5.2. Templates and Styles](#52-templates-and-styles)
   - [5.3. View Encapsulation](#53-view-encapsulation)
   - [5.4. ngContent and ngContainer](#54-ngcontent-and-ngcontainer)
@@ -109,21 +111,33 @@ Install node:
 
 `npm node-sass`
 
-Installed extensions:
+### VS Code Extentions and shortcuts
+  Usefull VS Code extensions:
 
-  VS Live Share
-
-  npm Intellisense
-
-  Debugger For Chrome
-
-  TS Lint
-
-  Auto Import
-
-  Sass
-
-  Npm
+- Angular Snippets by John Papa
+- Annotator
+- Auto Import
+- Beautify, Prettier Now, Prettier - Code Formatter
+- Browser Preview
+- Debugger for Chrome
+- ES6-String-HTML
+- ESLint, TS Lint
+- GitLens
+- HTML Class Suggestions; HTML Format;  Intellicense for CSS class names in HTML
+- HTML to CSS autocompletion;
+- JSON Pretty Printer
+- TypeScript Hero
+- Markdown Preview
+- Mermaid Markdown
+- REST Client
+- vscode-angular
+- Remote - WSL
+- Npm; Npm intellicense
+- ES6-string-html
+- VS Live Share
+- Debugger For Chrome
+- Auto Import
+- Sass
 
 MUST USE Shortcuts with VS Code:
 
@@ -756,8 +770,8 @@ Buit-in PIPES:
 
       percent
 
-PIPES are chainable.
- Supply arguments to some pipes using `:`
+**!PIPES are chainable via multiple '|'**
+**!Supply arguments to some pipes using `:`**
 
 ```HTML
 <div>{{ course.title | uppercase}}
@@ -797,6 +811,24 @@ Nameing convention: summary.pipe.ts holds pipe's implementation
 Also add the SummaryPipe in the module's @ngModule declarations array.
 
 or simply generate your pipe files: ```ng g p title-casing```
+
+``ng g p NumberToWords # this will generate the number-to-words folder with files inside pipes directory, included in shared module``
+
+**When we supply arrays or objects as values to filter+transform via pipe, that pipe requires to be impure in order to detect changes inside the arrays/objects we filter and display in the view!**
+``ng g pipe Filter`` (look into filter.pipe.ts file)
+
+In order to make the pipe re-execute not only when it detects the change of reference of objects/arrays passed as value to filter, but also when the content of objects/arrays passed to filter has changed(e.g. some elemets added inside the array/object's properties have changed), we use:
+
+```TypeScript
+@Pipe({
+  name: 'filter',
+  pure: false // this will cause the pipe to be slower, as it checks for object changes(e.g inside the array of projects)
+})
+```
+usage: 
+```HTML
+<div *ngFor="let project of projects | filter: searchBy : searchText | paging : currentPageIndex : pageSize; let i = index">
+```
 ## 5. Building Reusable Components
 
    ### 5.1. Component API, Input and Output Properties
@@ -874,6 +906,10 @@ onFavoriteChange(eventArgs: FavoriteChangedEventArgs) {
   ```HTML
   <app-favorite [notFavorite]="post.notFavorite"  (changeAliass)="OnFavoriteChange($event)"></app-favorite>
   ```
+  ### Life Cycle Hooks
+
+   More on: [https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/angular-readme/README.md#angular-lifecycle-hooks](https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/angular-readme/README.md#angular-lifecycle-hooks)
+
   ### 5.2. Templates and Styles
 
 Each component has a template (HTML file) to render component's view. But all our external templates are actually

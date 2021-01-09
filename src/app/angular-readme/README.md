@@ -152,14 +152,43 @@ Variables declared with `let` are not hoisted (allocated memorie on top of the f
 Variables declared with `var` are visible inside the block/function where they where declared, and also in the enclosing function (in the outer function of their declaration - this si the closure - scope chain)
 
 # Angular lifecycle hooks 
-- with these we can respond and act at a specific moment in the life of a component
+- with these methods we can respond and act at a specific moment in the life of a component
+A Mermaid diagram can be seen below using Mermaid Preview Extention in VSCode (waiting for GitHub support to preview in browser)
+```mermaid
+gantt
+dateFormat  YYYY-MM-DD
+title Angular Life Cycle Hooks of Components & Directives
 
-`ngOnChanges` - respond when Angular sets or resets data-bound input properties; receives a SimpleChanges object of current and previous property values
+section Create 
+Constructor()           :done,    des1, 2014-01-06,2014-01-08
+section Initialize Component
+OnChanges.ngOnChanges()              :active, des2, 2014-01-08, 3d
+OnInit.ngOnInit               :         des3, 2014-01-09, 3d
+section Other Change Detections
+DoCheck.ngDoCheck()               :active,  des4, after des3, 3d
+ngAfterContentInit()                :         des5, after des3, 3d
+ngAfterContentChecked()               :         des6, after des3, 3d
+ngAfterViewInit()               :         des7, after des3, 3d
+ngAfterViewChecked()                :         des8, after des3, 3d
+section A Change in View was Detected (e.g. mouse click)
+DoCheck.ngDoCheck()               :active,  des11, after des8, 3d
+ngAfterContentChecked()               :         des12, after des8, 3d
+ngAfterViewChecked()                :         des13, after des8, 3d
+section Delete Component(Change route)
+ngOnDestroy()                :         des10, after des13, 3d
 
-`ngOnInit` - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
-`ngDoCheck` - detect or act upon changes that Angular cannot detect on it's own
-`ngAfterContentInit`, `ngAfterContentChecked`, `ngAfterViewInit`, `ngAfterViewChecked`,
+```      
+`ngOnChanges` - once - respond when Angular sets (one time, after componet construction) or resets(after each ngDoCheck) data-bound input properties; receives a SimpleChanges object of current and previous property values
+
+`ngOnInit` - once - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
+`ngDoCheck` - executes when an event occures, before change "detection process" occures.Used to identify wheather change detection process occures or not. Thus, helps to detect or act upon changes that Angular cannot detect on it's own (if you we use 3rd parties controls that Angular cannot recognize - e.g you have JavaScript code that executes outside like a click event))
+`ngAfterContentInit` - exe one time in the life of a component, after suppling the component along with parent component (use it to get the content properties of children components), 
+`ngAfterContentChecked` - executes each time, after "change detection" process of the component data,
+`ngAfterViewInit` - once, after initializing all elements in the template of the component - use it if we need to manipulate properties of the view children(inner templates),
+`ngAfterViewChecked` -  executes each time, after "change detection" process of "View" of the component,
 `ngOnDestroy` - use it to cleanup: unsubscribe to observables or detach event handlers, just before Angular destroys the component
+
+  For testing use this file: [https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts](https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts)
 
 # Passing  data from parent to child component via `@Input` decorator and input property:
 In the child component js we pass the input properties using the `@Input` decorator

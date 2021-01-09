@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FavoriteChangedEventArgs } from '../favorite/favorite.component';
-import { LikesComponent } from '../features/likes/likes.component';
+import { FavoriteChangedEventArgs } from '../../to-sort-components/favorite/favorite.component';
+import { LikesComponent } from '../../to-sort-components/features/likes/likes.component';
 
 const likeButton = new LikesComponent(310, false);
 

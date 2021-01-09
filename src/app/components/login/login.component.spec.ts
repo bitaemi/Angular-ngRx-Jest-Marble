@@ -1,9 +1,7 @@
-import { services } from './../../../products copy/services/index';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm } from "@angular/forms";
 import { LoginComponent } from "./login.component";
 import { LoginService } from "../../services/login.service";
-import { QuestionsService } from "../../services/questions.service";
 import { APP_BASE_HREF, CommonModule } from "@angular/common";
 import { ApplicationModule } from "@angular/core";
 
@@ -36,6 +34,4 @@ describe("Login Component Testing", () => {
     comp.onLoginClick(new NgForm([], []));
     expect(comp.s.loginStatus).toBe(true);
   });
-
-
 });
