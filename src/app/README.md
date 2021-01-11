@@ -13,7 +13,7 @@
     - [2.3.5. Interfaces](#235-interfaces)
     - [2.3.6. Classes, Objects, Constructors](#236-classes-objects-constructors)
     - [2.3.7. Access modifiers, Properties](#237-access-modifiers-properties)
-    - [2.3.8. Modules](#238-modules)
+    - [2.3.8. Models](#238-models)
   - [3. Building Blocks of Angular App](#3-building-blocks-of-angular-app)
   - [3.1. Component](#31-component)
     - [Create a component:](#create-a-component)
@@ -393,12 +393,11 @@ The clean approach for the Point class declaration is to prefix the parameters o
      point.x = 10; //apply the setter method
 ```
 
-### 2.3.8. Modules
+### 2.3.8. Models
 
-Module = container of related components. 
-A module is a file with an export class declaration:
+A data model is a file with an export class declaration:
 
-```ng g class Point``` # generates point.ts file which we can use a data model
+```ng g class Point``` # generates point.ts file which we can use as data model
 
 point.ts file:
 ```TypeScript

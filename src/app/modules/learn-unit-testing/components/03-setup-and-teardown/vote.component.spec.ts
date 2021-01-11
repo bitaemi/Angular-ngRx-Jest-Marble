@@ -18,14 +18,26 @@ describe('VoteComponent', () => {
     // tear down
   });
 
-  // define as many tests as there are execution paths for all methods of the component
-  // a test or spec is defined by it() function
-  it('should increment totalVotes when upvoted', () => {
-    // Act - call a method
+  it('should raise voteChanged event when upvoted', () => {
+    // because event emitter is an observabale we can subscribe to get the event raised
+    // INITIALIZATION
+    let totalVotes = null;
+    component.voteChanged.subscribe(tv => totalVotes = tv);
+    // ACT
     component.upVote();
-    // Assert
+    // expect(component.totalVotes).not.toBeNull(); this test will pass even though we have a bug in the component
     expect(component.totalVotes).toBe(1);
   });
+  
+  // define as many tests as there are execution paths for all methods of the component
+  // a test or spec is defined by it() function
+  // this is in the case we do not have the event emitter:
+  // it('should increment totalVotes when upvoted', () => {
+  //   // Act - call a method
+  //   component.upVote();
+  //   // Assert
+  //   expect(component.totalVotes).toBe(1);
+  // });
 
   it('should decrement totalVotes when downvoted', () => {
     // Act - call a method
@@ -33,6 +45,7 @@ describe('VoteComponent', () => {
     // Assert
     expect(component.totalVotes).toBe(-1);
   });
+
   afterAll(() => {
     // what needs to be executed after all tests
   })

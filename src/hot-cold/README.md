@@ -252,7 +252,7 @@ npm test mocking-observables-values.spec.ts:
 #or press p in order to provide the test name to watch
 mocking-observables-values.spec.ts:
 ```
-after that you'll be able to watch test running while edditing mocking-observables-values.spec.ts:
+after that you'll be able to watch test running while editing mocking-observables-values.spec.ts:
 
 ```TypeScript
 describe('can support observable data mocking', () => {

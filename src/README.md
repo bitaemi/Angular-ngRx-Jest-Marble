@@ -9,24 +9,20 @@
   - [2.3 Mesure Success with TDD](#23-mesure-success-with-tdd)
 - [3. Unit testing](#3-unit-testing)
   - [3.0. Simple Unit Testing Examples](#30-simple-unit-testing-examples)
-    - [Setup methods for testing](#setup-methods-for-testing)
-    - [Test component that has injected a FormBuilder](#test-component-that-has-injected-a-formbuilder)
-    - [Test a component with event emitter](#test-a-component-with-event-emitter)
-    - [Test a component that has an injected service](#test-a-component-that-has-an-injected-service)
   - [NgZone](#ngzone)
-  - [Unit Testing Limitations -> Integration Tests](#unit-testing-limitations---integration-tests)
-  - [3.1 Angular Tests with Jest](#31-angular-tests-with-jest)
-    - [3.1.2. Jest is better](#312-jest-is-better)
-    - [3.1.3. Installation steps:](#313-installation-steps)
-    - [3.1.5 SnapShot testing](#315-snapshot-testing)
-  - [3.2  Unit Testing RxJs with Marble Diagrams](#32--unit-testing-rxjs-with-marble-diagrams)
-    - [3.2.2 Marble Syntax - RxJs Empty and Never Observables](#322-marble-syntax---rxjs-empty-and-never-observables)
-    - [3.2.3 Write the first marble test](#323-write-the-first-marble-test)
-  - [3.2 Model Observables using hot() or cold() methods in unit testing](#32-model-observables-using-hot-or-cold-methods-in-unit-testing)
-  - [3.3. Unit testing by mocking Observable values](#33-unit-testing-by-mocking-observable-values)
-  - [3.4. Testing RxJS Operators](#34-testing-rxjs-operators)
-  - [3.5. Testing Business Code](#35-testing-business-code)
-  - [3.6. Handling Errors and Race Conditions](#36-handling-errors-and-race-conditions)
+  - [3.1. Unit Testing Limitations -> Integration Tests](#31-unit-testing-limitations---integration-tests)
+  - [3.2. Angular Tests with Jest](#32-angular-tests-with-jest)
+    - [3.2.2. Jest is better](#322-jest-is-better)
+    - [3.2.3. Installation steps:](#323-installation-steps)
+    - [3.2.5 SnapShot testing](#325-snapshot-testing)
+  - [3.3  Unit Testing RxJs with Marble Diagrams](#33--unit-testing-rxjs-with-marble-diagrams)
+    - [3.3.2 Marble Syntax - RxJs Empty and Never Observables](#332-marble-syntax---rxjs-empty-and-never-observables)
+    - [3.3.3 Write the first marble test](#333-write-the-first-marble-test)
+  - [3.3. Model Observables using hot() or cold() methods in unit testing](#33-model-observables-using-hot-or-cold-methods-in-unit-testing)
+  - [3.4. Unit testing by mocking Observable values](#34-unit-testing-by-mocking-observable-values)
+  - [3.5. Testing RxJS Operators](#35-testing-rxjs-operators)
+  - [3.6. Testing Business Code](#36-testing-business-code)
+  - [3.7. Handling Errors and Race Conditions](#37-handling-errors-and-race-conditions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -88,234 +84,38 @@ Unit testing means testing the component in isolation
 - tests first (unit tests are written first, after is written the code)
 
 ## 3.0. Simple Unit Testing Examples
-  - no integration with template, file system, database, services, routes
-  - in test.ts set the context just the unit-testing-demos
+
+- no integration with template, file system, database, services, routes
+  - in test.ts set the context just the learn-unit-testing path
 ```TypeScript
-const context = require.context('./app/components/unit-testing-demos/', true, /\.spec\.ts$/);
+const context = require.context('./app/modules/learn-unit-testing/components/', true, /\.spec\.ts$/);
 ```
-  - in console run `ng test` - we use Jsmine framework to write our tests and the Karma engine which will open up a browser window with running tests results
+ or for  pipes: 
+ ```TypeScript
+const context = require.context('./app/pipes/', true, /\.spec\.ts$/);
+```
+  - in console run `ng test` - we use Jasmine framework to write our tests and the Karma engine which will open up a browser window with running tests results
   - to generate the code coverage reports:
   `ng test --no-watch --code-coverage` - this runs test and creates a folder `coverage` in main directory containing coverage reports
   - define as many tests as there are execution paths for all methods of the component
   - a test or spec is defined by it() function
   - each test should run in an isolated world
 
-Example of component testing:
+Example of component testing:  
 
-### Setup methods for testing
+- [Setup methods for testing](./app/modules/learn-unit-testing/README.md#setup-methods-for-testing)
+- [Test component that has injected a FormBuilder](./app/modules/learn-unit-testing/README.md#test-component-that-has-injected-a-formbuilder)
+- [Test a component with event emitter](./app/modules/learn-unit-testing/README.md#test-a-component-with-event-emitter)
+- [Test a component that has an injected service](./app/modules/learn-unit-testing/README.md#test-a-component-that-has-an-injected-service)
 
-```TypeScript
-import { VoteComponent } from './vote.component';
-
-describe('VoteComponent', () => {
-  let component: VoteComponent;
-  // Arrage
-  // each test should run in an isolated world
-  beforeAll(() => {
-    // what needs to be executed before all tests
-  });
-
-  beforeEach(() => {
-    // setup
-    // before each test component should be reinitialized so that previously runned test won't affect running test
-    component = new VoteComponent();
-  })
-
-  afterEach(() => {
-    // tear down
-  });
-
-  // define as many tests as there are execution paths for all methods of the component
-  // a test or spec is defined by it() function
-  it('should increment totalVotes when upvoted', () => {
-    // Act - call a method
-    component.upVote();
-    // Assert
-    expect(component.totalVotes).toBe(1);
-  });
-
-  it('should decrement totalVotes when downvoted', () => {
-    // Act - call a method
-    component.downVote();
-    // Assert
-    expect(component.totalVotes).toBe(-1);
-  });
-  afterAll(() => {
-    // what needs to be executed after all tests
-  })
-});
-``` 
-### Test component that has injected a FormBuilder
-
-```TypeScript
-export class TodoFormComponent { 
-  form: FormGroup; 
-
-  constructor(fb: FormBuilder) {
-    this.form = fb.group({
-      name: ['', Validators.required],
-      email: [''],
-    });
-  }
-}
-```
-we have the following unit tests:
-
-```TypeScript
-describe('TodoFormComponent', () => {
-  var component: TodoFormComponent; 
-
-  beforeEach(() => {
-    component = new TodoFormComponent(new FormBuilder());
-  });
-
-  it('should create a form with 2 controls', () => {
-    expect(component.form.contains('name')).toBeTruthy();
-    expect(component.form.contains('email')).toBeTruthy();
-
-  });
-
-  it('should make the name control required', () => {
-    let control = component.form.get('name');
-    control.setValue('');
-    expect(control.valid).toBeFalsy();
-  });
-});
-```
-### Test a component with event emitter
-```TypeScript
-import { EventEmitter } from '@angular/core'; 
-
-export class VoteComponent { 
-  totalVotes = 0; 
-  voteChanged = new EventEmitter();
-
-  upVote() { 
-    this.totalVotes++;
-    this.voteChanged.emit(this.totalVotes);
-  }
-}
-```
-unit test:
-```TypeScript
- it('should raise voteChanged event when upvoted', () => {
-    // beause event emitter is an observabale we can subscribe to get the event raised
-    // INITIALIZATION
-    let totalVotes = null;
-    component.voteChanged.subscribe(tv => totalVotes = tv);
-    // ACT
-    component.upVote();
-    // expect(component.totalVotes).not.toBeNull(); this test will pass even though we have a bug in the component
-    expect(component.totalVotes).toBe(1);
-  });
-  ```
-
-  ### Test a component that has an injected service
-Component:
-
-```TypeScript
-  import { TodoService } from './todo.service'
-
-export class TodosComponent { 
-  todos: any[] = [];
-  message; 
-
-  constructor(private service: TodoService) {}
-
-  ngOnInit() { 
-    this.service.getTodos().subscribe(t => this.todos = t);
-  }
-
-  add() { 
-    var newTodo = { title: '... ' };
-    this.service.add(newTodo).subscribe(
-      t => this.todos.push(t),
-      err => this.message = err);
-  }
-
-  delete(id) {
-    if (confirm('Are you sure?'))
-      this.service.delete(id).subscribe();
-  }  
-}
-```
-Testing:
-```TypeScript
-describe('TodosComponent', () => {
-	let component: TodosComponent;
-	let service: TodoService;
-
-	beforeEach(() => {
-		service = new TodoService(null); // We cheat - anyway we will not use the Http protocol
-		component = new TodosComponent(service);
-	});
-
-
-  xit('should set todos property with the items returned from server', () => {
-    let todos = [1, 2, 3];
-    // Arrange:
-    // we want to change the implementation of the getTodos method by using the spyOn method from Jasmine
-    // with spyOn we get control over a method in a class - can check if a method has been called, we can change it's implementation or return a different value
-    spyOn(service, 'getTodos').and.returnValue(from([[1, 2, 3]]));
-    // Action
-    component.ngOnInit();
-    // Assert
-    expect(component.todos.length).toBe(3);
-    expect(component.todos).toBe(todos);
-  });
-
-  it('should call the server to save the chages when a new todo item is added'), () => {
-    // arrange - make sure that the add method from service is called
-    let spy = spyOn(service, 'add').and.callFake(todoItem => {
-      return empty();//from([[1, 2, 3, 4]]);
-    });
-    component.add();
-    expect(spy).toHaveBeenCalled();
-  }
-  it('should add a new todo from the server'), () => {
-    let todo = { id: 1 };
-    // arrange - make sure that the add method from service is called
-    let spy = spyOn(service, 'add').and.returnValue(from([{ id: 1 }]));
-    component.add();
-    expect(component.todos.indexOf(todo)).toBeGreaterThan(-1);
-  }
-
-  it('should set the message property when server gets an error when adding a new todo'), () => {
-    let error = 'error from the server';
-    // arrange - make sure that the add method from service is called
-    let spy = spyOn(service, 'add').and.returnValue(Observable.throw(error));
-    component.add();
-    expect(component.message).toBe(error);
-  }
-  it('should call the server to delete a todo item if the user confirms'), () => {
-    let todoId = 1;
-    // arrange - make sure that the add method from service is called
-    spyOn(window, 'confirm').and.returnValue(true);
-    let spy = spyOn(service, 'delete').and.returnValue(empty());
-    // act
-    component.delete(todoId);
-    expect(spy).toHaveBeenCalledWith(todoId);
-  }
-  it('should NOT call the server to delete a todo item if the user cancels'), () => {
-    let todoId = 1;
-    // arrange - make sure that the add method from service is called
-    spyOn(window, 'confirm').and.returnValue(false);
-    let spy = spyOn(service, 'delete').and.returnValue(empty());
-    // act
-    component.delete(todoId);
-    expect(spy).not.toHaveBeenCalled();
-  }
-
-});
-```
 ## NgZone
 
 ```TypeScript
 export class QuestionsIndexComponent
 {
   n: number = 0;
-  // if you do not need your data update in the view constantly, for operastions that happen inside a component
-  // then, you would use ngZone - here you will get updated data of compont only when click event triggers method1 of component
+  // if you do not need your data update in the view constantly, for operations that happen inside a component
+  // then, you would use ngZone - here you will get updated data of component only when click event triggers method1 of component
   constructor(@Inject(NgZone) private zone: NgZone)
   {
     this.zone.runOutsideAngular( () => {
@@ -335,15 +135,19 @@ export class QuestionsIndexComponent
 <span>{{n}}</span>
   <input type="button" value="Click me" (click)="method1()">
 ```
-## Unit Testing Limitations -> Integration Tests
+## 3.1. Unit Testing Limitations -> Integration Tests
 
-- routing
-- template bindings
+- [Integration testing examples](./app/modules/learn-unit-testing/README.md#integration-testing-examples)
+  - template bindings: [Testing Templates](./app/modules/learn-unit-testing/README.md#testing-templates)
+  - routing: [Testing Navigation](./app/modules/learn-unit-testing/README.md#testing-navigation)
+  - [Testing Directives](./app/modules/learn-unit-testing/README.md#testing-directives)
+  - [Dealing with asynchronous operations](./app/modules/learn-unit-testing/README.md#dealing-with-asynchronous-operations)
 
 
-## 3.1 Angular Tests with Jest
 
-### 3.1.2. Jest is better 
+## 3.2. Angular Tests with Jest
+
+### 3.2.2. Jest is better 
 
 Jasmine testing is slow:
  - initial build time slow
@@ -355,9 +159,9 @@ Jasmine testing is slow:
   - snapshot testing
   - using jsdom under the hood
   - runs tests in parallel
-  - immersive wach mode - only runs the tests associated with your git changes
+  - immersive watch mode - only runs the tests associated with your git changes
   
-### 3.1.3. Installation steps:
+### 3.2.3. Installation steps:
 
  - 1)Remove Karma packages
  - Jasmine is also used by protractor, so you have to still keep it
@@ -390,7 +194,7 @@ In console:
  - you can run only run one test by writing  test name and press enter;
  - you can clear the filter and run  tests again
 
- ### 3.1.4 Migrating Codebase
+ ### 3.2.4 Migrating Codebase
 
  - no need to change assertions
  - differences in mocking
@@ -398,12 +202,12 @@ In console:
  - jest-marbles to test RxJs and Observables
  - vscode-jest - while you are writing the tests the package tells you if tests are failing or not (puts comments)
 
-### 3.1.5 SnapShot testing
+### 3.2.5 SnapShot testing
 
 - take any serializable object, create a snapshot and then compare your changes with the previously taken snapshot
 - if you run tests for the first time will create the snapshots automatically -> `expect(fixture).toMatchSnapshot()` assertion
 
-## 3.2  Unit Testing RxJs with Marble Diagrams
+## 3.3  Unit Testing RxJs with Marble Diagrams
 
 ```Bash
 npm i -D jasmine-marbles # install jasmine marbles library as a dev dependency
@@ -426,7 +230,7 @@ npm i -D jasmine-marbles # install jasmine marbles library as a dev dependency
  - LEFT --------------TIME FRAME = 10 ms of time------------------------> RIGHT
  - max 740 frames/project
 
- ### 3.2.1 Marble Syntax Symbols
+ ### 3.3.1 Marble Syntax Symbols
 
  - `-` = time =  each frame  = 10 ms of time
  - `|` = the successful completion of an observable
@@ -441,12 +245,12 @@ npm i -D jasmine-marbles # install jasmine marbles library as a dev dependency
  - -------0-----1-----X----> it means emit 2 values and error
 
 
- ### 3.2.2 Marble Syntax - RxJs Empty and Never Observables
+ ### 3.3.2 Marble Syntax - RxJs Empty and Never Observables
 
  - "|" - EMPTY - emits no items but terminates normally
  - "-" or "-----" - NEVER emits any item and never terminates normally
 
-### 3.2.3 Write the first marble test
+### 3.3.3 Write the first marble test
 
 For following Unit Testing RxJs with Marble Diagrams tutorial stop the app and start it using:
 
@@ -495,7 +299,7 @@ describe('Marble Syntax', () => {
 });
 
 ```
-## 3.2 Model Observables using hot() or cold() methods in unit testing
+## 3.3. Model Observables using hot() or cold() methods in unit testing
 
 - [Model Observables using hot() or cold() methods in unit testing](./hot-cold/README.md)
   - [1. HOT Observables](./hot-cold/README.md#1-hot-observables)
@@ -504,20 +308,20 @@ describe('Marble Syntax', () => {
   - [4. Testing COLD Observables](./hot-cold/README.md#4-testing-cold-observables)
   - [5. Testing Hot Observables:](./hot-cold/README.md#5-testing-hot-observables)
 
-## 3.3. Unit testing by mocking Observable values 
+## 3.4. Unit testing by mocking Observable values 
  - [Unit testing by mocking Observable values](./hot-cold/README.md#2-unit-testing-by-mocking-observable-values)
 
-## 3.4. Testing RxJS Operators
+## 3.5. Testing RxJS Operators
   - [Concat](./rxjs-operators/README.md#concat)
   - [Zip](./rxjs-operators/README.md#zip)
 
-## 3.5. Testing Business Code
+## 3.6. Testing Business Code
 
 - [Run async tests in a sync manner using Test Scheduler](./test-scheduler/README.md#run-async-tests-in-a-sync-manner-using-test-scheduler)
 - [Race Condition](./test-scheduler/README.md#race-condition)
 - [Debounce Time](./test-scheduler/README.md#debounce-time)
 
-## 3.6. Handling Errors and Race Conditions
+## 3.7. Handling Errors and Race Conditions
 
 - [Why Handle Errors](./errors-syntaxes/README.md#why-handle-errors)
 - [Marble testing for errors](./errors-syntaxes/README.md#marble-testing-for-errors)
