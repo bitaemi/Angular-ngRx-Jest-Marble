@@ -8,10 +8,22 @@
   - [Test a component with event emitter](#test-a-component-with-event-emitter)
   - [Test a component that has an injected service](#test-a-component-that-has-an-injected-service)
 - [Integration testing examples](#integration-testing-examples)
+  - [Test file generation](#test-file-generation)
+  - [Test setup](#test-setup)
   - [Testing Templates](#testing-templates)
+    - [Testing property and class bindings](#testing-property-and-class-bindings)
+    - [Testing Event Bindings](#testing-event-bindings)
+  - [Testing with dependencies](#testing-with-dependencies)
+    - [Providing Dependencies](#providing-dependencies)
+    - [Getting the dependencies](#getting-the-dependencies)
+    - [Providing Stubs](#providing-stubs)
   - [Testing Navigation](#testing-navigation)
-  - [Testing Directives](#testing-directives)
+    - [Dealing with router params](#dealing-with-router-params)
+    - [Providing RouterOutlet Components](#providing-routeroutlet-components)
+  - [Shallow Component Testing](#shallow-component-testing)
+  - [Testing Attribute Directives](#testing-attribute-directives)
   - [Dealing with asynchronous operations](#dealing-with-asynchronous-operations)
+  - [NgZone](#ngzone)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 # Unit testing examples:
@@ -224,6 +236,10 @@ describe('TodosComponent', () => {
 ```
 # Integration testing examples
 
+## Test file generation 
+
+Angular's CLI will generate the spec files along with componnet/service/pipe/directive genaration;
+
 For unit testing can rename the .spec file to unit.spec and have separated spec file for integration testing.
 
 A generated .spec file contains:
@@ -244,10 +260,167 @@ A generated .spec file contains:
     fixture.detectChanges();
   });
 ```
-Because the standard compile way in Angular is done using Webpack, all components,templates and stules are bundled into one single js file, thus the .compileComponets() is not necessary and we can have just one single beforeEach block.
+Because the standard compile way in Angular is done using Webpack, all components,templates and styles are bundled into one single .js file, thus the compileComponets() is not necessary and we can have just one single beforeEach block.
 
+## Test setup
+
+```TypeScript
+describe('VoterComponent', () => {
+    let component: VoterComponent;
+    let fixture: ComponentFixture<VoterComponent>;
+    beforeEach(() => {
+        // for integration testing we cannot create the instance of the component
+        // we need to ask Angular to create that instance for us
+        // using utility methods from TestBed class we, first create a dynamic module for our component
+        TestBed.configureTestingModule({
+            declarations: [VoterComponent] // for this simple component there's no need of imports or providers array
+        });
+        // now we instruct Angular to create the component
+        // TestBed.createComponent(VoterComponent); // this returns a component fixture of type <VoterComponent>
+        // so this component fixture is a wrapper over our component's instance and also over its template
+        fixture = TestBed.createComponent(VoterComponent);
+        // use it to get an instange of the component, can run change detection manually and also get one or more of the injected dependencies in this component,
+        component = fixture.componentInstance;
+        // the fixture.nativeElement = the root DOM element for this component's template
+        // the fixture.debugElement = a wrapper around nativeElement providing useful methods for quering the DOM
+    });
+
+});
+```
 ## Testing Templates
+### Testing property and class bindings
+  We are interested to check what exactly we have in the DOM (HTML template), thus we use the query method of debuggerElement wrapper to traverse the DOM and find elements corresponding either to css selectors or HTML attributes
+
+For voter componet we have the following template:
+```HTML
+    <i 
+      class="glyphicon glyphicon-menu-up vote-button"
+      [class.highlighted]="myVote == 1"
+      (click)="upVote()"></i>
+
+  <span class="vote-count">{{ totalVotes }}</span>
+```
+a) Check if the innerText of the element with `.vote-count` class contains the proper totalVotes string:
+
+```TypeScript
+
+    it('should render total votes', () => {
+        component.myVote = 1;
+        component.othersVote = 20;
+        // need to explicitlly tell Angular when to perform change detection
+        // because in testing env, it does not run as it normally does
+        fixture.detectChanges();
+
+        let debugElem = fixture.debugElement.query(By.css('vote-count')); 
+        // returns first HTML element that matches the interogation
+        // can use By with .directive instead of .css and it will return the
+        // DOM element on which the specified directive is applied
+        let el = debugElem.nativeElement; // debugElement is of type HTMLElement
+        expect(el.innerText).toContain(21);// if we would have used toBe the test would have been too fragile
+        // when working with strings better use toContain instead of toBe
+    });
+    
+```    
+b) Check if, when I have upvoted, then the icon with class `.glyphicon-menu-up` should also have the `highlighted` class;
+
+```TypeScript
+it('should highlight the upvoted button, if I had upvoted', () => {
+        component.myVote = 1;
+        fixture.detectChanges();
+        let debugElem = fixture.debugElement.query(By.css('.glyphicon-menu-up'));
+        // no need for native element to check for the existence of a class on the
+        // html element - use classes property of debugElem (can acess also styles and attributes properties)
+        expect(debugElem.classes['highlighted']).toBeTruthy();
+    });
+```    
+### Testing Event Bindings
+```TypeScript
+
+    it('should increase total votes when I click the upvote button', () => {
+        let button = fixture.debugElement.query(By.css('.glyphicon-menu-up'));
+        // we need to explicitly trigger the click:
+        button.triggerEventHandler('click', null); // this is for integration testing
+        // for Unit testing you will simply have: component.upVote();
+        expect(component.totalVotes).toBe(1);
+    });
+```
+## Testing with dependencies
+### Providing Dependencies
+```TypeScript
+beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        declarations: [TodosComponent],
+        providers: [TodoService],
+        imports:[HttpClient]
+      })
+      .compileComponents();
+    }));
+```    
+### Getting the dependencies
+
+  If the service is registered in the providers array,at the level of the module,
+  this will become a singleton =  a single instace shared accross all components in module
+  then you can get this service dependency from the TestBed: 
+```TypeScript
+      let service = TestBed.get(TodoService);
+```  
+ If the service is registered directly in the component's metadata, then you will get the corresponding service dependecy, injected in the component, from the debugElement wrapper:
+ ```TypeScript
+       let service = fixture.debugElement.injector.get(TodoService);    
+```  
+Delete the ```fixture.detectChanges();``` generated along with component because calling this method before each test execution will make Angular to execute ngOnInit with all it's API calls/methods before getting the chance to spyOn on these methods called in ngOnInit, in order to change the behavior and return testing values.
+
+Thus:
+```TypeScript
+ it('should load todos from the server', () => {
+      let service = TestBed.get(TodoService);
+      spyOn(service, 'getTodos').and.returnValue(from([1, 2, 3]));
+      fixture.detectChanges(); // trigger Angular's detect change mechanism only after apply spyOn to the methods from ngOnInit 
+      expect(component.todos.length).toBe(3);
+    });
+```    
+### Providing Stubs
+Inside user-details.spec.ts we want to ensure that the navigate method of the router is called with the right arguments For:
+```TypeScript
+  save() { 
+    this.router.navigate(['users']);
+  }
+```  
+we need:
 
 ## Testing Navigation
-## Testing Directives
+
+### Dealing with router params
+### Providing RouterOutlet Components
+## Shallow Component Testing    
+## Testing Attribute Directives
 ## Dealing with asynchronous operations
+
+## NgZone
+
+```TypeScript
+export class QuestionsIndexComponent
+{
+  n: number = 0;
+  // if you do not need your data update in the view constantly, for operations that happen inside a component
+  // then, you would use ngZone - here you will get updated data of component only when click event triggers method1 of component
+  constructor(@Inject(NgZone) private zone: NgZone)
+  {
+    this.zone.runOutsideAngular( () => {
+      // run this code in the background, outside Angular Zone - thus outside component's zone => component view 
+      // does not get updated via data binding (e.g {{n}} in the html template)
+      setInterval( () => {
+        this.n = this.n + 1;
+        console.log(this.n);
+      }, 300);
+    } );
+  }
+
+  method1()
+  {
+  }
+```
+```HTML
+<span>{{n}}</span>
+  <input type="button" value="Click me" (click)="method1()">
+```

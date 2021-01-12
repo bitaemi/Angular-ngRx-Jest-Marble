@@ -1,6 +1,6 @@
 import { VoterComponent } from './voter.component';
 
-describe('VoterComponent', () => {
+describe('Unit Testing VoterComponent', () => {
     let component: VoterComponent;
 
     beforeEach(() => {

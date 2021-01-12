@@ -9,8 +9,7 @@
   - [2.3 Mesure Success with TDD](#23-mesure-success-with-tdd)
 - [3. Unit testing](#3-unit-testing)
   - [3.0. Simple Unit Testing Examples](#30-simple-unit-testing-examples)
-  - [NgZone](#ngzone)
-  - [3.1. Unit Testing Limitations -> Integration Tests](#31-unit-testing-limitations---integration-tests)
+  - [3.1. Integration Tests](#31-integration-tests)
   - [3.2. Angular Tests with Jest](#32-angular-tests-with-jest)
     - [3.2.2. Jest is better](#322-jest-is-better)
     - [3.2.3. Installation steps:](#323-installation-steps)
@@ -86,20 +85,15 @@ Unit testing means testing the component in isolation
 ## 3.0. Simple Unit Testing Examples
 
 - no integration with template, file system, database, services, routes
-  - in test.ts set the context just the learn-unit-testing path
-```TypeScript
-const context = require.context('./app/modules/learn-unit-testing/components/', true, /\.spec\.ts$/);
-```
- or for  pipes: 
- ```TypeScript
-const context = require.context('./app/pipes/', true, /\.spec\.ts$/);
-```
-  - in console run `ng test` - we use Jasmine framework to write our tests and the Karma engine which will open up a browser window with running tests results
-  - to generate the code coverage reports:
+  - I have removed the test.ts as I'm using Jest's runner instead of Karma
+  - in console `ng test` won't work  any more as I deleted `test` obj. form angular.json - we do not use Jasmine framework to write our tests with Karma engine which normaly opens up a browser window with running tests results
+  - run intead `npm test` - will open Jest in watch mode by default
+  - to generate the code coverage reports, previously we had:
   `ng test --no-watch --code-coverage` - this runs test and creates a folder `coverage` in main directory containing coverage reports
   - define as many tests as there are execution paths for all methods of the component
   - a test or spec is defined by it() function
   - each test should run in an isolated world
+  - look into Jest config(below: 3.2.2. Jest is better ) as I am not using Karma (default test runner with Angular) any more
 
 Example of component testing:  
 
@@ -108,34 +102,9 @@ Example of component testing:
 - [Test a component with event emitter](./app/modules/learn-unit-testing/README.md#test-a-component-with-event-emitter)
 - [Test a component that has an injected service](./app/modules/learn-unit-testing/README.md#test-a-component-that-has-an-injected-service)
 
-## NgZone
+## 3.1. Integration Tests
 
-```TypeScript
-export class QuestionsIndexComponent
-{
-  n: number = 0;
-  // if you do not need your data update in the view constantly, for operations that happen inside a component
-  // then, you would use ngZone - here you will get updated data of component only when click event triggers method1 of component
-  constructor(@Inject(NgZone) private zone: NgZone)
-  {
-    this.zone.runOutsideAngular( () => {
-      // run this code in the background, outside Angular Zone - thus outside component's zone => component view does not get updated via data binding (e.g {{n}} in the html template)
-      setInterval( () => {
-        this.n = this.n + 1;
-        console.log(this.n);
-      }, 300);
-    } );
-  }
-
-  method1()
-  {
-  }
-```
-```HTML
-<span>{{n}}</span>
-  <input type="button" value="Click me" (click)="method1()">
-```
-## 3.1. Unit Testing Limitations -> Integration Tests
+Overcome Unit Testing Limitations with:
 
 - [Integration testing examples](./app/modules/learn-unit-testing/README.md#integration-testing-examples)
   - template bindings: [Testing Templates](./app/modules/learn-unit-testing/README.md#testing-templates)
@@ -143,11 +112,10 @@ export class QuestionsIndexComponent
   - [Testing Directives](./app/modules/learn-unit-testing/README.md#testing-directives)
   - [Dealing with asynchronous operations](./app/modules/learn-unit-testing/README.md#dealing-with-asynchronous-operations)
 
-
-
 ## 3.2. Angular Tests with Jest
-
 ### 3.2.2. Jest is better 
+ - With Jest you can use the same assertions that you have  used with Jasmine
+ - Jasmine is also used by protractor, so you have to still keep it
 
 Jasmine testing is slow:
  - initial build time slow
@@ -163,12 +131,46 @@ Jasmine testing is slow:
   
 ### 3.2.3. Installation steps:
 
- - 1)Remove Karma packages
- - Jasmine is also used by protractor, so you have to still keep it
- - `` npm i -D jest @types/jest jest-preset-angular``
+[https://dev.to/alfredoperez/angular-10-setting-up-jest-2m0l](https://dev.to/alfredoperez/angular-10-setting-up-jest-2m0l)
 
- - 2) With Jest you can use the same assertins that you have  used with Jasmine
+ - 1)Remove Karma packages:
 
+```bash
+  npm uninstall karma karma-chrome-launcher karma-coverage-istanbul-reporter karma-jasmine
+  karma-jasmine-html-reporter @types/jasmine @types/jasminewd2 jasmine-core jasmine-spec-reporter
+```
+ - 2) Install Jest
+
+ - ``npm install jest @types/jest jest-preset-angular --save-dev``
+
+ - 3) Remove ``"test": {}`` object from angular.json
+
+ - 4) Remove karma.conf.js and src/test.ts files
+ - 5) Create setupJest.ts file
+  This file should have the following content:
+```TypeScript
+import 'jest-preset-angular';
+```
+ - 6) Modify tsconfig.spec.json similar to the below( take into account your config files paths)
+```JSON
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "jest",
+      "node"
+    ]
+  },
+  "files": [
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}
+```
 in package.json:
 
 ```json
@@ -180,8 +182,22 @@ in package.json:
 },
 "jest": {
     "preset": "jest-preset-angular",
-    "setupTestFrameworkScriptFile": "<rootDir>/setupJest.js"
-}
+    // "setupTestFrameworkScriptFile": "<rootDir>/setupJest.js",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupJest.ts"
+    ],
+    // I also put down paths which I want to excude from running tests - in such learning repo when my app is broken :-D
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/dist/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/tsconfig.spec.json",
+        "stringifyContentPathRegex": "\\.html$"
+      }
+    }
+  }
 ```
 3) in setupJest you import jest-preset-angular package;
 
@@ -191,7 +207,8 @@ In console:
  - ``npm run test:watch``
  - `` jest --watch``
  -  `` jest --coverage``
- - you can run only run one test by writing  test name and press enter;
+ - you can run only run one test by writing  test name and press enter - if jest runner stays in watch mode or run:
+ ``npm test src/app/modules/learn-unit-testing/components/06-services/todos.component.spec.ts``
  - you can clear the filter and run  tests again
 
  ### 3.2.4 Migrating Codebase
