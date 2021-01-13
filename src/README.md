@@ -7,8 +7,8 @@
   - [2.1 When to Introduce TDD :](#21-when-to-introduce-tdd-)
   - [2.2 When NOT to Introduce TDD :](#22-when-not-to-introduce-tdd-)
   - [2.3 Mesure Success with TDD](#23-mesure-success-with-tdd)
-- [3. Unit testing](#3-unit-testing)
-  - [3.0. Simple Unit Testing Examples](#30-simple-unit-testing-examples)
+- [3. Unit and Integration Testing](#3-unit-and-integration-testing)
+  - [3.0. Unit Testing Examples](#30-unit-testing-examples)
   - [3.1. Integration Tests](#31-integration-tests)
   - [3.2. Angular Tests with Jest](#32-angular-tests-with-jest)
     - [3.2.2. Jest is better](#322-jest-is-better)
@@ -75,14 +75,16 @@ TDD - is a process that can be used with integration tests, automated tests, uni
 - sense of ownership
 - c) allocate time to see TDD results
 
-# 3. Unit testing
+# 3. Unit and Integration Testing
 
 Unit testing means testing the component in isolation
 
 - tests last (prod code is written first, then the tests after)
 - tests first (unit tests are written first, after is written the code)
 
-## 3.0. Simple Unit Testing Examples
+Integration testing allows testing template bindings, navigation, directives, async operations
+
+## 3.0. Unit Testing Examples
 
 - no integration with template, file system, database, services, routes
   - I have removed the test.ts as I'm using Jest's runner instead of Karma

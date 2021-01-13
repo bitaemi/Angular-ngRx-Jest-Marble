@@ -206,9 +206,15 @@ No need to do it with Angular CLI, but just to mention it (a full webpack config
   [2.1 When to Introduce TDD :](./src/README.md#21-when-to-introduce-tdd-)
   [2.2 When NOT to Introduce TDD :](./src/README.md#22-when-not-to-introduce-tdd-)
   [2.3 Mesure Success with TDD](./src/README.md#23-mesure-success-with-tdd)
-## 3. Unit testing
+## 3. Unit and Integration Testing
 
-  [Simple Unit Testing](./src/README.md#30-simple-unit-testing-examples)
+- [3.0. Unit Testing Examples](./src/README.md#30-unit-testing-examples)
+  - [Setup methods for testing](./src/app/modules/learn-unit-testing/README.md#setup-methods-for-testing)
+  - [Test component that has injected a FormBuilder](./src/app/modules/learn-unit-testing/README.md#test-component-that-has-injected-a-formbuilder)
+  - [Test a component with event emitter](./src/app/modules/learn-unit-testing/README.md#test-a-component-with-event-emitter)
+  - [Test a component that has an injected service](./src/app/modules/learn-unit-testing/README.md#test-a-component-that-has-an-injected-service)
+
+- [3.1. Integration Tests](./src/README.md#31-integration-tests)
   
   ### 3.1 Angular Tests with Jest
 

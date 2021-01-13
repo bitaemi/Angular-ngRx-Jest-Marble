@@ -2,6 +2,7 @@ import { UsersComponent } from './users.component';
 import { UserService } from './user.service'; 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw'; 
+import {from , empty } from 'rxjs';
 
 describe('UsersComponent', () => {
   let component: UsersComponent; 
@@ -14,7 +15,7 @@ describe('UsersComponent', () => {
 
   it('should set users property with the users retrieved from the server', () => {
     let users = [ 1, 2, 3 ];
-    spyOn(service, 'getUsers').and.returnValue(Observable.from([ users ]));
+    spyOn(service, 'getUsers').and.returnValue(from([ users ]));
 
     component.ngOnInit();
 
@@ -35,7 +36,7 @@ describe('UsersComponent', () => {
 
     it('should remove the selected user from the list if the user confirms deletion', () => {
       spyOn(window, 'confirm').and.returnValue(true);
-      spyOn(service, 'deleteUser').and.returnValue(Observable.empty());
+      spyOn(service, 'deleteUser').and.returnValue(empty());
 
       component.deleteUser(user);
 
@@ -52,7 +53,7 @@ describe('UsersComponent', () => {
 
     it('should call the server to delete the selected user if the user confirms deletion', () => {
       spyOn(window, 'confirm').and.returnValue(true);
-      let spy = spyOn(service, 'deleteUser').and.returnValue(Observable.empty());
+      let spy = spyOn(service, 'deleteUser').and.returnValue(empty());
 
       component.deleteUser(user);
 
@@ -61,7 +62,7 @@ describe('UsersComponent', () => {
 
     it('should NOT call the server to delete the selected user if the user cancels', () => {
       spyOn(window, 'confirm').and.returnValue(false);
-      let spy = spyOn(service, 'deleteUser').and.returnValue(Observable.empty());
+      let spy = spyOn(service, 'deleteUser').and.returnValue(empty());
 
       component.deleteUser(user);
 

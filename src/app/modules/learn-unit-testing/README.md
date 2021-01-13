@@ -379,18 +379,104 @@ Thus:
       expect(component.todos.length).toBe(3);
     });
 ```    
-### Providing Stubs
-Inside user-details.spec.ts we want to ensure that the navigate method of the router is called with the right arguments For:
+### Providing Stubs (e.g. a fake router)
+
+Inside user-details.spec.ts we want to ensure that the navigate method of the router is called with the right arguments.
+ For:
 ```TypeScript
   save() { 
     this.router.navigate(['users']);
   }
 ```  
+Testing using the router itself is part of Angular's testing, not our app testing. Thus, we provide a stub = a fake router 
+which will be a lightweight implementation of Angular's router that has onlu methods that we have used inside our component.
 we need:
+```TypeScript
+// ...
+class RouterStub {
+  navigate(params) {
+
+  }
+}
+// ...
+    TestBed.configureTestingModule({
+      declarations: [UserDetailsComponent],
+      // we register RouterStub class as a provider, insted on Router itself
+      providers: [
+        // we tell Angular that when it sees injected into component's constructor an instance of Router class
+        // it should create an instance of RouterStub, and use this object instead of Router's instance 
+        { provide: Router, useClass: RouterStub}
+      ]
+```      
+Similarly, use stubs for all the other dependencies that have been injected into the component.
 
 ## Testing Navigation
+```TypeScript
+  it('should redirect the user to the user\'s page after saving', () => {
+    let router = TestBed.get(Router);
+    let spy = spyOn(router, 'navigate'); // we already use a stub and there is no need to .and.callFake...
+    component.save();
+    expect(spy).toHaveBeenCalledWith(['users']);
+  });
+```  
+Second test of route did not work ???. Also running:
+``npm test src/app/app-routing.spec.ts`` test failed :-??
+```TypeScript
+import { UsersComponent } from './components/user-component/users.component';
+import { learnUnitTestRoutes } from './learn-unit-testing.module';
+describe('learn-unit-testing module\'s routes', () => {
+    xit('should contain a route for /users', () =>
+    {
+        // it does not pass - ???
+        let childrenRoutes: Route[] = learnUnitTestRoutes[0].children;
+        expect(childrenRoutes).toContain({ path: 'users', component: UsersComponent });
+        // I do not know how to fix it
+    })
+})
+```
+### Dealing with route parameters
 
-### Dealing with router params
+Because inside component's implementation we are using the params property from ActivatedRoute:
+```TypeScript
+  ngOnInit() {
+    this.route.params.subscribe(p => {
+      if (p['id'] === 0)
+        this.router.navigate(['not-found']);
+    });
+  }
+```
+we need to get and test params passed in the route:
+
+```TypeScript
+  it('should redirect the user to the not found page if an invalid user id is passed', () => {
+    let router = TestBed.get(Router);
+    // put a spy on the route to assert the navigate method has been called
+    let spy = spyOn(router, 'navigate');
+    let route: ActivatedRouteStub = TestBed.get(ActivatedRoute);
+    // we need to push a value in the observable stream of route's params
+    // on route.params we have only methods to read, not to push any data,
+    // but we'll use the ActivatedRouteStub, to have fake needed route's params
+    route.push({ id: 0 });
+    expect(spy).toHaveBeenCalledWith(['not-found']);
+  });
+```
+where:
+```TypeScript
+class ActivatedRouteStub {
+  private subject = new Subject();
+  // Subject it is an Observable, but it has also Observer capabilities and 
+  // we can use  it to push values into the observable
+  push(value) {
+    this.subject.next(value);
+  }
+  // declare params as a public property:
+  get params() {
+    return this.subject.asObservable();
+  }
+}
+```
+For me the test did not pass - no method call ?? anyway, the redirect is done inside ngOnInit, thus before:
+``fixture.componentInstance`` - called before each test.
 ### Providing RouterOutlet Components
 ## Shallow Component Testing    
 ## Testing Attribute Directives
