@@ -478,9 +478,133 @@ class ActivatedRouteStub {
 For me the test did not pass - no method call ?? anyway, the redirect is done inside ngOnInit, thus before:
 ``fixture.componentInstance`` - called before each test.
 ### Providing RouterOutlet Components
+
+We need to ensure that:
+
+```TypeScript
+  <router-outlet></router-outlet>
+```
+it is present inside app.component.ts, thus inside the app.component.spec.ts:
+
+```TypeScript
+it('should have a router outlet', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const de = fixture.debugElement.query(By.directive(RouterOutlet))
+    expect(de).not.toBeNull;
+  });
+```
+for this to work we need to use Angular's RouterTestingModule class like this:
+
+```TypeScript
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        // ...
+      ],
+      //...
+```     
+For testing if specific router links are present we need to check if specific href value exists among all tags with routerLink attribute, e.g. for:
+```HTML
+<a class="nav-link" routerLink="about">About Info</a>
+```
+Will query component's wrapper by the ``RouterLinkWithHref`` directive:
+```TypeScript
+  it('should have a link to about page', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const debugElements = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref))
+    let index = debugElements.findIndex(de => de.attributes['routerLink'] === 'about');
+    expect(index).toBeGreaterThan(-1);
+  });
+```  
 ## Shallow Component Testing    
+
+For complex templates, with many child templates(components), for testing you will either need to declare each child component inside the testing module, or, the simples way is to add: ``schemas: [NO_ERRORS_SCHEMA]``, after including just the main component in declarations array:
+
+```TypeScript
+ beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        AppComponent,
+        AboutComponent,
+        LoginComponent,
+        SignUpComponent,
+        AlertDirective,
+        RepeaterDirective,
+      ],
+      // schemas: [NO_ERRORS_SCHEMA], use this when you have too many components in the declarations array
+      // thought it is safer for testing to include all your components
+      // for me, using schemas, did not work, I had to include components
+```      
+
 ## Testing Attribute Directives
+For testing attribete directives, the key is to use a DirectiveHostComponent and configure testing modules as below:
+
+```TypeScript
+@Component({
+  template: `
+    <p highlight="cyan">First</p>
+    <p highlight>Second</p>
+  `
+})
+class DirectiveHostComponent { 
+}
+
+// ...
+describe('HighlightDirective', () => {
+  let fixture: ComponentFixture<DirectiveHostComponent>;
+  
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DirectiveHostComponent, HighlightDirective ]
+    })
+    .compileComponents();
+  }));
+  //...
+    it('should highlight the first element with cyan', () => {
+    let de = fixture.debugElement.queryAll(By.css('p'))[0];
+    expect(de.nativeElement.style.backgroundColor).toBe('cyan');
+  });
+
+  
+  it('should highlight the second element with default color', () => {
+    let de = fixture.debugElement.queryAll(By.css('p'))[1];
+    // get the reference to the highlight directive in order to read it's default color
+    let directive = de.injector.get(HighlightDirective);
+    expect(de.nativeElement.style.backgroundColor).toBe(directive.defaultColor);
+  });
+```
 ## Dealing with asynchronous operations
+```TypeScript
+    it('should load todos from the server via Promise', async(() => {
+      let service = TestBed.get(TodoService);
+      spyOn(service, 'getTodosPromise').and.returnValue(Promise.resolve([1, 2, 3]));
+      fixture.detectChanges(); // at this step ngOnInit is triggered
+      // but the async operation to fetch data are not yet completed when below is executed
+      // thus, we have to use the whenStable method which resolves a promise when all async operations from our component 
+      // are already completed
+      fixture.whenStable().then(() => {
+        expect(component.todos.length).toBe(3);
+      });
+      console.log('EXPECTED WAS CALLED'); // because outside whenStable it gets execued before promise's resolve from ngOnInit
+
+    }));
+```
+or:
+
+```TypeScript
+
+    it('should load todos from the server via Promise fakeAsync', fakeAsync(() => {
+      let service = TestBed.get(TodoService);
+      spyOn(service, 'getTodosPromise').and.returnValue(Promise.resolve([1, 2, 3]));
+      fixture.detectChanges();
+      tick(); // this simulates the passage of time
+      expect(component.todos.length).toBe(3);
+      // because this is after tick, will exe after all async op from component are finished
+      console.log('EXPECTED WAS CALLED');
+
+    }));
+``` 
 
 ## NgZone
 

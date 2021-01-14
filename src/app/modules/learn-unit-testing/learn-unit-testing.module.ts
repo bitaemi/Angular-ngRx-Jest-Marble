@@ -17,7 +17,8 @@ export const learnUnitTestRoutes: Routes = [
   ]},
 ];
 @NgModule({
-  declarations: [UserDetailsComponent,
+  declarations: [
+    UserDetailsComponent,
     UsersComponent,
     TodosComponent,
   ],
@@ -25,6 +26,7 @@ export const learnUnitTestRoutes: Routes = [
     CommonModule,
     RouterModule.forChild(learnUnitTestRoutes)
   ],
-  providers:[TodoService]
+  providers: [TodoService],
+  exports: [TodoService]
 })
 export class LearnUnitTestingModule { }

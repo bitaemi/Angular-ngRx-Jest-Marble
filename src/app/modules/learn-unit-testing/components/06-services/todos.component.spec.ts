@@ -1,13 +1,16 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Http } from '@angular/http';
+import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { TodosComponent } from './todos.component';
 import { TodoService } from './todo.service';
 import { from, empty, Observable } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TodosComponent', () => {
   let component: TodosComponent;
   let service: TodoService;
-  describe('Unit Testing TodosComponent', () => {
+  xdescribe('Unit Testing TodosComponent', () => {
     beforeEach(() => {
       service = new TodoService(null); // We cheat - anyway we will not use the Http protocol
       component = new TodosComponent(service);
@@ -79,8 +82,8 @@ describe('TodosComponent', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         declarations: [TodosComponent],
-        providers: [TodoService],
-        imports: [HttpClient]
+        imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]),],
+        providers: [TodoService,],
       })
         .compileComponents();
     }));
@@ -97,8 +100,9 @@ describe('TodosComponent', () => {
     it('should create', () => {
       expect(component).toBeTruthy();
     });
-
-    it('should load todos from the server', () => {
+    // comment this test because I'll use promise to get data instead of observable
+    // though Http is the old way - HttpClient is the new class to fetch data via API calls
+    xit('should load todos from the server', () => {
       // if the service is registered in the providers array,at the level of the module,
       // this will become a singleton =  a single instace shared across all components in module
       // then you can take it from the TestBed: 
@@ -112,5 +116,30 @@ describe('TodosComponent', () => {
       expect(component.todos.length).toBe(3);
 
     });
+
+    it('should load todos from the server via Promise', async(() => {
+      let service = TestBed.get(TodoService);
+      spyOn(service, 'getTodosPromise').and.returnValue(Promise.resolve([1, 2, 3]));
+      fixture.detectChanges(); // at this step ngOnInit is triggered
+      // but the async operation to fetch data are not yet completed when below is executed
+      // thus, we have to use the whenStable method which resolves a promise when all async operations from our component 
+      // are already completed
+      fixture.whenStable().then(() => {
+        expect(component.todos.length).toBe(3);
+      });
+      console.log('EXPECTED WAS CALLED'); // because outside whenStable it gets execued before promise's resolve from ngOnInit
+
+    }));
+
+    it('should load todos from the server via Promise fakeAsync', fakeAsync(() => {
+      let service = TestBed.get(TodoService);
+      spyOn(service, 'getTodosPromise').and.returnValue(Promise.resolve([1, 2, 3]));
+      fixture.detectChanges();
+      tick(); // this simulates the passage of time
+      expect(component.todos.length).toBe(3);
+      // because this is after tick, will exe after all async op from component are finished
+      console.log('EXPECTED WAS CALLED');
+
+    }));
   });
 })

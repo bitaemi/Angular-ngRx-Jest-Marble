@@ -16,7 +16,9 @@ export class AppComponent {
     title: 'Angular7-App',
     notFavorite: true
   };
-  constructor(private loginService: LoginService, private domSanitizer: DomSanitizer, private routerLoggerService: RouterLoggerService, private router: Router) {
+  constructor(private loginService: LoginService,
+    private routerLoggerService: RouterLoggerService,
+    private router: Router) {
   }
 
   ngOnInit() {
