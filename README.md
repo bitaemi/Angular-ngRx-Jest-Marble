@@ -27,15 +27,18 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 #  I. Angular for busy devs
+Go and study:
+
+- [Angular development](./src/app/README.md#angular-development)
+
+- [Building Blocks of Angular App](./src/app/README.md#3-building-blocks-of-angular-app)
+
 ## Angular App Architecture
 
 To make you curious:
 
 ![angular-architecture](./src/app/angular-readme/angular-architecture.JPG)
-Go and study:
 
-[Angular development](./src/app/README.md#angular-development)
-[Building Blocks of Angular App](./src/app/README.md#3-building-blocks-of-angular-app)
 
 ### Automate deployments using Gulp or Webpack
 

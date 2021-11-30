@@ -24,7 +24,27 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 # Angular lifecycle hooks 
 - with these methods we can respond and act at a specific moment in the life of a component
-A Mermaid diagram can be seen below using Mermaid Preview Extention in VSCode (waiting for GitHub support to preview in browser)
+
+![angular-life-cycle-hooks](./angular-life-cycle-hooks.JPG)
+
+
+- `ngOnChanges` - once - respond when Angular sets (one time, after componet construction) or resets(after each ngDoCheck) data-bound input properties; receives a SimpleChanges object of current and previous property values
+
+- `ngOnInit` - once - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
+
+- `ngDoCheck` - executes when an event occures, before change "detection process" occures.Used to identify wheather change detection process occures or not. Thus, helps to detect or act upon changes that Angular cannot detect on it's own (if you we use 3rd parties controls that Angular cannot recognize - e.g you have JavaScript code that executes outside like a click event))
+
+- `ngAfterContentInit` - exe one time in the life of a component, after suppling the component along with parent component (use it to get the content properties of children components), 
+
+- `ngAfterContentChecked` - executes each time, after "change detection" process of the component data,
+
+- `ngAfterViewInit` - once, after initializing all elements in the template of the component - use it if we need to manipulate properties of the view children(inner templates),
+
+- `ngAfterViewChecked` -  executes each time, after "change detection" process of "View" of the component,
+- `ngOnDestroy` - use it to cleanup: unsubscribe to observables or detach event handlers, just before Angular destroys the component
+
+A Mermaid diagram can be seen below using Mermaid Preview Extention in VSCode (+ Markdown Preview Enhanced) (waiting for GitHub support to preview in browser)
+
 ```mermaid
 gantt
 dateFormat  YYYY-MM-DD
@@ -49,15 +69,6 @@ section Delete Component(Change route)
 ngOnDestroy()                :         des10, after des13, 3d
 
 ```      
-`ngOnChanges` - once - respond when Angular sets (one time, after componet construction) or resets(after each ngDoCheck) data-bound input properties; receives a SimpleChanges object of current and previous property values
-
-`ngOnInit` - once - initialize the directive or component, after Angular displays for the first time the data-bound props or input props - good to gather here the data coming from API calls
-`ngDoCheck` - executes when an event occures, before change "detection process" occures.Used to identify wheather change detection process occures or not. Thus, helps to detect or act upon changes that Angular cannot detect on it's own (if you we use 3rd parties controls that Angular cannot recognize - e.g you have JavaScript code that executes outside like a click event))
-`ngAfterContentInit` - exe one time in the life of a component, after suppling the component along with parent component (use it to get the content properties of children components), 
-`ngAfterContentChecked` - executes each time, after "change detection" process of the component data,
-`ngAfterViewInit` - once, after initializing all elements in the template of the component - use it if we need to manipulate properties of the view children(inner templates),
-`ngAfterViewChecked` -  executes each time, after "change detection" process of "View" of the component,
-`ngOnDestroy` - use it to cleanup: unsubscribe to observables or detach event handlers, just before Angular destroys the component
 
   For testing use this file: [https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts](https://github.com/bitaemi/Angular-ngRx-Jest-Marble/blob/reactive-forms-auth-interceptors-advance/src/app/admin/components/project/project.component.ts)
 
@@ -110,7 +121,7 @@ ngAfterViewInit() {
   this.product.productName=child.masterName; //<= This will set data
 }
 ```
--  another way is to use the hierarchical dependency injection. We create a shared service and we declare it as a provider of the level of the parent that have as children all the components in need for that service
+-  another way is to use the hierarchical dependency injection. We create a shared service and we declare it as a provider at the level of the parent that has as children all the components in need for that service
 
 ```TypeScript
     providers: [SharedService],
